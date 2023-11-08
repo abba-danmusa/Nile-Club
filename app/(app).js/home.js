@@ -7,27 +7,22 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-root-toast'
 import { Stack } from 'expo-router/stack'
 import { Slot, router } from 'expo-router'
-import Signin from './(authentication).js/signin';
-import Home from './(app).js/home';
 
 const queryClient = new QueryClient()
 
-export default function Page() {
-  let isLoggedIn = 'authentication'
-  
-  const screen = {
-    authentication: <Signin />,
-    app: <Home/>
-  }[isLoggedIn]
-  
+export default function Home() {
   return (
-    <SafeAreaProvider>
-      <RootSiblingParent>
-        <QueryClientProvider client={queryClient}>
-          {screen}
-        </QueryClientProvider>
-      </RootSiblingParent>
-    </SafeAreaProvider>
+    <View style={styles.container}>
+      <View style={styles.container}>
+        <View style={styles.main}>
+          <Text style={styles.title}>Hello World</Text>
+          <Text style={styles.subtitle}>
+            This is the first page of your app.
+          </Text>
+        </View>
+      </View>
+      <StatusBar style="auto" />
+    </View>
   )
 }
 
