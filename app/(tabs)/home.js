@@ -1,14 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { RootSiblingParent } from 'react-native-root-siblings'
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Toast from 'react-native-root-toast'
-import { Stack } from 'expo-router/stack'
-import { Slot, router } from 'expo-router'
-
-const queryClient = new QueryClient()
 
 export default function Home() {
   return (
