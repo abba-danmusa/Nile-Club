@@ -1,54 +1,15 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { RootSiblingParent } from 'react-native-root-siblings'
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Toast from 'react-native-root-toast'
-import { Stack } from 'expo-router/stack'
-import { Slot, router } from 'expo-router'
-import Signin from './(authentication).js/signin';
-import Home from './(app).js/home';
+import { Stack, Redirect } from 'expo-router';
 
 const queryClient = new QueryClient()
 
-export default function Page() {
-  let isLoggedIn = 'authentication'
-  
-  const screen = {
-    authentication: <Signin />,
-    app: <Home/>
-  }[isLoggedIn]
-  
-  return (
-    <SafeAreaProvider>
-      <RootSiblingParent>
-        <QueryClientProvider client={queryClient}>
-          {screen}
-        </QueryClientProvider>
-      </RootSiblingParent>
-    </SafeAreaProvider>
-  )
+const isLoggedIn = false
+export default function App() {
+  if (isLoggedIn) {
+    return <Redirect href='/home' />
+  } else {
+    return <Redirect href='/signin' />
+  }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    padding: 24,
-  },
-  main: {
-    flex: 1,
-    justifyContent: "center",
-    maxWidth: 960,
-    marginHorizontal: "auto",
-  },
-  title: {
-    fontSize: 64,
-    fontWeight: "bold",
-  },
-  subtitle: {
-    fontSize: 36,
-    color: "#38434D",
-  },
-});

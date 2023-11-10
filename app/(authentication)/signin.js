@@ -1,13 +1,9 @@
 import { Button, Input, Text } from '@rneui/themed'
-import { router } from 'expo-router'
+import { Link } from 'expo-router'
 import { useAuthStore } from '../../hooks/stores/useAuthStore'
 
 export default function Signin() {
   const { email, password, setEmail, setPassword } = useAuthStore()
-
-  const signupScreen = () => {
-    router.push('/signup')
-  }
 
   const signup = () => {
     console.log(email, password)
@@ -19,7 +15,7 @@ export default function Signin() {
       <Input label={'email'} value={email} onChangeText={setEmail}/>
       <Input label={'password'} value={password} onChangeText={setPassword}/>
       <Button title={'Submit'} onPress={signup}/>
-      <Button title={'sign up'} onPress={signupScreen} />
+      <Link href="/signup">Sign up</Link>
     </>
   )
 }
