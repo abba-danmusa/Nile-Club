@@ -80,6 +80,7 @@ export default function Signup() {
       />
       <Button title={'Submit'} onPress={submit} />
       <Link href="/signin">Sign up</Link>
+      <Link href={'/resend'}>Resend Verification Code</Link>
 
     </>
   )

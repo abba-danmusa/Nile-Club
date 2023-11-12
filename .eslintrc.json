@@ -1,7 +1,8 @@
 {
     "env": {
         "browser": true,
-        "es2021": true
+        "es2021": true,
+        "mobile": true
     },
     "extends": [
         "eslint:recommended",
@@ -12,7 +13,7 @@
         "sourceType": "module"
     },
     "plugins": [
-        "react-native"
+        "react"
     ],
     "rules": {
     }
