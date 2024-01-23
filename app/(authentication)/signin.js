@@ -5,7 +5,7 @@ import { useAuthStore } from '../../hooks/stores/useAuthStore'
 import { useSignin } from '../../hooks/queries/useAuthentication'
 import { StatusBar } from 'expo-status-bar'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { StyleSheet, TouchableOpacity } from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 
 export default function Signin() {
@@ -52,22 +52,31 @@ export default function Signin() {
         autoCorrect={false}
         returnKeyType='go'
         leftIcon={() => <AntDesign name="lock" size={30} color="black" />}
-        rightIcon={() => {
-          return (
-            <TouchableOpacity
-              onPress={secureTextEntry}
-              style={{
-                padding: 5
-              }}
-            >
-              {eye}
-            </TouchableOpacity>
-          )
-        }}
+        rightIcon={() => 
+          <TouchableOpacity onPress={secureTextEntry} style={{padding: 5}}>
+            {eye}
+          </TouchableOpacity>
+        }
 
       />
-      <Button title={'Submit'} onPress={signup}/>
-      <Link href="/signup">Sign up</Link>
+      
+      <TouchableOpacity
+        onPress={() => { }}
+        style={{ alignSelf: 'flex-end', marginBottom: 100 }}
+      >
+        <Text>Forgot your password?</Text>
+      </TouchableOpacity>
+      {/* <Link href="/signup" style={{ alignSelf: 'flex-end', }}>
+        <View style={styles.signupLink}>
+          <View style={{marginRight: 10}}>
+            <Text style={{fontSize: 30}}>Sign up</Text>
+          </View>
+          <View style={styles.signupArrow}>
+            <AntDesign name="arrowright" style={{alignSelf: 'center'}} size={30} color="white" />
+          </View>
+        </View>
+      </Link> */}
+      <Button title={'Submit'} onPress={signup} />
     </SafeAreaView>
   )
 }
@@ -87,5 +96,19 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     color: '#333',
     fontWeight: 'bold',
+  },
+  signupLink: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  signupArrow: {
+    display: 'flex',
+    justifyContent: 'center',
+    width: 65,
+    height: 50,
+    backgroundColor: 'orange',
+    borderRadius: 20,
   }
 })

@@ -1,87 +1,66 @@
-import {Input, Text, Button}  from '@rneui/themed'
-import { Link } from 'expo-router'
-import { useAuthStore } from '../../hooks/stores/useAuthStore'
-import { useSignup } from '../../hooks/queries/useAuthentication'
-import Toast from '../../utils/toast'
+import { StyleSheet, Text, View, SafeAreaView, StatusBar, Dimensions} from 'react-native'
+import React from 'react'
+import Slides from '../../components/Slides'
+import EmailVerificationForm from '../../components/signup/emailForm'
 
-export default function Signup() {
-  const {
-    firstName,
-    lastName,
-    email,
-    password,
-    department,
-    year,
-    confirmPassword,
-    setEmail,
-    setPassword,
-    setDepartment,
-    setYear,
-    setFirstName,
-    setLastName,
-    setConfirmPassword
-  } = useAuthStore()
+const SCREEN_WIDTH = Dimensions.get('window').width
 
-  const { mutate: signup } = useSignup()
+const SLIDES_DATA = [
+  {
+    // color: '#F2F9FB',
+    // asset: require('../../assets/welcome/1.png'),
+    // title: 'Join clubs effortlessly',
+    // description: 'Explore what a club has to offer and become a member',
+    renderSlide: () => <EmailVerificationForm />
+  },
+  // {
+  //   color: '#FFF',
+  //   asset: require('../../assets/welcome/2.png'),
+  //   title: 'Always in the know',
+  //   description: 'Stay informed about everything going on in your club',
+  // },
+  // {
+  //   color: '#FFF',
+  //   asset: require('../../assets/welcome/3.png'),
+  //   title: 'Made for students',
+  //   description: 'Enjoy a seamless and transparent user experience made for you',
+  // }
+]
 
-  const signinScreen = () => {
-    router.back()
-  }
-
-  const submit = () => {
-    if (password !== confirmPassword) {
-      Toast('Passwords do not match')
-      return
-    }
-    signup({
-      email,
-      password,
-      confirmPassword,
-      firstName,
-      lastName,
-      department,
-      year
-    })
-  }
-
+const signup = () => {
   return (
-    <>
-      <Text>Sign up</Text>
-      <Input
-        label={'First Name'}
-        value={firstName}
-        onChangeText={setFirstName}
-      />
-      <Input
-        label={'Last Name'}
-        value={lastName}
-        onChangeText={setLastName}
-      />
-      <Input
-        label={'Email'}
-        value={email}
-        onChangeText={setEmail}
-      />
-      <Input
-        label={'Department'}
-        value={department}
-        onChangeText={setDepartment}
-      />
-      <Input
-        label={'Year'}
-        value={year}
-        onChangeText={setYear}
-      />
-      <Input label={'password'} value={password} onChangeText={setPassword} />
-      <Input
-        label={'confirm password'}
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
-      />
-      <Button title={'Submit'} onPress={submit} />
-      <Link href="/signin">Sign up</Link>
-      <Link href={'/resend'}>Resend Verification Code</Link>
-
-    </>
+    <SafeAreaView>
+      <StatusBar style="auto" hidden />
+      <Slides renderSlide={renderSlides}/>
+    </SafeAreaView>
   )
 }
+
+const renderSlides = () => {
+  SLIDES_DATA.map((slide, index) => {
+    const adjustFirstImageHeight = { height: index == 0 ? 209 : 281 }
+    return (
+      <View style={[styles.slideContainer, adjustFirstImageHeight]}>
+        { slide.renderSlide() }
+      </View>
+    )
+  })
+  // return (
+  //   <View style={styles.slideContainer}>
+  //     <Text>hello world</Text>
+  //   </View>
+  // )
+}
+
+const styles = StyleSheet.create({
+  slideContainer: {
+    flex: 1,
+    width: SCREEN_WIDTH,
+    height: '100%',
+    justifyContent: 'center',
+    backgroundColor: '#F2F9FB',
+    alignItems: 'center'
+  },
+})
+
+export default signup

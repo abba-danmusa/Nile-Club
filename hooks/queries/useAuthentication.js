@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "../../utils/axios";
 import Toast from '../../utils/toast'
 import { router } from "expo-router";
+import { useAuthStore } from "../stores/useAuthStore";
 
 export const useSignup = () => {
   return useMutation({
@@ -20,6 +21,7 @@ export const useSignup = () => {
 }
 
 export const useSignin = () => {
+  const { setInitialState } = useAuthStore()
   return useMutation({
     mutationKey: ["signin"],
     mutationFn: async (data) => {
