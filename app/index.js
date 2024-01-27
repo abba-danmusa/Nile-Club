@@ -5,6 +5,6 @@ export default function App() {
   if (isLoggedIn) {
     return <Redirect href='/home' />
   } else {
-    return <Redirect href='/signin' />
+    return <Redirect href='/welcome' />
   }
 }

@@ -1,87 +1,148 @@
-import {Input, Text, Button}  from '@rneui/themed'
-import { Link } from 'expo-router'
-import { useAuthStore } from '../../hooks/stores/useAuthStore'
+import React, { useState, useRef }  from 'react'
+import { View, ScrollView, StyleSheet, Dimensions} from 'react-native'
+import EmailForm from "../../components/signup/EmailForm"
+import VerifyEmailForm from '../../components/signup/VerifyEmailForm'
 import { useSignup } from '../../hooks/queries/useAuthentication'
-import Toast from '../../utils/toast'
+import { useAuthStore } from '../../hooks/stores/useAuthStore'
+import Loader from '../../components/Loader'
+import { router } from "expo-router"
+import PasswordForm from '../../components/signup/PasswordForm'
 
-export default function Signup() {
-  const {
-    firstName,
-    lastName,
-    email,
-    password,
-    department,
-    year,
-    confirmPassword,
-    setEmail,
-    setPassword,
-    setDepartment,
-    setYear,
-    setFirstName,
-    setLastName,
-    setConfirmPassword
-  } = useAuthStore()
+const SCREEN_WIDTH = Dimensions.get('window').width
+const EMAIL_FORM_INDEX = 0
+const VERIFICATION_CODE_FORM_INDEX = 1
 
-  const { mutate: signup } = useSignup()
+export default function signup() {
+  
+  const [slideIndex, setSlideIndex] = useState(0)
+  const scrollViewRef = useRef(null)
 
-  const signinScreen = () => {
-    router.back()
+  const { mutate: sendVerificationCode, isPending, isSuccess} = useSignup()
+  const { email } = useAuthStore()
+
+  
+  const submitEmailForm = () => {
+    sendVerificationCode(
+      { email },
+      { 
+        onSuccess: () => scrollToScreen(VERIFICATION_CODE_FORM_INDEX), 
+        onError: error => routeUserToAppropriateScreen(error)
+      }
+    )
   }
 
-  const submit = () => {
-    if (password !== confirmPassword) {
-      Toast('Passwords do not match')
-      return
+  const routeUserToAppropriateScreen = error => {
+    if (error.response?.status === 409) {
+      scrollToScreen(VERIFICATION_CODE_FORM_INDEX)
     }
-    signup({
-      email,
-      password,
-      confirmPassword,
-      firstName,
-      lastName,
-      department,
-      year
+    if (error.response?.status === 408) {
+      router.push('/signin')
+    }
+  }
+
+  const scrollToScreen = (index) => {
+    const nextPageOffset = index * SCREEN_WIDTH
+    scrollViewRef.current.scrollTo({ x: nextPageOffset, animated: true })
+    setSlideIndex(index)
+  }
+
+  const SLIDES = [
+    {
+      renderSlide: () => <EmailForm handleSubmit={submitEmailForm} />
+    },
+    {
+      renderSlide: () =>
+        <VerifyEmailForm
+          scrollToScreen={scrollToScreen}
+        />
+    },
+    {
+      renderSlide: () => <PasswordForm/>
+    }
+  ]
+
+  const CurrentSlideIndicator = () => {
+    return (
+      <View style={styles.indicatorContainer}>
+        {
+          SLIDES.map((slide, index) =>
+            <View
+              key={index}
+              style={[
+                styles.indicatorStyle,
+                {
+                  opacity: (slideIndex == index) ||
+                    (slideIndex > index) ? 1 : .4
+                }
+              ]}
+            />
+          )
+        }
+      </View>
+    )
+  }
+
+  const renderDifferentSlides = () => {
+    return SLIDES.map((slide, index) => {
+      return (
+        <View
+          key={index}
+          style={styles.slideContainer}
+        >
+          { slide.renderSlide() }
+          {/* { slide.submitButton() } */}
+        </View>
+      )
     })
   }
 
   return (
     <>
-      <Text>Sign up</Text>
-      <Input
-        label={'First Name'}
-        value={firstName}
-        onChangeText={setFirstName}
-      />
-      <Input
-        label={'Last Name'}
-        value={lastName}
-        onChangeText={setLastName}
-      />
-      <Input
-        label={'Email'}
-        value={email}
-        onChangeText={setEmail}
-      />
-      <Input
-        label={'Department'}
-        value={department}
-        onChangeText={setDepartment}
-      />
-      <Input
-        label={'Year'}
-        value={year}
-        onChangeText={setYear}
-      />
-      <Input label={'password'} value={password} onChangeText={setPassword} />
-      <Input
-        label={'confirm password'}
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
-      />
-      <Button title={'Submit'} onPress={submit} />
-      <Link href="/signin">Sign up</Link>
-      <Link href={'/resend'}>Resend Verification Code</Link>
+      
+      {isPending && <Loader />}
+      {CurrentSlideIndicator()}
 
+      <ScrollView
+        ref={scrollViewRef}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        scrollEventThrottle={16}
+        scrollEnabled={true}
+        onScroll={({ nativeEvent }) => {
+          const offsetX = nativeEvent.contentOffset.x
+          const index = Math.floor(offsetX / SCREEN_WIDTH)
+          setSlideIndex(index)
+        }}
+      >
+        {renderDifferentSlides()}
+      </ScrollView>
     </>
   )
 }
+
+const styles = StyleSheet.create({
+  indicatorContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 10,
+    position: 'absolute',
+    top: 50,
+    zIndex: 1,
+    alignSelf: 'center'
+  },
+  indicatorStyle: {
+    width: 27,
+    height: 6,
+    backgroundColor: '#365486',
+    borderRadius: 10
+  },
+  slideContainer: {
+    flex: 1,
+    width: SCREEN_WIDTH,
+    height: '100%',
+    backgroundColor: '#FFF',
+    // justifyContent: 'center',
+    // alignItems: 'center'
+  },
+})

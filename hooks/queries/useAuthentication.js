@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "../../utils/axios";
 import Toast from '../../utils/toast'
 import { router } from "expo-router";
+import { useAuthStore } from "../stores/useAuthStore";
 
 export const useSignup = () => {
   return useMutation({
@@ -11,15 +12,15 @@ export const useSignup = () => {
     },
     onSuccess: (data) => {
       Toast(data.data?.message)
-      router.replace('/verification')
     },
     onError: (error) => {
       Toast(error.response?.data.message || error.message) // prioritize server error message, then client error message
-    }
+    },
   })
 }
 
 export const useSignin = () => {
+  const { setInitialState } = useAuthStore()
   return useMutation({
     mutationKey: ["signin"],
     mutationFn: async (data) => {
@@ -49,26 +50,21 @@ export const useVerification = () => {
     },
     onSuccess: data => {
       Toast(data.data?.message)
-      router.replace('/signin')
     },
     onError: error => {
       Toast(error.response?.data.message || error.message) // prioritize server error message, then client error message
-      if (error?.response?.status === 401) { // verification code expires
-        router.back()
-      }
-    }
+    },
   })
 }
 
 export const useResend = () => {
   return useMutation({
     mutationKey: ["resend"],
-    mutationFn: async (data) => {
+    mutationFn: async data => {
       return await axios.post("/authentication/resend", data)
     },
     onSuccess: data => {
       Toast(data.data?.message)
-      router.push('/verification')
     },
     onError: (error) => {
       Toast(error.response?.data.message || error.message) // prioritize server error message, then client error message
