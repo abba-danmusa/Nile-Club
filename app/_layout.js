@@ -13,7 +13,7 @@ const queryClient = new QueryClient()
 export default function Layout() {
   
   const [fontsLoaded] = useFonts({
-    'Poppins-Black': require('../assets/fonts/Poppins-Black.ttf'),
+    'Poppins': require('../assets/fonts/Poppins-Regular.ttf'),
   })
 
   const onLayoutRootView = useCallback(async () => {

@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, ScrollView, Dimensions} from 'react-native'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 
-const Slides = ({ renderSlide, data }) => {
+const Slides = ({ renderSlide, renderSlides, data, scrollEnabled = true}) => {
 
   const [slideIndex, setSlideIndex] = useState(0)
 
@@ -28,6 +28,19 @@ const Slides = ({ renderSlide, data }) => {
     )
   }
 
+  const renderDifferentSlides = () => {
+    return data.map((slide, index) => {
+      return (
+        <View
+          key={index}
+          style={styles.slideContainer}
+        >
+          {slide.renderSlide()}
+        </View>
+      )
+    })
+  }
+
   return (
     <>
       { CurrentSlideIndicator() }
@@ -38,13 +51,15 @@ const Slides = ({ renderSlide, data }) => {
         showsHorizontalScrollIndicator={false}
         scrollEventThrottle={16}
         style={{ flex: 1 }}
+        scrollEnabled={scrollEnabled}
         onScroll={({ nativeEvent }) => {
           const offsetX = nativeEvent.contentOffset.x
           const index = Math.floor(offsetX / SCREEN_WIDTH)
           setSlideIndex(index)
         }}
       >
-        { renderSlide && renderSlide() }
+        {renderSlide && renderSlide()}
+        {renderSlides && renderDifferentSlides()}
       </ScrollView>
     </>
   )
@@ -65,7 +80,15 @@ const styles = StyleSheet.create({
     height: 6,
     backgroundColor: '#365486',
     borderRadius: 10
-  }
+  },
+  slideContainer: {
+    flex: 1,
+    width: SCREEN_WIDTH,
+    height: '100%',
+    backgroundColor: '#FFF',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
 })
 
 export default Slides

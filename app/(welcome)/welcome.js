@@ -3,7 +3,7 @@ import { StatusBar, StyleSheet, Text, View, Dimensions} from 'react-native'
 import Slides from '../../components/Slides'
 import { router } from 'expo-router'
 import { Image } from 'expo-image'
-import { Button } from '@rneui/themed'
+import BottomButton from '../../components/BottomButton'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 
@@ -59,11 +59,7 @@ const renderSlide = () => {
         />
         <Text style={styles.titleStyle}>{slide.title}</Text>
         <Text style={styles.descriptionStyle}>{slide.description}</Text>
-        <Button
-          title={'Get Started'}
-          containerStyle={styles.buttonContainer}
-          onPress={navigateToSignup}
-        />
+        <BottomButton title={'Get Started'} handlePress={navigateToSignup} />
       </View>
     )
   })
@@ -91,20 +87,12 @@ const styles = StyleSheet.create({
     marginBottom: 10
   },
   descriptionStyle: {
-    fontFamily: 'Poppins-Black',
+    fontFamily: 'Poppins',
     fontSize: 20,
     fontWeight: 'bold',
     color: '#252427',
     textAlign: 'center',
     width: 285
-  },
-  buttonContainer: {
-    marginTop: 89,
-    position: 'absolute',
-    bottom: 20,
-    width: SCREEN_WIDTH - 30,
-    borderRadius: 10,
-    backgroundColor: '#365486'
   },
 })
 
