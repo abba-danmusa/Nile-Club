@@ -54,28 +54,37 @@ export default function VerifyEmailForm({ scrollToScreen }) {
           setCodeConfirmed(false)
         }} />
       }
-      { (verifyingCode || resendingCode) && <Loader/> }
+
+      {(verifyingCode || resendingCode) && <Loader />}
+      
       <BackButton handlePress={ () => scrollToScreen(EMAIL_FORM_INDEX) } />
 
       <View style={styles.container}>
         <Text style={styles.title}>Verify your email</Text>
+
         <Text
           style={styles.description}
         >
           Please check your inbox and tap the link in the email we just sent to:
         </Text>
-        <CodeForm/>
+
+        <CodeForm />
+        
         <View style={styles.emailContainer}>
           <Text style={styles.email}>{email}</Text>
           <TouchableOpacity onPress={resendCode}>
             <Text style={styles.resendText}>Resend</Text>
           </TouchableOpacity>
         </View>
+
         <View style={styles.resendTimerContainer}>
           <Feather name="alert-circle" size={15} color="black" />
-          <Text style={styles.resendTimerText}>You can request a new code after</Text>
+          <Text style={styles.resendTimerText}>
+            You can request a new code after
+          </Text>
           <Text style={styles.resendTimer}>1:00</Text>
         </View>
+        
         <BottomButton
           title={'Confirm Verification'}
           handlePress={submitVerificationCode}
@@ -117,9 +126,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Poppins',
     fontWeight: '500',
+    width: 300,
   },
   resendText: {
-    // alignSelf: 'flex-end',
     color: '#365486',
     fontFamily: 'Poppins',
     fontWeight: '600',

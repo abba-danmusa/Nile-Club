@@ -1,11 +1,11 @@
 import { View, Text, StyleSheet, ActivityIndicator, KeyboardAvoidingView, Dimensions} from 'react-native'
 import React from 'react'
 import { Link } from 'expo-router'
-import { Input } from '@rneui/themed'
 import { Image } from 'expo-image'
 import { useAuthStore } from '../../hooks/stores/useAuthStore'
 import BottomButton from '../../components/BottomButton'
 import toast from '../../utils/toast'
+import CustomizedInput from '../CustomizedInput'
 
 const SLIDE_DATA = {
   color: '#F2F9FB',
@@ -42,7 +42,7 @@ const EmailVerificationForm = ({handleSubmit}) => {
       />
       <Text style={styles.title}>{SLIDE_DATA.title}</Text>
       <Text style={styles.description}>{SLIDE_DATA.description}</Text>
-      <Input
+      <CustomizedInput
         focusable={true}
         placeholder='Enter your email address'
         label='Email'
