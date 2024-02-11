@@ -16,9 +16,8 @@ const BottomButton = ({ title, handlePress, color = '#fff', backgroundColor = '#
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    marginTop: 89,
     position: 'absolute',
-    bottom: 25,
+    bottom: 40,
     width: SCREEN_WIDTH - 30,
     borderRadius: 12,
     alignSelf: 'center'

@@ -6,9 +6,11 @@ const initialState = {
   lastName: '',
   password: '',
   confirmPassword: '',
+  code: '',
+  faculty: '',
   department: '',
   year: '',
-  code: '',
+  matriculationNumber: '',
 }
 
 export const useAuthStore = create(set => ({
@@ -18,6 +20,8 @@ export const useAuthStore = create(set => ({
   setConfirmPassword: confirmPassword => set({ confirmPassword }),
   setDepartment: department => set({ department }),
   setYear: year => set({ year }),
+  setFaculty: faculty => set({ faculty }),
+  matriculationNumber: matriculationNumber => set({ matriculationNumber }),
   setCode: code => set({ code }),
   setFirstName: firstName => set({ firstName }),
   setLastName: lastName => set({ lastName }),

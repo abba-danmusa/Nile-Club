@@ -7,6 +7,7 @@ import { useAuthStore } from '../../hooks/stores/useAuthStore'
 import Loader from '../../components/Loader'
 import { router } from "expo-router"
 import PasswordForm from '../../components/signup/PasswordForm'
+import AboutForm from '../../components/signup/AboutForm'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 const EMAIL_FORM_INDEX = 0
@@ -17,7 +18,7 @@ export default function signup() {
   const [slideIndex, setSlideIndex] = useState(0)
   const scrollViewRef = useRef(null)
 
-  const { mutate: sendVerificationCode, isPending, isSuccess} = useSignup()
+  const { mutate: sendVerificationCode, isPending} = useSignup()
   const { email } = useAuthStore()
 
   
@@ -51,13 +52,13 @@ export default function signup() {
       renderSlide: () => <EmailForm handleSubmit={submitEmailForm} />
     },
     {
-      renderSlide: () =>
-        <VerifyEmailForm
-          scrollToScreen={scrollToScreen}
-        />
+      renderSlide: () => <VerifyEmailForm scrollToScreen={scrollToScreen}/>
     },
     {
-      renderSlide: () => <PasswordForm/>
+      renderSlide: () => <PasswordForm scrollToScreen={scrollToScreen} />
+    },
+    {
+      renderSlide: () => <AboutForm scrollToScreen={scrollToScreen} />
     }
   ]
 
@@ -142,7 +143,5 @@ const styles = StyleSheet.create({
     width: SCREEN_WIDTH,
     height: '100%',
     backgroundColor: '#FFF',
-    // justifyContent: 'center',
-    // alignItems: 'center'
   },
 })

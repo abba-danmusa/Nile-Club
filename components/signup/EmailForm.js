@@ -28,8 +28,7 @@ const EmailVerificationForm = ({handleSubmit}) => {
   }
 
   return (
-    <KeyboardAvoidingView
-      behavior = { Platform.OS === 'ios' ? 'padding' : 'height' }
+    <View
       style={styles.container}
     >
       <Image
@@ -63,7 +62,7 @@ const EmailVerificationForm = ({handleSubmit}) => {
         <Link href={'/signin'} style={styles.signupLink}>Sign in</Link>
       </View>
       <BottomButton title={'Proceed'} handlePress={sendVerificationCode} />
-    </KeyboardAvoidingView>
+    </View>
   )
 }
 
@@ -86,7 +85,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 30,
-    fontWeight: 400,
+    fontWeight: '400',
     color: '#000',
     fontFamily: 'Poppins',
     paddingTop: 20,

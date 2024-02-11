@@ -1,6 +1,5 @@
 import React, {useState} from 'react'
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity} from 'react-native'
-const DEVICE_WIDTH = Dimensions.get('window').width
 const { useAuthStore } = require('../../hooks/stores/useAuthStore')
 import { Feather } from '@expo/vector-icons'
 import BottomButton from '../BottomButton'
@@ -12,10 +11,11 @@ import {
 } from '../../hooks/queries/useAuthentication'
 import Loader from '../Loader'
 import toast from '../../utils/toast'
-import CodeConfirmed from './CodeConfirmed'
+import SuccessScreen from '../SuccessScreen'
 
 const EMAIL_FORM_INDEX = 0
 const PASSWORD_FORM_INDEX = 2
+const DEVICE_WIDTH = Dimensions.get('window').width
 
 export default function VerifyEmailForm({ scrollToScreen }) {
   
@@ -49,10 +49,15 @@ export default function VerifyEmailForm({ scrollToScreen }) {
   return (
     <>
       {
-        codeConfirmed && <CodeConfirmed scrollToPasswordForm={() => {
-          scrollToScreen(PASSWORD_FORM_INDEX)
-          setCodeConfirmed(false)
-        }} />
+        codeConfirmed &&
+        <SuccessScreen
+          title="Email Verified"
+          description='Your email has been verified'
+          scrollToPasswordForm={() => {
+            scrollToScreen(PASSWORD_FORM_INDEX)
+            setCodeConfirmed(false)
+          }}
+        />
       }
 
       {(verifyingCode || resendingCode) && <Loader />}
@@ -98,7 +103,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    width: DEVICE_WIDTH,
+    width: '100%',
     height: '100%',
     marginTop: 100,
     paddingLeft: 20,
@@ -126,7 +131,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Poppins',
     fontWeight: '500',
-    width: 300,
+    width: DEVICE_WIDTH / 1.5,
   },
   resendText: {
     color: '#365486',
