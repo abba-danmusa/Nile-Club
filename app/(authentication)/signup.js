@@ -12,6 +12,7 @@ import AboutForm from '../../components/signup/AboutForm'
 const SCREEN_WIDTH = Dimensions.get('window').width
 const EMAIL_FORM_INDEX = 0
 const VERIFICATION_CODE_FORM_INDEX = 1
+const PASSWORD_FORM_INDEX = 2
 
 export default function signup() {
   
@@ -38,6 +39,9 @@ export default function signup() {
     }
     if (error.response?.status === 408) {
       router.push('/signin')
+    }
+    if (error.response?.status === 403) {
+      scrollToScreen(PASSWORD_FORM_INDEX)
     }
   }
 
@@ -109,7 +113,7 @@ export default function signup() {
         pagingEnabled
         showsHorizontalScrollIndicator={false}
         scrollEventThrottle={16}
-        scrollEnabled={true}
+        scrollEnabled={false}
         onScroll={({ nativeEvent }) => {
           const offsetX = nativeEvent.contentOffset.x
           const index = Math.floor(offsetX / SCREEN_WIDTH)

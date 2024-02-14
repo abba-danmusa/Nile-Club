@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Dimensions, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, Dimensions, ScrollView, Platform } from 'react-native'
 import React, {useState} from 'react'
 import CustomizedInput from '../CustomizedInput'
 import Dropdown from '../Dropdown'
@@ -101,8 +101,8 @@ export default function AboutForm({scrollToScreen}) {
   const INPUTS = [
     {
       label: 'First Name',
-      value: firstName ,
-      onChangeText: setFirstName ,
+      value: firstName,
+      onChangeText: setFirstName,
       placeholder: 'Enter your first name',
       autoCapitalize: 'words',
       autoComplete: 'name',
@@ -113,15 +113,15 @@ export default function AboutForm({scrollToScreen}) {
       onChangeText: setLastName,
       placeholder: 'Enter your last name',
       autoCapitalize: 'words',
-      autoComplete: 'family-name'
+      autoComplete: 'family-name',
     },
     {
       label: 'Matriculation Number',
-      value: matriculationNumber ,
-      onChangeText: setMatriculationNumber ,
+      value: matriculationNumber,
+      onChangeText: setMatriculationNumber,
       placeholder: 'Enter your matriculation number',
-      autoCapitalize: 'numbers',
-      autoComplete: 'numbers',
+      autoCapitalize: 'none',
+      autoComplete: 'off',
     }
   ]
 

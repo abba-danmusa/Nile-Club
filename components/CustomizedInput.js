@@ -10,7 +10,7 @@ export default function CustomizedInput({...props}) {
     onChangeText,
     label,
     placeholder,
-    autoComplete = 'password',
+    autoComplete = 'off',
     autoCapitalize = 'none',
     returnKeyType = 'next',
     autoCorrect = false,

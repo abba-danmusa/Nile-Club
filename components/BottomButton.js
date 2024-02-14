@@ -3,14 +3,19 @@ import { Button } from '@rneui/themed'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 
-const BottomButton = ({ title, handlePress, color = '#fff', backgroundColor = '#365486'}) => {
+const BottomButton = ({
+  title,
+  handlePress = () => {},
+  color = '#fff',
+  backgroundColor = '#365486'
+}) => {
 
   return <Button
     title={title}
     titleStyle={{ color }}
     containerStyle={styles.buttonContainer}
     buttonStyle={{backgroundColor}}
-    onPress={handlePress}
+    onPress={() => handlePress()}
   />
 }
 

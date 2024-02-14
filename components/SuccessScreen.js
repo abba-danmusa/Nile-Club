@@ -11,7 +11,7 @@ const SuccessScreen = ({ ...props }) => {
     title,
     description,
     image = require('../assets/signup/check_mark.png'),
-    scrollToScreen
+    scrollToScreen = () => {}
   } = props
 
   return (
@@ -26,7 +26,7 @@ const SuccessScreen = ({ ...props }) => {
         title={'Proceed'}
         backgroundColor={'#fff'}
         color={'#365486'}
-        handlePress={scrollToScreen}
+        handlePress={() => scrollToScreen(PASSWORD_FORM_INDEX)}
       />
     </View>
   )

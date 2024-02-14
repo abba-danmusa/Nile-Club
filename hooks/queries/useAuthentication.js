@@ -57,7 +57,6 @@ export const useSignin = () => {
       return await axios.post("/authentication/signin", data)
     },
     onSuccess: data => {
-      Toast(data.data?.message)
       router.replace('/home')
     },
     onError: (error) => {
