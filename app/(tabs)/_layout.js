@@ -29,15 +29,15 @@ const TabLayout = () => {
         }}
       />
       <Tabs.Screen
-        name="chats"
-        options={{
-          tabBarIcon: ({ color, focused }) => <Ionicons name="chatbubble-ellipses-outline" size={focused ? 30 : 24} color={color} />
-        }}
-      />
-      <Tabs.Screen
         name="discover"
         options={{
           tabBarIcon: ({ color, focused }) => <AntDesign name="search1" size={focused ? 30 : 24} color={color} />
+        }}
+      />
+      <Tabs.Screen
+        name="chats"
+        options={{
+          tabBarIcon: ({ color, focused }) => <Ionicons name="chatbubble-ellipses-outline" size={focused ? 30 : 24} color={color} />
         }}
       />
       <Tabs.Screen

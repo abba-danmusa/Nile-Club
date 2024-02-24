@@ -59,8 +59,8 @@ const styles = StyleSheet.create({
   container: {
     width: 300,
     flex: 1,
-    height: 300,
-    width: 225,
+    width: 200,
+    height: 225,
     // backgroundColor: '#F2F9FB',
     backgroundColor: '#fff',
     marginHorizontal: 6,
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     ...SHADOW
   },
   image: {
-    height: 150,
+    height: 100,
     width: '100%',
     resizeMode: 'cover',
     borderTopRightRadius: 12,

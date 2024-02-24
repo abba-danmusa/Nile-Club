@@ -6,7 +6,7 @@ const CustomizedButton = ({
   title,
   handlePress = () => { },
   width = '100%',
-  height = 30,
+  height = 24,
   color = '#fff',
   backgroundColor = '#365486',
   position
@@ -20,27 +20,43 @@ const CustomizedButton = ({
         styles.buttonContainer,
         {
           width,
-          height,
           position,
-          bottom: position == 'absolute' ? 8 : '',
+          bottom: position == 'absolute' ? 5 : '',
         }
       ]
     }
-    buttonStyle={{ backgroundColor }}
+    buttonStyle={
+      [
+        styles.buttonStyle,
+        {
+          width,
+          backgroundColor,
+          height
+        }
+      ]
+    }
     onPress={() => handlePress()}
   />
 }
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    ...SHADOW,
     borderRadius: 12,
     alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 'fit-content',
+    width: 'fit-content',
+  },
+  buttonStyle: {
+    ...SHADOW,
+    borderRadius: 12,
   },
   titleStyle: {
     fontSize: 10,
     fontFamily: 'Poppins',
     fontWeight: '500',
+    lineHeight: 10,
   }
 })
 
