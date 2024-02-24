@@ -19,6 +19,36 @@ export const useSignup = () => {
   })
 }
 
+export const useAbout = () => {
+  return useMutation({
+    mutationKey: ["about"],
+    mutationFn: async (data) => {
+      return await axios.post("/authentication/about", data)
+    },
+    onSuccess: (data) => {
+      Toast(data.data?.message)
+    },
+    onError: (error) => {
+      Toast(error.response?.data.message || error.message) // prioritize server error message, then client error message
+    },
+  })
+}
+
+export const useCreatePassword = () => {
+  return useMutation({
+    mutationKey: ["create-password"],
+    mutationFn: async (data) => {
+      return await axios.post("/authentication/password/create", data)
+    },
+    onSuccess: (data) => {
+      Toast(data.data?.message)
+    },
+    onError: (error) => {
+      Toast(error.response?.data.message || error.message) // prioritize server error message, then client error message
+    },
+  })
+}
+
 export const useSignin = () => {
   const { setInitialState } = useAuthStore()
   return useMutation({
@@ -27,7 +57,6 @@ export const useSignin = () => {
       return await axios.post("/authentication/signin", data)
     },
     onSuccess: data => {
-      Toast(data.data?.message)
       router.replace('/home')
     },
     onError: (error) => {

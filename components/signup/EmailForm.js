@@ -1,11 +1,11 @@
 import { View, Text, StyleSheet, ActivityIndicator, KeyboardAvoidingView, Dimensions} from 'react-native'
 import React from 'react'
 import { Link } from 'expo-router'
-import { Input } from '@rneui/themed'
 import { Image } from 'expo-image'
 import { useAuthStore } from '../../hooks/stores/useAuthStore'
 import BottomButton from '../../components/BottomButton'
 import toast from '../../utils/toast'
+import CustomizedInput from '../CustomizedInput'
 
 const SLIDE_DATA = {
   color: '#F2F9FB',
@@ -28,8 +28,7 @@ const EmailVerificationForm = ({handleSubmit}) => {
   }
 
   return (
-    <KeyboardAvoidingView
-      behavior = { Platform.OS === 'ios' ? 'padding' : 'height' }
+    <View
       style={styles.container}
     >
       <Image
@@ -42,7 +41,7 @@ const EmailVerificationForm = ({handleSubmit}) => {
       />
       <Text style={styles.title}>{SLIDE_DATA.title}</Text>
       <Text style={styles.description}>{SLIDE_DATA.description}</Text>
-      <Input
+      <CustomizedInput
         focusable={true}
         placeholder='Enter your email address'
         label='Email'
@@ -63,7 +62,7 @@ const EmailVerificationForm = ({handleSubmit}) => {
         <Link href={'/signin'} style={styles.signupLink}>Sign in</Link>
       </View>
       <BottomButton title={'Proceed'} handlePress={sendVerificationCode} />
-    </KeyboardAvoidingView>
+    </View>
   )
 }
 
@@ -86,7 +85,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 30,
-    fontWeight: 400,
+    fontWeight: '400',
     color: '#000',
     fontFamily: 'Poppins',
     paddingTop: 20,

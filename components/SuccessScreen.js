@@ -1,25 +1,32 @@
 import { View, Text, StyleSheet, Dimensions } from 'react-native'
 import React from 'react'
-import BottomButton from '../BottomButton'
+import BottomButton from './BottomButton'
 import { Image } from 'expo-image'
 
 const SCREEN_WIDTH = Dimensions.get('window').width
 const PASSWORD_FORM_INDEX = 2
 
-const CodeConfirmed = ({ scrollToPasswordForm }) => {
+const SuccessScreen = ({ ...props }) => {
+  const {
+    title,
+    description,
+    image = require('../assets/signup/check_mark.png'),
+    scrollToScreen = () => {}
+  } = props
+
   return (
     <View style={styles.container}>
       <Image
-        source={require('../../assets/signup/check_mark.png')}
+        source={image}
         style={styles.image}
       />
-      <Text style={styles.title}>Email Verified</Text>
-      <Text style={styles.description}>Your email has been verified</Text>
+      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.description}>{description}</Text>
       <BottomButton
         title={'Proceed'}
         backgroundColor={'#fff'}
         color={'#365486'}
-        handlePress={scrollToPasswordForm}
+        handlePress={() => scrollToScreen(PASSWORD_FORM_INDEX)}
       />
     </View>
   )
@@ -53,4 +60,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default CodeConfirmed
+export default SuccessScreen
