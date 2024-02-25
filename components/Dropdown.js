@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     // width: DEVICE_WIDTH - 80,
   },
   selectListDropdown: {
-    backgroundColor: '#365486',
+    backgroundColor: '#CBE8EF',
     marginBottom: 20,
     // marginTop: 10,
     // padding: 10

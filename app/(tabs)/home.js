@@ -1,8 +1,9 @@
 import { StatusBar } from 'expo-status-bar'
-import { FlatList, SectionList, StyleSheet, Text, View } from 'react-native'
+import { FlatList, SectionList, StyleSheet, Text, View, ScrollView} from 'react-native'
 import SectionTitle from '../../components/SectionTitle';
-import { SafeAreaView } from 'react-native-safe-area-context'
 import EventItems from '../../components/home/EventItems'
+import FeaturedItems from '../../components/home/FeaturedItems'
+import NewsAnnouncement from '../../components/home/NewsAnnouncement'
 
 export default function Home() {
   
@@ -10,7 +11,7 @@ export default function Home() {
     {
       name: 'Drama Club',
       image: require('../../assets/home/drama-club.png'),
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt',
       members: [
         {
           image: require('../../assets/home/club-member-1.png'),
@@ -26,7 +27,7 @@ export default function Home() {
     {
       name: 'Model UN Club',
       image: require('../../assets/home/model-un-club.png'),
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt',
       members: [
         {
           image: require('../../assets/home/club-member-1.png'),
@@ -42,7 +43,23 @@ export default function Home() {
     {
       name: 'Music Club',
       image: require('../../assets/home/drama-club.png'),
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis',
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt',
+      members: [
+        {
+          image: require('../../assets/home/club-member-1.png'),
+        },
+        {
+          image: require('../../assets/home/club-member-2.png'),
+        },
+        {
+          image: require('../../assets/home/club-member-3.png'),
+        }
+      ]
+    },
+    {
+      name: 'Social Club',
+      image: require('../../assets/home/drama-club.png'),
+      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt',
       members: [
         {
           image: require('../../assets/home/club-member-1.png'),
@@ -57,9 +74,59 @@ export default function Home() {
     }
   ]
 
+  const FEATURED_CLUBS = [
+    {
+      image: require('../../assets/home/model-un-club.png'),
+      name: 'Model UN Club',
+      description: 'Model UN is a club that mimics the United Nations Conferences in New York.',
+      ratings: '5.0',
+    },
+    {
+      image: require('../../assets/home/model-un-club.png'),
+      name: 'Model UN Club',
+      description: 'Model UN is a club that mimics the United Nations Conferences in New York.',
+      ratings: '3.9',
+    },
+    {
+      image: require('../../assets/home/model-un-club.png'),
+      name: 'Model UN Club',
+      description: 'Model UN is a club that mimics the United Nations Conferences in New York.',
+      ratings: '4.5',
+    },
+    {
+      image: require('../../assets/home/model-un-club.png'),
+      name: 'Model UN Club',
+      description: 'Model UN is a club that mimics the United Nations Conferences in New York.',
+      ratings: '2.9',
+    }
+  ]
+
+  const NEWS_ANNOUNCEMENTS = [
+    {
+      image: require('../../assets/home/model-un-club-1.png'),
+      title: 'Model UN Club',
+      description: 'Model UN announces a new president and new cabinet members for the model UN secretariat. The new appointees will be announced in our upcoming orientation',
+    },
+    {
+      image: require('../../assets/home/photography-club.png'),
+      title: 'Model UN Club',
+      description: 'Model UN announces a new president and new cabinet members for the model UN secretariat. The new appointees will be announced in our upcoming orientation',
+    },
+    {
+      image: require('../../assets/home/model-un-club-1.png'),
+      title: 'Model UN Club',
+      description: 'Model UN announces a new president and new cabinet members for the model UN secretariat. The new appointees will be announced in our upcoming orientation',
+    },
+    {
+      image: require('../../assets/home/photography-club.png'),
+      title: 'Model UN Club',
+      description: 'Model UN announces a new president and new cabinet members for the model UN secretariat. The new appointees will be announced in our upcoming orientation',
+    }
+  ]
+
   return (
-    <View style={{backgroundColor: '#EBEEF3', marginTop: 0}}>
-      <SectionTitle title={'Events Happening in School'} buttonTitle={'View All'} action={() => console.log('Clubs')} />
+    <ScrollView style={{ backgroundColor: '#EBEEF3',  }}>
+      <SectionTitle title={'Events Happening in School'} action={() => {}}/>
       <FlatList
         showsHorizontalScrollIndicator={false}
         containerStyle={styles.mainContainer}
@@ -68,15 +135,33 @@ export default function Home() {
         horizontal
         keyExtractor={item => item.name}
         renderItem={({ item }) => <EventItems item={item}/>}
-      />        
-    </View>
+      />
+      <SectionTitle title={'Featured Clubs'} action={() => { }} />
+      <FlatList
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        containerStyle={styles.mainContainer}
+        style={styles.main}
+        data={FEATURED_CLUBS}
+        keyExtractor={(_, index) => index}
+        renderItem={({ item }) => <FeaturedItems item={item} /> }
+      />
+      <SectionTitle title={'News and Announcement'} action={() => { }} />
+      <FlatList
+        // containerStyle={styles.mainContainer}
+        style={styles.main}
+        data={NEWS_ANNOUNCEMENTS}
+        keyExtractor={(_, index) => index}
+        renderItem={({ item }) => <NewsAnnouncement item={item} /> } 
+      />
+    </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
   mainContainer: {
     // backgroundColor: '#EBEEF3',
-    paddingHorizontal: 50,
+    // paddingHorizontal: 50,
     alignContent: 'center',
     marginBottom: 10,
   },

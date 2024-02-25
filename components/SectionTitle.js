@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity} from 'react-native'
 import React from 'react'
 
-export default function SectionTitle({title, buttonTitle, action}) {
+export default function SectionTitle({title, buttonTitle = 'View All', action}) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{title}</Text>
