@@ -20,12 +20,12 @@ export default function NewsAnnouncement({ item }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: 357,
+    // width: 357,
     height: 347,
     // backgroundColor: '#F2F9FB',
     backgroundColor: '#fff',
     marginBottom: 10,
-    marginHorizontal: 20,
+    // paddingHorizontal: 10,
     borderRadius: 12,
     alignSelf: 'center',
     ...SHADOW
@@ -60,13 +60,13 @@ const styles = StyleSheet.create({
     fontWeight: '400',
   },
   title: {
-    fontSize: 12,
+    fontSize: 18,
     color: '#365486',
     fontFamily: 'Poppins',
     fontWeight: '500',
   },
   description: {
-    fontSize: 10,
+    fontSize: 14,
     fontFamily: 'Poppins',
     fontWeight: '400',
     marginBottom: 5,
