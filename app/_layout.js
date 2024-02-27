@@ -31,9 +31,10 @@ export default function Layout() {
       <QueryClientProvider client={queryClient}>
         <RootSiblingParent>
           <Stack screenOptions={{headerShown: false}}>
-            <Stack.Screen name='(tabs)' />
             <Stack.Screen name='(welcome)' />
             <Stack.Screen name='(authentication)'/>
+            <Stack.Screen name='(tabs)' />
+            <Stack.Screen name='(club)' />
           </Stack>
         </RootSiblingParent>
       </QueryClientProvider>

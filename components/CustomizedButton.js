@@ -7,20 +7,25 @@ const CustomizedButton = ({
   handlePress = () => { },
   width = '100%',
   height = 24,
+  lineHeight = 10,
   color = '#fff',
+  alignSelf = 'center',
+  justifyContent = 'center',
   backgroundColor = '#365486',
   position
 }) => {
 
   return <Button
     title={title}
-    titleStyle={ [styles.titleStyle, { color }] }
+    titleStyle={ [styles.titleStyle, { color, lineHeight }] }
     containerStyle={
       [
         styles.buttonContainer,
         {
           width,
           position,
+          alignSelf,
+          justifyContent,
           bottom: position == 'absolute' ? 5 : '',
         }
       ]
@@ -42,8 +47,6 @@ const CustomizedButton = ({
 const styles = StyleSheet.create({
   buttonContainer: {
     borderRadius: 12,
-    alignSelf: 'center',
-    justifyContent: 'center',
     alignItems: 'center',
     height: 'fit-content',
     width: 'fit-content',
@@ -56,7 +59,6 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontFamily: 'Poppins',
     fontWeight: '500',
-    lineHeight: 10,
   }
 })
 

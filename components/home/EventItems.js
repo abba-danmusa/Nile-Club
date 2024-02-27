@@ -3,6 +3,7 @@ import { Image } from 'expo-image'
 import CustomizedButton from '../CustomizedButton'
 import { SHADOW } from '../../utils/styles'
 import { AntDesign } from '@expo/vector-icons'
+import { router } from "expo-router"
 
 export default function EventItems({item}) {
   return (
@@ -17,7 +18,7 @@ export default function EventItems({item}) {
       </View>
       <CustomizedButton
         title={'View Details'}
-        handlePress={() => console.log('View Details')}
+        handlePress={() => router.push('/club')}
         width='95%'
         position={'absolute'}
       />
