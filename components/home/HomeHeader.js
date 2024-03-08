@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   avatar: {
     width: 45,
     height: 45,
-    resizeMode: 'contain',
+    contentFit: 'contain',
     borderRadius: 100,
   },
   avatarText: {

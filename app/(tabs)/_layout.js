@@ -1,8 +1,7 @@
 import React from 'react'
-import {StyleSheet} from 'react-native'
-import { Tabs, Stack} from 'expo-router'
+import {StyleSheet, View, Text} from 'react-native'
+import { Tabs } from 'expo-router'
 import { AntDesign, Ionicons, Feather } from '@expo/vector-icons'
-import { BlurView } from 'expo-blur'
 import HomeHeader from '../../components/home/HomeHeader'
 
 const TabLayout = () => {
@@ -12,12 +11,9 @@ const TabLayout = () => {
         screenOptions={{
           headerShown: false,
           tabBarShowLabel: false,
-          tabBarStyle: { position: 'absolute' },
-          tabBarActiveTintColor: '#365486',
+          tabBarStyle: styles.tabBarStyle,
+          tabBarActiveTintColor: '#fff',
           tabBarInactiveTintColor: 'black',
-          tabBarBackground: () => (
-            <BlurView tint="light" intensity={50} style={[StyleSheet.absoluteFill, {backgroundColor: 'transparent'}]} />
-          ),
         }}
       >
         <Tabs.Screen
@@ -25,32 +21,75 @@ const TabLayout = () => {
           options={{
             headerShown: true,
             header: () => <HomeHeader />,
-            tabBarIcon: ({ color, focused }) => <AntDesign name="home" size={focused ? 30 : 24} color={color} />,
+            tabBarIcon: ({ color, focused }) =>
+              <TabIcon
+                name={'home'}
+                color={color}
+                focused={focused}
+                icon={ size =>
+                  <AntDesign name='home' size={size} color={color} />
+                }
+              />,
           }}
         />
         <Tabs.Screen
           name="discover"
           options={{
-            tabBarIcon: ({ color, focused }) => <AntDesign name="search1" size={focused ? 30 : 24} color={color} />
+            tabBarIcon: ({ color, focused }) =>
+              <TabIcon
+                name={'discover'}
+                color={color}
+                focused={focused}
+                icon={ size =>
+                  <AntDesign name="search1" size={size} color={color} />
+                }
+              />
           }}
         />
         <Tabs.Screen
           name="chats"
           options={{
-            tabBarIcon: ({ color, focused }) => <Ionicons name="chatbubble-ellipses-outline" size={focused ? 30 : 24} color={color} />
+            tabBarIcon: ({ color, focused }) =>
+              <TabIcon
+                name={'chats'}
+                color={color}
+                focused={focused}
+                icon={ size =>
+                  <Ionicons
+                    name="chatbubble-ellipses-outline"
+                    size={size}
+                    color={color}
+                  />
+                }
+              />
           }}
         />
         <Tabs.Screen
           name="clubs"
-          options={{
-            tabBarIcon: ({ color, focused }) => <Feather name="shield" size={focused ? 30 : 24} color={color} />,
-            
+          options={{           
+            tabBarIcon: ({ color, focused }) =>
+              <TabIcon
+                name={'clubs'}
+                color={color}
+                focused={focused}
+                icon={ size =>
+                  <Feather name="shield" size={size} color={color} />
+                }
+              />
           }}
         />
         <Tabs.Screen
           name="profile"
           options={{
-            tabBarIcon: ({ color, focused }) => <AntDesign name="user" size={focused ? 30 : 24} color={color} />
+            tabBarIcon: ({ color, focused }) =>
+              <TabIcon
+                name={'profile'}
+                color={color}
+                focused={focused}
+                icon={ size => 
+                  <AntDesign name="user" size={size} color={color} />
+                }
+              />
           }}
         />
       </Tabs>
@@ -58,6 +97,47 @@ const TabLayout = () => {
   )
 }
 
-const styles = StyleSheet.create({})
+function TabIcon({name, focused, color, icon = () => {}, iconSize = 24}) {
+  return (
+    <View style={[styles.icon, focused ? { ...styles.activeTab } : {}]}>
+      { icon(iconSize) }
+      <Text
+        style={[styles.tabBarText, { color: focused ? color : '#252427' }]}
+      >
+        {name}
+      </Text>
+    </View>
+  )
+}
+
+const styles = StyleSheet.create({
+  tabBarStyle: {
+    position: 'absolute',
+    backgroundColor: '#CFD7E2',
+    height: 76,
+    elevation: 1000,
+    borderTopRightRadius: 40,
+    borderTopLeftRadius: 40,
+    paddingBottom: 20,
+    paddingTop: 10,
+  },
+  activeTab: {
+    backgroundColor: '#365486',
+    borderRadius: 50 / 2,
+    elevation: 1000,
+  },
+  tabBarText: {
+    fontSize: 9,
+    fontFamily: 'Poppins',
+    fontWeight: '400',
+    textTransform: 'capitalize',
+  },
+  icon: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 50,
+    height: 50,
+  },
+})
 
 export default TabLayout

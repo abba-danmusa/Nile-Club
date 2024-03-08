@@ -4,25 +4,28 @@ import CustomizedButton from '../CustomizedButton'
 import { SHADOW } from '../../utils/styles'
 import { AntDesign } from '@expo/vector-icons'
 import { router } from "expo-router"
+import SectionTitle from '../SectionTitle'
 
-export default function EventItems({item}) {
+export default function EventItems({ item }) {
   return (
-    <View style={styles.container}>
-      <Image source={item.image} style={styles.image} />
-      <View style={styles.content}>
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>{item.name}</Text>
-          <MembersAvatar item={item}/>           
+    <>
+      <View key={ item._id } style={styles.container}>
+        <Image source={item.image} style={styles.image} />
+        <View style={styles.content}>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>{item.name}</Text>
+            <MembersAvatar item={item}/>           
+          </View>
+          <Text style={styles.description}>{item.description}</Text>
         </View>
-        <Text style={styles.description}>{item.description}</Text>
+        <CustomizedButton
+          title={'View Details'}
+          handlePress={() => router.push('/club')}
+          width='95%'
+          position={'absolute'}
+        />
       </View>
-      <CustomizedButton
-        title={'View Details'}
-        handlePress={() => router.push('/club')}
-        width='95%'
-        position={'absolute'}
-      />
-    </View>
+    </>
   )
 }
 
@@ -72,7 +75,7 @@ const styles = StyleSheet.create({
   image: {
     height: 100,
     width: '100%',
-    resizeMode: 'cover',
+    contentFit: 'cover',
     borderTopRightRadius: 12,
     borderTopLeftRadius: 12
   },
@@ -95,7 +98,7 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     borderRadius: 100,
-    resizeMode: 'cover',
+    contentFit: 'cover',
   },
   plusContainer: {
     width: 20,

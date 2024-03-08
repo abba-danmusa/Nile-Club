@@ -105,7 +105,7 @@ export default function AboutForm({scrollToScreen}) {
       onChangeText: setFirstName,
       placeholder: 'Enter your first name',
       autoCapitalize: 'words',
-      autoComplete: 'name',
+      autoComplete: 'given-name',
     },
     {
       label: 'Last Name',
@@ -121,7 +121,7 @@ export default function AboutForm({scrollToScreen}) {
       onChangeText: setMatriculationNumber,
       placeholder: 'Enter your matriculation number',
       autoCapitalize: 'none',
-      autoComplete: 'off',
+      autoComplete: 'one-time-code',
     }
   ]
 

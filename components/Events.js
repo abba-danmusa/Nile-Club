@@ -72,6 +72,7 @@ const DATA = [
 export default function Events({
   data = [...DATA],
 }) {
+  console.log(data[0])
   return (
     <FlatList
       showsHorizontalScrollIndicator={false}
