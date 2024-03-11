@@ -1,8 +1,9 @@
 import React from 'react'
-import {StyleSheet, View, Text} from 'react-native'
+import {StyleSheet, View, Text, TouchableOpacity} from 'react-native'
 import { Tabs } from 'expo-router'
 import { AntDesign, Ionicons, Feather } from '@expo/vector-icons'
 import HomeHeader from '../../components/home/HomeHeader'
+import { SHADOW } from '../../utils/styles'
 
 const TabLayout = () => {
   return (
@@ -20,6 +21,8 @@ const TabLayout = () => {
           name="home"
           options={{
             headerShown: true,
+            headerStyle: styles.container,
+            headerTransparent: true,
             header: () => <HomeHeader />,
             tabBarIcon: ({ color, focused }) =>
               <TabIcon
@@ -137,6 +140,27 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: 50,
     height: 50,
+  },
+  container: {
+    // backgroundColor: 'tomato',
+    backgroundColor: '#EBEEF3',
+    // height: 50,
+    // paddingHorizontal: 10,
+    // paddingVertical: 5,
+    // display: 'flex',
+    // flexDirection: 'row',
+    // alignItems: 'center',
+    ...SHADOW
+  },
+  notificationContainer: {
+    backgroundColor: '#365486',
+    width: 40,
+    height: 40,
+    marginRight: 10,
+    borderRadius: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...SHADOW
   },
 })
 

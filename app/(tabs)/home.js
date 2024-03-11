@@ -1,9 +1,9 @@
-import { View, Text, SectionList, FlatList, ScrollView, ActivityIndicator, AppState} from 'react-native'
-import React, {useRef, useState, useEffect} from 'react'
+import { View, FlatList, Animated, StatusBar} from 'react-native'
 import SectionTitle from '../../components/SectionTitle'
 import EventItems from '../../components/home/EventItems'
 import FeaturedItems from '../../components/home/FeaturedItems'
 import NewsAnnouncement from '../../components/home/NewsAnnouncement'
+import { useAnimationStore } from '../../hooks/stores/useAnimationStore'
 
 export default function home() {
   
@@ -164,24 +164,38 @@ export default function home() {
       ]
     }
   ]
-  
+
+  const { translateY } = useAnimationStore()
+
   return (
-    <SectionList
-      sections={SECTIONS}
-      keyExtractor={({ _id }) => _id}
-      ItemSeparatorComponent={() => <View style={{ height: 5 }} />}
-      ListFooterComponent={() => <View style={{ height: 150 }} />}
-      renderSectionHeader={({ section }) =>
-        <>
-          <SectionTitle key={section.title} title={section.title} />
-          {section.renderItems(section.data)}
-        </>
-      }
-      renderItem={({ item, section }) => {
-        if (!section.horizontal) {
-          section.renderItems(section.data)
+    <View style={{ flex: 1 }}>
+      <StatusBar backgroundColor={'#EBEEF3'} barStyle="dark-content"/>
+      <Animated.SectionList
+        scrollEventThrottle={16}
+        sections={SECTIONS}
+        alwaysBounceHorizontal
+        alwaysBounceVertical
+        bounces
+        keyExtractor={({ _id }) => _id}
+        SectionListHeader={() => <View style={{ height: 150 }} />}
+        ItemSeparatorComponent={() => <View style={{ height: 5 }} />}
+        ListFooterComponent={() => <View style={{ height: 150 }} />}
+        style={{paddingTop: 100}}
+        onScroll={(e) => {
+          translateY.setValue(e.nativeEvent.contentOffset.y)
+        }}
+        renderSectionHeader={({ section }) =>
+          <>
+            <SectionTitle key={section.title} title={section.title} />
+            {section.renderItems(section.data)}
+          </>
         }
-      }}
-    />
+        renderItem={({ item, section }) => {
+          if (!section.horizontal) {
+            section.renderItems(section.data)
+          }
+        }}
+      />
+    </View>
   )
 }
