@@ -35,6 +35,7 @@ export default function Layout() {
             <Stack.Screen name='(authentication)'/>
             <Stack.Screen name='(tabs)' />
             <Stack.Screen name='(club)' />
+            <Stack.Screen name='profile' />
           </Stack>
         </RootSiblingParent>
       </QueryClientProvider>

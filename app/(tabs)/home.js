@@ -1,9 +1,10 @@
-import { View, FlatList, Animated, StatusBar} from 'react-native'
+import { View, FlatList, Animated, StatusBar } from 'react-native'
 import SectionTitle from '../../components/SectionTitle'
 import EventItems from '../../components/home/EventItems'
 import FeaturedItems from '../../components/home/FeaturedItems'
 import NewsAnnouncement from '../../components/home/NewsAnnouncement'
 import { useAnimationStore } from '../../hooks/stores/useAnimationStore'
+import AddEventButton from '../../components/AddEventButton'
 
 export default function home() {
   
@@ -169,7 +170,8 @@ export default function home() {
 
   return (
     <View style={{ flex: 1 }}>
-      <StatusBar backgroundColor={'#EBEEF3'} barStyle="dark-content"/>
+      <StatusBar backgroundColor={'#EBEEF3'} barStyle="dark-content" />
+      <AddEventButton/>
       <Animated.SectionList
         scrollEventThrottle={16}
         sections={SECTIONS}

@@ -1,7 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { Image } from 'expo-image'
 import { SHADOW } from '../../utils/styles'
-import { AntDesign } from '@expo/vector-icons'
 
 export default function NewsAnnouncement({ item }) {
   return (

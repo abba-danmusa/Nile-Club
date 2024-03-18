@@ -54,7 +54,6 @@ const HomeHeader = () => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#EBEEF3',
-    height: 50,
     paddingHorizontal: 10,
     paddingVertical: 5,
     display: 'flex',

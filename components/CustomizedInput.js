@@ -15,7 +15,7 @@ export default function CustomizedInput({...props}) {
     returnKeyType = 'next',
     autoCorrect = false,
     keyboardType = 'default',
-    rightIcon,
+    rightIcon = () => {},
     showPassword,
   } = props
 
@@ -37,6 +37,7 @@ export default function CustomizedInput({...props}) {
       inputContainerStyle={styles.inputContainer}
       rightIcon={rightIcon}
       secureTextEntry={showPassword}
+      cursorColor='#263B5E'
     />
   )
 }
