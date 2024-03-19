@@ -3,6 +3,8 @@ import axios from "../../utils/axios";
 import Toast from '../../utils/toast'
 import { router } from "expo-router";
 import { useAuthStore } from "../stores/useAuthStore";
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
 
 export const useSignup = () => {
   return useMutation({
@@ -26,6 +28,8 @@ export const useAbout = () => {
       return await axios.post("/authentication/about", data)
     },
     onSuccess: (data) => {
+      const { setInitialState } = useAuthStore()
+      setInitialState()
       Toast(data.data?.message)
     },
     onError: (error) => {
@@ -57,6 +61,8 @@ export const useSignin = () => {
       return await axios.post("/authentication/signin", data)
     },
     onSuccess: data => {
+      setInitialState()
+      const token = AsyncStorage.setItem('token', data.data?.token)
       router.replace('/home')
     },
     onError: (error) => {

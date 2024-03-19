@@ -1,13 +1,13 @@
 import React, {useEffect} from 'react'
 import { BlurView } from 'expo-blur'
-import { View, Image, Easing, StyleSheet, Dimensions, Animated } from 'react-native'
+import { Text, Easing, StyleSheet, Dimensions, Animated } from 'react-native'
 
 const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj['
 
 const DEVICE_WIDTH = Dimensions.get('window').width
 
-export default function Loader() {
+export default function Loader({message = ''}) {
   const spinValue = new Animated.Value(0)
 
   useEffect(() => {
@@ -27,17 +27,11 @@ export default function Loader() {
   })
 
   return (
-    <BlurView
-      intensity={0}
-      style={styles.container}
-    >
-        <Animated.View
-          // source={require('../assets/loading-spin.png')}
-          style={[styles.image, { transform: [{ rotate: spin }] }]}
-          // PlaceholderContent={blurhash}
-        />
-      {/* <View style={styles.imageContainer}>
-      </View> */}
+    <BlurView intensity={0} style={styles.container}>
+      <Animated.View
+        style={[styles.image, { transform: [{ rotate: spin }] }]}
+      />
+      <Text style={styles.message}>{ message }</Text>   
     </BlurView>
   )
 }
@@ -68,5 +62,12 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 10,
     backgroundColor: '#365486',
+  },
+  message: {
+    fontFamily: 'Poppins',
+    fontWeight: '600',
+    fontSize: 20,
+    color: '#365486',
+    marginTop: 5
   }
 })

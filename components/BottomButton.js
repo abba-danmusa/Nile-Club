@@ -15,7 +15,7 @@ const BottomButton = ({
     titleStyle={{ color }}
     containerStyle={styles.buttonContainer}
     buttonStyle={{backgroundColor}}
-    onPress={() => handlePress()}
+    onPress={handlePress}
   />
 }
 

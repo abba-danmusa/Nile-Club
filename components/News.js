@@ -25,12 +25,12 @@ const NEWS_ANNOUNCEMENTS = [
     description: 'Model UN announces a new president and new cabinet members for the model UN secretariat. The new appointees will be announced in our upcoming orientation',
   }
 ]
-export default function News({data = [...NEWS_ANNOUNCEMENTS]}) {
+export default function News({item = [...NEWS_ANNOUNCEMENTS]}) {
   return (
     <FlatList
       containerStyle={styles.mainContainer}
       style={{ paddingBottom: 60 }}
-      data={data}
+      data={item}
       keyExtractor={(_, index) => index}
       renderItem={({ item }) => <NewsAnnouncement item={item} />}
     />

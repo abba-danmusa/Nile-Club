@@ -1,14 +1,14 @@
 import { Image } from 'expo-image'
 import React from 'react'
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity} from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, SectionList, FlatList} from 'react-native'
 import Avatar from '../../components/Avatar'
 import { SHADOW } from '../../utils/styles'
 import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons'
 import CustomizedButton from '../../components/CustomizedButton'
 import { Divider } from '@rneui/themed'
 import SectionTitle from '../../components/SectionTitle'
-import Events from '../../components/Events'
-import News from '../../components/News'
+import FeaturedItems from '../../components/home/FeaturedItems'
+import NewsAnnouncement from '../../components/home/NewsAnnouncement'
 
 const EXECUTIVES = [
   {
@@ -39,16 +39,122 @@ const EXECUTIVES = [
 ]
 
 export default function club() {
+
+  const SECTIONS = [
+    {
+      title: 'Featured Clubs',
+      horizontal: true,
+      renderItems: data => <FlatList
+        horizontal
+        data={data}
+        renderItem={({ item }) => <FeaturedItems item={item} />}
+        showsHorizontalScrollIndicator={false}
+      />,
+      data: [
+        {
+          _id: '42425',
+          image: require('../../assets/home/model-un-club.png'),
+          name: 'Model UN Club',
+          description: 'Model UN is a club that mimics the United Nations Conferences in New York.',
+          ratings: '5.0',
+        },
+        {
+          _id: '42425351414',
+          image: require('../../assets/home/model-un-club.png'),
+          name: 'Model UN Club',
+          description: 'Model UN is a club that mimics the United Nations Conferences in New York.',
+          ratings: '3.9',
+        },
+        {
+          _id: '4242535342',
+          image: require('../../assets/home/model-un-club.png'),
+          name: 'Model UN Club',
+          description: 'Model UN is a club that mimics the United Nations Conferences in New York.',
+          ratings: '4.5',
+        },
+        {
+          _id: '424253534',
+          image: require('../../assets/home/model-un-club.png'),
+          name: 'Model UN Club',
+          description: 'Model UN is a club that mimics the United Nations Conferences in New York.',
+          ratings: '2.9',
+        }
+      ]
+    },
+    {
+      title: 'News and Announcement',
+      horizontal: false,
+      renderItems: data => <FlatList
+        data={data}
+        renderItem={({ item }) => <NewsAnnouncement item={item} />}
+        showsHorizontalScrollIndicator={false}
+      />,
+      data: [
+        {
+          _id: '12425',
+          image: require('../../assets/home/model-un-club-1.png'),
+          name: 'Model UN Club',
+          description: 'Model UN announces a new president and new cabinet members for the model UN secretariat. The new appointees will be announced in our upcoming orientation',
+        },
+        {
+          _id: '14235',
+          image: require('../../assets/home/photography-club.png'),
+          name: 'Photography Club',
+          description: 'Model UN announces a new president and new cabinet members for the model UN secretariat. The new appointees will be announced in our upcoming orientation',
+        },
+        {
+          _id: '24235',
+          image: require('../../assets/home/model-un-club-1.png'),
+          name: 'Model UN Club',
+          description: 'Model UN announces a new president and new cabinet members for the model UN secretariat. The new appointees will be announced in our upcoming orientation',
+        },
+        {
+          _id: '14231',
+          image: require('../../assets/home/photography-club.png'),
+          name: 'Photography Club',
+          description: 'Model UN announces a new president and new cabinet members for the model UN secretariat. The new appointees will be announced in our upcoming orientation',
+        }
+      ]
+    }
+  ]
+
   return (
-    <ScrollView style={styles.container}>
-      <Hero/>
+    <View style={styles.container}>
+      <SectionList
+        sections={SECTIONS}
+        keyExtractor={({ _id }) => _id}
+        ItemSeparatorComponent={() => <View style={{ height: 5 }} />}
+        ListFooterComponent={() => <View style={{ height: 150 }} />}
+        ListHeaderComponent={() => <ListHeaderComponent />}
+        renderSectionHeader={({ section }) =>
+          <>
+            <SectionTitle key={section.title} title={section.title} />
+            {section.renderItems(section.data)}
+          </>
+        }
+        renderItem={({ item, section }) => {
+          if (!section.horizontal) {
+            section.renderItems(section.data)
+          }
+        }}
+      />
+    </View>
+  )
+}
+
+const ListHeaderComponent = () => {
+  return (
+    <>
+      <Hero />
       <Header />
       <Ratings />
       <View style={styles.descriptionContainer}>
-        <Text style={styles.description}>Model UN is a club that mimics the United Nations Conferences in New York. The purpose of this club is to create a generation of leaders that chose dialogue and peaceful resolutions over violence and bloodshed. Join us in making world a better place today!</Text>
+        <Text style={styles.description}>
+          Model UN is a club that mimics the United Nations Conferences in New York. The purpose of this club is to create a generation of leaders that chose dialogue and peaceful resolutions over violence and bloodshed. Join us in making world a better place today!
+        </Text>
       </View>
       <Divider color='#58719B' />
-      <Stats/>
+      <Stats />
       <Divider color='#58719B' />
       <Text style={styles.sectionTitle}>Our Executives</Text>
       <View style={styles.executiveContainer}>
@@ -63,11 +169,7 @@ export default function club() {
           ))
         }
       </View>
-      <SectionTitle title={'Past Events'} />
-      <Events />
-      <SectionTitle title={'News and Announcements Feed'} />
-      <News/>
-    </ScrollView>
+    </>
   )
 }
 
@@ -155,6 +257,7 @@ const Executive = ({ name, image, position }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    overflow: 'scroll',
     backgroundColor: '#EBEEF3',
   },
   hero: {
@@ -164,7 +267,7 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: 298,
-    resizeMode: 'cover',
+    contentFit: 'cover',
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
   },

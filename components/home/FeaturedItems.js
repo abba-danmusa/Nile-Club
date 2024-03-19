@@ -5,7 +5,7 @@ import { AntDesign } from '@expo/vector-icons'
 
 export default function FeaturedItems({ item }) {
   return (
-    <View style={styles.container}>
+    <View key={ item._id } style={styles.container}>
       <Image source={item.image} style={styles.image} />
       <View style={styles.content}>
         <View style={styles.titleContainer}>
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
   image: {
     height: 93,
     width: '100%',
-    resizeMode: 'cover',
+    contentFit: 'cover',
     borderTopRightRadius: 12,
     borderTopLeftRadius: 12
   },

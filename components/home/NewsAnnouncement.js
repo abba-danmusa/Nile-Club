@@ -1,11 +1,10 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { Image } from 'expo-image'
 import { SHADOW } from '../../utils/styles'
-import { AntDesign } from '@expo/vector-icons'
 
 export default function NewsAnnouncement({ item }) {
   return (
-    <View style={styles.container}>
+    <View key={item._id} style={styles.container}>
       <Image source={item.image} style={styles.image} />
       <View style={styles.content}>
         <View style={styles.titleContainer}>
@@ -20,22 +19,21 @@ export default function NewsAnnouncement({ item }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // width: 357,
+    width: 347,
     height: 347,
-    // backgroundColor: '#F2F9FB',
     backgroundColor: '#fff',
     marginBottom: 10,
-    // paddingHorizontal: 10,
     borderRadius: 12,
     alignSelf: 'center',
     ...SHADOW
   },
   image: {
     height: 209,
-    width: '100%',
-    resizeMode: 'cover',
+    width: '100',
+    contentFit: 'cover',
     borderTopRightRadius: 12,
-    borderTopLeftRadius: 12
+    borderTopLeftRadius: 12,
+    zIndex: 1000
   },
   content: {
     marginVertical: 5,
