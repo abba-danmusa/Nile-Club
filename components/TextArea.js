@@ -5,11 +5,16 @@ const DEVICE_WIDTH = Dimensions.get('window').width
 export default function TextArea({
   value = '',
   onChangeText = () => { },
-  placeholder = 'Provide a detail description of your club here'
+  placeholder = 'Provide a detail description of your club here',
+  title=''
 }) {
   return (
     <View>
-      <Text style={styles.inputLabel}>Club Description</Text>
+      {
+        title ? 
+          <Text style={styles.inputLabel}>{title}</Text>
+        : null
+      }
       <TextInput
         placeholderTextColor={'grey'}
         placeholder={placeholder}
