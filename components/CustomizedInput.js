@@ -4,20 +4,19 @@ import { Input } from '@rneui/themed'
 
 const DEVICE_WIDTH = Dimensions.get('window').width
 
-export default function CustomizedInput({...props}) {
-  const {
-    value,
-    onChangeText,
-    label,
-    placeholder,
-    autoComplete = 'off',
-    autoCapitalize = 'none',
-    returnKeyType = 'next',
-    autoCorrect = false,
-    keyboardType = 'default',
-    rightIcon = () => {},
-    showPassword,
-  } = props
+export default function CustomizedInput({
+  value = '',
+  onChangeText = () => {},
+  label = '',
+  placeholder = '',
+  autoComplete = 'off',
+  autoCapitalize = 'sentences',
+  returnKeyType = 'next',
+  autoCorrect = false,
+  keyboardType = 'default',
+  rightIcon = () => { },
+  showPassword,
+}) {
 
   return (
     <Input
