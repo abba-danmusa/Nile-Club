@@ -5,8 +5,11 @@ import FeaturedItems from '../../components/home/FeaturedItems'
 import NewsAnnouncement from '../../components/home/NewsAnnouncement'
 import { useAnimationStore } from '../../hooks/stores/useAnimationStore'
 import AddEventButton from '../../components/AddEventButton'
+import { useFeeds } from '../../hooks/queries/useFeed'
 
 export default function home() {
+  
+  const { data: feeds, isSuccess } = useFeeds()
   
   const SECTIONS = [
     {
@@ -137,6 +140,7 @@ export default function home() {
         renderItem={({ item }) => <NewsAnnouncement item={item} />}
         showsHorizontalScrollIndicator={false}
       />,
+      // data: [feeds?.data]
       data: [
         {
           _id: '12425',

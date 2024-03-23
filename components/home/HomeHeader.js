@@ -5,7 +5,7 @@ import { SHADOW } from "../../utils/styles"
 import { Image } from 'expo-image'
 import { router } from "expo-router"
 import { useAnimationStore } from '../../hooks/stores/useAnimationStore'
-import getStatusBarHeight from '../../utils/StatusBarHeight'
+import { getStatusBarHeight } from '../../utils/methods'
 
 const HomeHeader = () => {
   

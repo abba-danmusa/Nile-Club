@@ -6,11 +6,20 @@ import TimePicker from '../../components/TimePicker'
 import { SHADOW } from '../../utils/styles'
 import { Entypo } from '@expo/vector-icons'
 import BottomButton from '../../components/BottomButton'
-import { useNewEventStore } from '../../hooks/stores/useNewEventStore'
+import { useEventStore } from '../../hooks/stores/useEventStore'
 
-const DEVICE_WIDTH = Dimensions.get('window').width
-const CATEGORIES = ['Event', 'Party', 'Conference', 'Workshop', 'Other', 'Conferences', 'Workshops', 'Others']
 const ASSETS_UPLOAD_SCREEN = 1
+const DEVICE_WIDTH = Dimensions.get('window').width
+const CATEGORIES = [
+  'Event',
+  'Party',
+  'Conference',
+  'Workshop',
+  'Other',
+  'Conferences',
+  'Workshops',
+  'Others'
+]
 
 const NewEventForm = ({ scrollToScreen = () => { } }) => {
 
@@ -25,11 +34,9 @@ const NewEventForm = ({ scrollToScreen = () => { } }) => {
     description,
     setTitle,
     setDescription,
-    category
-  } = useNewEventStore()
+  } = useEventStore()
 
   const submitEventForm = () => {
-    console.log(title, date, description, startTime, endTime)
     scrollToScreen(ASSETS_UPLOAD_SCREEN)
   }
 
@@ -68,8 +75,8 @@ const NewEventForm = ({ scrollToScreen = () => { } }) => {
         <ScrollView
           horizontal
           scrollEnabled={true}
-          showsHorizontalScrollIndicator={false}
           scrollToOverflowEnabled={true}
+          showsHorizontalScrollIndicator={false}
           contentContainerStyle={styles.categoryContainer}
         >
           {
@@ -86,7 +93,7 @@ const NewEventForm = ({ scrollToScreen = () => { } }) => {
 
 const CategoryItem = ({ item }) => {
 
-  const { category, setCategory } = useNewEventStore()
+  const { category, setCategory } = useEventStore()
   return (
     <TouchableOpacity
       key={item}
@@ -163,11 +170,9 @@ const styles = StyleSheet.create({
   },
   categoryMainContainer: {
     height: 100,
-    // padding: 10
   },
   categoryContainer: {
     height: 60,
-    // backgroundColor: 'red',
     padding: 5,
     alignItems: 'center',
     alignContent: 'center',
