@@ -1,7 +1,7 @@
 import React from 'react'
 import { TouchableOpacity, StyleSheet } from 'react-native'
 import { Entypo } from '@expo/vector-icons'
-import getStatusBarHeight from '../utils/StatusBarHeight'
+import { getStatusBarHeight } from '../utils/methods'
 
 const STATUS_BAR_HEIGHT = getStatusBarHeight()
 

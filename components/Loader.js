@@ -67,7 +67,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins',
     fontWeight: '600',
     fontSize: 20,
-    color: '#365486',
-    marginTop: 5
+    color: '#fff',
+    marginTop: 5,
+    // backgroundColor: '#fff',
+    // paddingVertical: 5,
+    // paddingHorizontal: 5,
+    // borderRadius: 10
   }
 })
