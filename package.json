@@ -35,7 +35,10 @@
     "react-native-screens": "~3.22.0",
     "react-native-snap-carousel-new": "^3.9.2",
     "zustand": "^4.4.6",
-    "expo-av": "~13.4.1"
+    "expo-av": "~13.4.1",
+    "@shopify/flash-list": "1.4.3",
+    "expo-dev-client": "~2.4.13",
+    "react-native-pager-view": "6.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
