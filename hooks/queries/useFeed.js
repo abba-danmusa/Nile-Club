@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
+import axios from '../../utils/axios'
 
 export const useFeeds = () => {
   return useQuery({
@@ -6,7 +7,7 @@ export const useFeeds = () => {
     queryFn: async () => {
       return axios.get('/feed')
     },
-    retry: 2
+    retry: true,
   })
 }
 

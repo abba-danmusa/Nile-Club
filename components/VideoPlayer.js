@@ -5,6 +5,7 @@ import { Video, ResizeMode } from 'expo-av';
 export default function VideoPlayer({
   uri = 'https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4'
 }) {
+  
   const video = React.useRef(null)
   const [status, setStatus] = React.useState({})
 
@@ -13,7 +14,7 @@ export default function VideoPlayer({
       <Video
         ref={video}
         style={styles.video}
-        source={{uri}}
+        source={{ uri }}
         useNativeControls
         resizeMode={ResizeMode.CONTAIN}
         isLooping

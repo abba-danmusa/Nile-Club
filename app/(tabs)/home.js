@@ -6,10 +6,14 @@ import NewsAnnouncement from '../../components/home/NewsAnnouncement'
 import { useAnimationStore } from '../../hooks/stores/useAnimationStore'
 import AddEventButton from '../../components/AddEventButton'
 import { useFeeds } from '../../hooks/queries/useFeed'
+import { FlashList } from "@shopify/flash-list"
+import FeedSkeleton from '../../components/FeedSkeleton'
+import FeedItem from '../../components/home/FeedItem'
+import { getStatusBarHeight } from '../../utils/methods'
 
 export default function home() {
   
-  const { data: feeds, isSuccess } = useFeeds()
+  const { data, isSuccess, isPending } = useFeeds()
   
   const SECTIONS = [
     {
@@ -172,36 +176,50 @@ export default function home() {
 
   const { translateY } = useAnimationStore()
 
+  if (isPending) return <FeedSkeleton/>
+
   return (
-    <View style={{ flex: 1 }}>
+    <Animated.View style={{ flex: 1 }}>
       <StatusBar backgroundColor={'#EBEEF3'} barStyle="dark-content" />
       <AddEventButton/>
-      <Animated.SectionList
-        scrollEventThrottle={16}
-        sections={SECTIONS}
-        alwaysBounceHorizontal
-        alwaysBounceVertical
-        bounces
-        keyExtractor={({ _id }) => _id}
-        SectionListHeader={() => <View style={{ height: 150 }} />}
-        ItemSeparatorComponent={() => <View style={{ height: 5 }} />}
-        ListFooterComponent={() => <View style={{ height: 150 }} />}
-        style={{paddingTop: 100}}
+      <FlashList
+        data={data?.data?.feeds}
+        ListEmptyComponent={<FeedSkeleton />}
+        ListHeaderComponent={<View style={{ marginTop: 100 + getStatusBarHeight() * 1.8 }} />}
+        ListFooterComponent={<View style={{paddingBottom: 100}}/>}
+        renderItem={({ item }) => <FeedItem item={item} />}
+        estimatedItemSize={100}
         onScroll={(e) => {
           translateY.setValue(e.nativeEvent.contentOffset.y)
         }}
-        renderSectionHeader={({ section }) =>
-          <>
-            <SectionTitle key={section.title} title={section.title} />
-            {section.renderItems(section.data)}
-          </>
-        }
-        renderItem={({ item, section }) => {
-          if (!section.horizontal) {
-            section.renderItems(section.data)
-          }
-        }}
       />
-    </View>
+    </Animated.View>
   )
 }
+
+{/* <Animated.SectionList
+  scrollEventThrottle={16}
+  sections={SECTIONS}
+  alwaysBounceHorizontal
+  alwaysBounceVertical
+  bounces
+  keyExtractor={({ _id }) => _id}
+  SectionListHeader={() => <View style={{ height: 150 }} />}
+  ItemSeparatorComponent={() => <View style={{ height: 5 }} />}
+  ListFooterComponent={() => <View style={{ height: 150 }} />}
+  style={{ paddingTop: 100 }}
+  onScroll={(e) => {
+    translateY.setValue(e.nativeEvent.contentOffset.y)
+  }}
+  renderSectionHeader={({ section }) =>
+    <>
+      <SectionTitle key={section.title} title={section.title} />
+      {section.renderItems(section.data)}
+    </>
+  }
+  renderItem={({ item, section }) => {
+    if (!section.horizontal) {
+      section.renderItems(section.data)
+    }
+  }}
+/> */}

@@ -67,7 +67,7 @@ const TabLayout = () => {
               />
           }}
         />
-        <Tabs.Screen
+        {/* <Tabs.Screen
           name="clubs"
           options={{           
             tabBarIcon: ({ color, focused }) =>
@@ -80,7 +80,7 @@ const TabLayout = () => {
                 }
               />
           }}
-        />
+        /> */}
         <Tabs.Screen
           name="profile"
           options={{
@@ -117,12 +117,13 @@ const styles = StyleSheet.create({
   tabBarStyle: {
     position: 'absolute',
     backgroundColor: '#CFD7E2',
-    height: 76,
+    // height: 76,
+    height: 66,
     elevation: 1000,
-    borderTopRightRadius: 40,
-    borderTopLeftRadius: 40,
+    borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
     paddingBottom: 20,
-    paddingTop: 10,
+    paddingTop: 20,
   },
   activeTab: {
     backgroundColor: '#365486',
@@ -130,7 +131,7 @@ const styles = StyleSheet.create({
     elevation: 1000,
   },
   tabBarText: {
-    fontSize: 9,
+    fontSize: 10,
     fontFamily: 'Poppins',
     fontWeight: '400',
     textTransform: 'capitalize',
