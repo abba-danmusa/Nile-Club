@@ -189,7 +189,7 @@ export default function home() {
         ItemSeparatorComponent={() => <View style={{ height: 50 }} />}
         ListFooterComponent={<View style={{paddingBottom: 100}}/>}
         renderItem={({ item }) => <FeedItem item={item} />}
-        estimatedItemSize={100}
+        estimatedItemSize={50}
         onScroll={(e) => {
           translateY.setValue(e.nativeEvent.contentOffset.y)
         }}

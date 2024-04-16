@@ -1,7 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native'
-import React, { useState } from 'react'
 import { Image } from 'expo-image'
-import { Image as NativeImage } from 'react-native'
 import { AntDesign, FontAwesome5 } from '@expo/vector-icons'
 import TruncateText from '../../components/TruncateText'
 import ImageCarousel from '../ImageCarousel'
@@ -13,15 +11,14 @@ const DEVICE_WIDTH = Dimensions.get('window').width
 export default function FeedItem({ item }) {
 
   const {
-    assets: { images, videos },
+    assets,
     title,
-    description
+    description,
+    category,
+    startTime: starts,
+    endTime: end,
+    creator
   } = item
-  
-  let assets = [
-    ...(images || []).flatMap(i => i === null ? [] : i),
-    ...(videos || []).flatMap(v => v === null ? [] : v)
-  ]
 
   return (
     <View>
@@ -32,28 +29,26 @@ export default function FeedItem({ item }) {
             renderItem={RenderItem}
             layout='stack'
             itemWidth={DEVICE_WIDTH}
+            itemHeight={500}
           />
-          : <View
-            style={{
-              backgroundColor: 'black',
-              width: DEVICE_WIDTH,
-              height: 400,
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-            <Image
-              source={require('../../assets/icon.png')}
-              style={{
-                width: 150,
-                height: 150,
-                borderRadius: 20  
-              }}
-            />
-          </View>
+          : <View style={styles.noAssetContainer}>
+              <Image
+                source={require('../../assets/icon.png')}
+                style={{
+                  width: 150,
+                  height: 150,
+                  borderRadius: 20  
+                }}
+              />
+            </View>
       }
-      <View style={
-        { justifyContent: 'space-between', flexDirection: 'row'}
-      }>
+
+      <View
+        style={{
+        justifyContent: 'space-between',
+        flexDirection: 'row'
+        }}
+      >
         <View style={{ flexDirection: 'row', marginTop: 5, marginLeft: 10 }}>
           <AirbnbRating size={15} showRating={false} defaultRating={4} />
         </View>
@@ -80,27 +75,39 @@ const RenderItem = ({ item, index }) => {
   const match = item?.secure_url?.match(regex)
   const asset = match[1]
 
-  if (asset === 'image') {
+  if (item?.resource_type === 'image') {
     return (
       <Image
         source={ item?.secure_url }
-        style={[styles.image, {height: item?.height}]}
+        style={[styles.image, { width: '100%', minHeight: 450 }]}
       />
     )
   }
-  if (asset === 'video') {
-    return <VideoPlayer uri={item?.secure_url} />
+  if (item?.resource_type === 'video') {
+    return (
+      <VideoPlayer
+        uri={item?.secure_url}
+        height={450}
+        width={'100%'}
+        backgroundColor='black'
+      />
+    )
   }
 }
 
 const styles = StyleSheet.create({
   image: {
-    width: '100%',
-    minHeight: 400,
-    contentFit: 'cover',
+    contentFit: 'contain',
   },
   contentContainer: {
     marginHorizontal: 10,
     marginTop: 5
+  },
+  noAssetContainer: {
+    backgroundColor: 'black',
+    width: DEVICE_WIDTH,
+    height: 400,
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 })
