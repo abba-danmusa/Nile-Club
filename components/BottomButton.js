@@ -22,7 +22,7 @@ const BottomButton = ({
 const styles = StyleSheet.create({
   buttonContainer: {
     position: 'absolute',
-    bottom: 40,
+    bottom: 20,
     width: SCREEN_WIDTH - 30,
     borderRadius: 12,
     alignSelf: 'center'

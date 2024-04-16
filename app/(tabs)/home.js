@@ -13,8 +13,8 @@ import { getStatusBarHeight } from '../../utils/methods'
 
 export default function home() {
   
-  const { data, isSuccess, isPending } = useFeeds()
-  
+  const { data, isSuccess, isPending, isError, error } = useFeeds()
+
   const SECTIONS = [
     {
       title: 'Events Happening in School',
@@ -186,6 +186,7 @@ export default function home() {
         data={data?.data?.feeds}
         ListEmptyComponent={<FeedSkeleton />}
         ListHeaderComponent={<View style={{ marginTop: 100 + getStatusBarHeight() * 1.8 }} />}
+        ItemSeparatorComponent={() => <View style={{ height: 50 }} />}
         ListFooterComponent={<View style={{paddingBottom: 100}}/>}
         renderItem={({ item }) => <FeedItem item={item} />}
         estimatedItemSize={100}

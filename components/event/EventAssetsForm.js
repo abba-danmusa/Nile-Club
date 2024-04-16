@@ -1,19 +1,76 @@
-import { Text, StyleSheet, Dimensions, View, TouchableOpacity, Image } from 'react-native'
+import { StyleSheet, Dimensions, TouchableOpacity } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import BottomButton from '../../components/BottomButton'
-import { useState } from 'react'
 import ImageCarousel from '../ImageCarousel'
 import { AntDesign } from '@expo/vector-icons'
 import * as ImagePicker from 'expo-image-picker'
 import { SHADOW } from '../../utils/styles'
-import VideoPlayer from '../../components/VideoPlayer'
 import { useEventStore } from '../../hooks/stores/useEventStore'
+import Toast from '../../utils/toast'
+import BackButton from '../../components/BackButton'
+import RenderItem from './RenderItem'
+import { useCreateEvent } from '../../hooks/queries/useEvent'
+import Loader from '../../components/Loader'
 
 const DEVICE_WIDTH = Dimensions.get('window').width
+const EVENT_FORM_SCREEN = 0
 
-export default function EventAssetsForm({ submit }) {
+export default function EventAssetsForm({
+  scrollToScreen = () => { }
+}) {
 
-  const { assets, setAssets } = useEventStore()
+  const {
+    date,
+    startTime,
+    endTime,
+    title,
+    description,
+    setTitle,
+    assets,
+    uploadedAssets,
+    setAssets,
+    category,
+    setInitialState
+  } = useEventStore()
+
+  const { mutate: createEvent, isPending } = useCreateEvent()
+
+  /**
+   * Submits the event creation form.
+   * Creates the event in the database.
+   * Clears the form fields on success.
+   */
+  const submit = async () => {
+    
+    if (!date || !startTime || !endTime || !title || !description) {
+      Toast('Please fill in all the fields')
+      scrollToScreen(EVENT_FORM_SCREEN)
+      return
+    }
+
+    // create the event
+    createEvent(
+      {
+        date,
+        startTime,
+        endTime,
+        title,
+        description,
+        setTitle,
+        category,
+        assets: [...uploadedAssets]
+      },
+      {
+        onSuccess: data => {
+          setInitialState()
+        },
+        onError: error => {
+          console.log(error)
+          Toast(error.message)
+        }
+      }
+    )
+  }
 
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library. now I can have access to all your pictures... Haha, just kidding!
@@ -23,22 +80,40 @@ export default function EventAssetsForm({ submit }) {
       // aspect: [5, 7],
       quality: 1,
     })
+
     if (!result.canceled) {
-      // console.log(result.assets[0])
       setAssets([...assets, result.assets[0]])
+    }
+  }
+
+  const upload = async () => {
+    try {
+      const response = await pickImage()
+    } catch (error) {
+      Toast(error.message)
     }
   }
 
   return (
     <>
+      
+      {isPending ? <Loader message={'Creating Event...'} /> : null}
+      
+      <BackButton
+        handlePress={() => scrollToScreen(EVENT_FORM_SCREEN)}
+        color='#365486'
+        iconColor='#fff'
+      />
       <SafeAreaView style={styles.container}>
-        <Text style={styles.title}>Add Images or Videos for your event</Text>
         <ImageCarousel
           images={assets}
           setImages={setAssets}
-          renderItem={renderItem}
+          keyExtractor={item => item.uri}
+          renderItem={({ item, index }) =>
+            <RenderItem item={item} index={index} />
+          }
         />
-        <TouchableOpacity onPress={pickImage} style={styles.addImageButton}>
+        <TouchableOpacity onPress={upload} style={styles.addImageButton}>
           <AntDesign name="plus" size={24} color="black"/>
         </TouchableOpacity>
         
@@ -46,35 +121,6 @@ export default function EventAssetsForm({ submit }) {
       </SafeAreaView>
     </>
   )
-}
-
-const renderItem = ({ item, index }) => {
-  if (!item.type) {
-    return (
-      <View style={{
-        backgroundColor: '#CBE8EF',
-        borderRadius: 5,
-        height: 450,
-        padding: 50,
-      }}>
-        <Text style={{ fontSize: 30 }}>{item.title}</Text>
-        <Text>{item.text}</Text>
-      </View>
-    )
-  }
-  if (item.type === 'image') {
-    return (
-      <Image
-        source={{ uri: item.uri }}
-        style={styles.image}
-      />
-    )
-  }
-  if (item.type === 'video') {
-    return (
-      <VideoPlayer uri={item.uri} />
-    )
-  }
 }
 
 const styles = StyleSheet.create({
@@ -95,7 +141,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   container: {
-    marginTop: 20,
+    marginTop: 70,
     alignItems: 'center',
     paddingBottom: 120
   },
@@ -137,11 +183,22 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 10,
     bottom: 120,
+    zIndex: 1000,
     ...SHADOW
   },
   image: {
     width: 300,
     height: 450,
     resizeMode: 'contain'
+  },
+  uploadButton: {
+    position: 'absolute',
+    alignSelf: 'center',
+    // width: '100%',
+    bottom: 0,
+    backgroundColor: '#263B5E',
+    padding: 10,
+    borderRadius: 10,
+    ...SHADOW
   }
 })
