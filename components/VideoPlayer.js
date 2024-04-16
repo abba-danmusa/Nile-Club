@@ -3,7 +3,10 @@ import { View, StyleSheet, Button } from 'react-native';
 import { Video, ResizeMode } from 'expo-av';
 
 export default function VideoPlayer({
-  uri = 'https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4'
+  uri = 'https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
+  width = 300,
+  height = 450,
+  backgroundColor = 'inherit'
 }) {
   
   const video = React.useRef(null)
@@ -13,12 +16,12 @@ export default function VideoPlayer({
     <View style={styles.container}>
       <Video
         ref={video}
-        style={styles.video}
         source={{ uri }}
         useNativeControls
         resizeMode={ResizeMode.CONTAIN}
         isLooping
         onPlaybackStatusUpdate={status => setStatus(() => status)}
+        style={[styles.video, { width: width, height: height, backgroundColor: backgroundColor, }]}
       />
       {/* <View style={styles.buttons}>
         <Button
@@ -39,9 +42,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#ecf0f1',
   },
   video: {
-    alignSelf: 'center',
-    width: 300,
-    height: 450,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   buttons: {
     flexDirection: 'row',

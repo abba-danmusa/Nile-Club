@@ -11,11 +11,11 @@ import { useEventStore } from '../../hooks/stores/useEventStore'
 const ASSETS_UPLOAD_SCREEN = 1
 const DEVICE_WIDTH = Dimensions.get('window').width
 const CATEGORIES = [
-  'Event',
-  'Party',
-  'Conference',
-  'Workshop',
-  'Others'
+  {title: 'Event'},
+  {title: 'Party'},
+  {title: 'Conference'},
+  {title: 'Workshop'},
+  {title: 'Others'},
 ]
 
 const NewEventForm = ({ scrollToScreen = () => { } }) => {
@@ -91,34 +91,36 @@ const NewEventForm = ({ scrollToScreen = () => { } }) => {
 const CategoryItem = ({ item }) => {
 
   const { category, setCategory } = useEventStore()
+  let categories = [...category.map(item => item.title)]
+
   return (
     <TouchableOpacity
-      key={item}
+      key={item.title}
       onPress={() => 
         setCategory(
-          category.includes(item) ?
-            category.filter(i => i !== item)
+          categories.includes(item.title) ?
+            category.filter(i => i.title !== item.title)
             : [...category, item]
         )
       }
       style={[
         styles.categoryItemContainer,
-        category.includes(item) ?
+        categories.includes(item.title) ?
           { ...SHADOW } : {}
       ]}
     >
       <Entypo
         name="circle"
         size={10}
-        color={category.includes(item) ? '#00B383' : 'black'}
+        color={categories.includes(item.title) ? '#00B383' : 'black'}
       />
       <Text
         style={[
-          styles.categoryItem, category.includes(item) ?
+          styles.categoryItem, categories.includes(item.title) ?
             { color: '#365486' } : {}]
         }
       >
-        {item}
+        {item.title}
       </Text>
     </TouchableOpacity>
   )

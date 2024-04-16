@@ -11,6 +11,7 @@ import BackButton from '../../components/BackButton'
 import RenderItem from './RenderItem'
 import { useCreateEvent } from '../../hooks/queries/useEvent'
 import Loader from '../../components/Loader'
+import { router } from 'expo-router'
 
 const DEVICE_WIDTH = Dimensions.get('window').width
 const EVENT_FORM_SCREEN = 0
@@ -47,7 +48,6 @@ export default function EventAssetsForm({
       scrollToScreen(EVENT_FORM_SCREEN)
       return
     }
-
     // create the event
     createEvent(
       {
@@ -63,6 +63,7 @@ export default function EventAssetsForm({
       {
         onSuccess: data => {
           setInitialState()
+          router.back()
         },
         onError: error => {
           console.log(error)

@@ -9,42 +9,49 @@ export default function ImageCarousel({
   renderItem = () => { },
   layout = 'stack',
   itemWidth = 300,
+  itemHeight = 1000
 }) {
 
   const carouselRef = useRef(null)
   const [activeSlide, setActiveSlide] = useState(0)
 
   return (
-    <>
+    <View>
       <Carousel
         layout={layout}
         ref={carouselRef}
         data={images}
         sliderWidth={DEVICE_WIDTH}
         itemWidth={itemWidth}
-        itemHeight={1000}
+        itemHeight={itemHeight}
         layoutCardOffset={100}
         renderItem={renderItem}
-        keyExtractor={(item, index) => index}
+        keyExtractor={(_item, index) => index}
         onSnapToItem={index => setActiveSlide(index)}
-        swipeThreshold={30}
+        swipeThreshold={10}
         containerCustomStyle={{
-          // height: 450,
-          borderBottomColor: 'red',
+          borderBottomColor: 'black',
+          backgroundColor: 'black',
           zIndex: 1000
-          // borderBottomWidth: 1
         }}
       />
       {
         images.length > 0 && (
-          <Pagination
-            dotsLength={images.length}
-            activeDotIndex={activeSlide}
-            dotStyle={{ backgroundColor: 'grey' }}
-            containerStyle={{ maxHeight: 65 }}
-          />
+          <View style={{position: 'absolute', bottom: 0, width: '100%'}}>
+            <Pagination
+              dotsLength={images.length}
+              activeDotIndex={activeSlide}
+              dotStyle={{ width: 10, height: 10, }}
+              containerStyle={{ height: 10, backgroundColor: 'transparent', zIndex: 10000 }}
+              dotContainerStyle={{ width: 10, height: 10, borderRadius: 100 }}
+              inactiveDotColor='white'
+              dotColor='grey'
+              carouselRef={carouselRef}
+              tappableDots
+            />
+          </View>
         )
       }
-    </>
+    </View>
   )
 }
