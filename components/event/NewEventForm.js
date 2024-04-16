@@ -15,9 +15,6 @@ const CATEGORIES = [
   'Party',
   'Conference',
   'Workshop',
-  'Other',
-  'Conferences',
-  'Workshops',
   'Others'
 ]
 

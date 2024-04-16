@@ -9,7 +9,13 @@ const initialState = {
   endTime: new Date(),
   title: '',
   description: '',
-  assets: [{ title: 'Add some image(s)', text: 'Tab on the plus button' }],
+  assets: [{
+    title: 'Add some image(s) or video(s)',
+    text: 'Tab on the plus button'
+  }],
+  uploadedAssets: [],
+  images: [],
+  videos: [],
   category: [],
 }
 
@@ -23,8 +29,11 @@ export const useEventStore = create((set) => ({
   setStartTime: (startTime) => set({ startTime }),
   setEndTime: (endTime) => set({ endTime }),
   setTitle: (title) => set({ title }),
-  setAssets: (assets) => set({assets}),
+  setAssets: (assets) => set({ assets }),
+  setUploadedAssets: (uploadedAssets) => set({ uploadedAssets }),
   setDescription: (description) => set({ description }),
   setCategory: (category) => set({ category }),
-  setInitialState: () => set({...initialState})
+  setVideos: (videos) => set({ videos }),
+  setImages: (images) => set({ images }),
+  setInitialState: () => set({...initialState}),
 }));

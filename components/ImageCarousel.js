@@ -9,7 +9,6 @@ export default function ImageCarousel({
   renderItem = () => { },
   layout = 'stack',
   itemWidth = 300,
-  renderEmptyItem
 }) {
 
   const carouselRef = useRef(null)
@@ -23,16 +22,17 @@ export default function ImageCarousel({
         data={images}
         sliderWidth={DEVICE_WIDTH}
         itemWidth={itemWidth}
-        itemHeight={500}
+        itemHeight={1000}
         layoutCardOffset={100}
         renderItem={renderItem}
-        keyExtractor={(item, index) => item._id}
+        keyExtractor={(item, index) => index}
         onSnapToItem={index => setActiveSlide(index)}
         swipeThreshold={30}
         containerCustomStyle={{
-          height: 450,
-          borderBottomColor: 'grey',
-          borderBottomWidth: 1
+          // height: 450,
+          borderBottomColor: 'red',
+          zIndex: 1000
+          // borderBottomWidth: 1
         }}
       />
       {
@@ -41,7 +41,7 @@ export default function ImageCarousel({
             dotsLength={images.length}
             activeDotIndex={activeSlide}
             dotStyle={{ backgroundColor: 'grey' }}
-            containerStyle={{maxHeight: 65}}
+            containerStyle={{ maxHeight: 65 }}
           />
         )
       }
