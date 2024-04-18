@@ -10,6 +10,7 @@ const initialState = {
   title: '',
   description: '',
   assets: [{
+    _id: 1,
     title: 'Add some image(s) or video(s)',
     text: 'Tab on the plus button'
   }],

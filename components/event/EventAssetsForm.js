@@ -82,8 +82,12 @@ export default function EventAssetsForm({
       quality: 1,
     })
 
+    let asset = result.assets[0]
+    asset.upload = false
+
     if (!result.canceled) {
-      setAssets([...assets, result.assets[0]])
+      // set the asset and filter out the asset placeholder
+      setAssets([...assets, asset].reverse())
     }
   }
 

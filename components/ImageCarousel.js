@@ -9,7 +9,8 @@ export default function ImageCarousel({
   renderItem = () => { },
   layout = 'stack',
   itemWidth = 300,
-  itemHeight = 1000
+  itemHeight = 1000,
+  backgroundColor = undefined
 }) {
 
   const carouselRef = useRef(null)
@@ -31,7 +32,7 @@ export default function ImageCarousel({
         swipeThreshold={10}
         containerCustomStyle={{
           borderBottomColor: 'black',
-          backgroundColor: 'black',
+          backgroundColor,
           zIndex: 1000
         }}
       />

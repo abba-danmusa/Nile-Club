@@ -15,7 +15,9 @@ export default function RenderItem({ item, index }) {
 
   const {
     uploadedAssets,
-    setUploadedAssets
+    setUploadedAssets,
+    assets,
+    setAssets
   } = useEventStore()
 
   const uploadAsset = async imageURI => {
@@ -54,9 +56,16 @@ export default function RenderItem({ item, index }) {
   const upload = async () => {
     let asset
     try {
-      setUploaded(true)
+      setAssets([
+        ...assets.filter(i => i.uri !== item.uri),
+        { ...item, uploaded: true }
+      ])
       asset = await uploadAsset(item.uri)
     } catch (error) {
+      setAssets([
+        ...assets.filter(i => i.uri !== item.uri),
+        { ...item, uploaded: false }
+      ])
       return toast(error.message || `Error uploading ${item.type}`)
     }
     setUploadedAssets([...uploadedAssets, asset])
@@ -78,31 +87,27 @@ export default function RenderItem({ item, index }) {
   if (item.type === 'image') {
     return (
       <View>
-        <BlurView
-          intensity={(100 - uploadProgress) / 5}
-          style={{
-          position: 'absolute',
-          width: '100%',
-          height: '100%',
-          zIndex: 1,
-        }} />
-        <Image
-          source={{ uri: item.uri }}
-          style={styles.image}
-        />
-        <LinearProgress
-          variant='determinate'
-          value={uploadProgress / 100}
-          style={styles.linearProgress}
-        />
+        <View style={{position: 'relative'}}>
+          <Image
+            source={{ uri: item.uri }}
+            style={styles.image}
+            placeholder={'contain'}
+          />
+        </View>
+        <View>
+        </View>
+
         {
-          !uploaded ? 
-            <View style={styles.uploadButton}>
-              <TouchableOpacity onPress={upload}>
-                <Text style={{ color: '#fff' }}>{`Upload ${item.type}`}</Text>
-              </TouchableOpacity>
-            </View>
-          : null
+          item.uploaded ?
+            <LinearProgress
+              variant='determinate'
+              value={item.uploaded ? 1 : uploadProgress / 100}
+              style={styles.linearProgress}
+            /> 
+          :    
+            <TouchableOpacity style={styles.uploadButton} onPress={upload}>
+              <Text style={{ color: '#fff', fontFamily: 'Poppins', fontSize: 10, textTransform: 'uppercase' }}>{`Upload ${item.type}`}</Text>
+            </TouchableOpacity>
         }
       </View>
     )
@@ -111,7 +116,7 @@ export default function RenderItem({ item, index }) {
     return (
       <>
         <VideoPlayer uri={item.uri} />
-        <BlurView
+        {/* <BlurView
           intensity={(100 - uploadProgress) / 5}
           style={{
             position: 'absolute',
@@ -119,20 +124,18 @@ export default function RenderItem({ item, index }) {
             height: '100%',
             zIndex: 1,
           }}
-        />
-        <LinearProgress
-          variant='determinate'
-          value={uploadProgress / 100}
-          style={styles.linearProgress}
-        />
+        /> */}
         {
-          !uploaded ?
-            <View style={styles.uploadButton}>
-              <TouchableOpacity onPress={upload}>
-                <Text style={{ color: '#fff' }}>{`Upload ${item.type}`}</Text>
-              </TouchableOpacity>
-            </View>
-            : null
+          item.uploaded ?
+            <LinearProgress
+              variant='determinate'
+              value={item.uploaded ? 1 : uploadProgress / 100}
+              style={styles.linearProgress}
+            />
+          :
+            <TouchableOpacity style={styles.uploadButton} onPress={upload}>
+              <Text style={{ color: '#fff', fontFamily: 'Poppins', fontSize: 10, textTransform: 'uppercase' }}>{`Upload ${item.type}`}</Text>
+            </TouchableOpacity>
         }
       </>
     )
@@ -152,22 +155,25 @@ const styles = StyleSheet.create({
   image: {
     width: 300,
     height: 450,
-    resizeMode: 'contain'
+    resizeMode: 'contain',
+    // position: 'relative'
   },
   uploadButton: {
     ...SHADOW,
     borderRadius: 5,
     position: 'absolute',
-    bottom: '50%',
+    bottom: 0,
+    // height: 30,
     alignSelf: 'center',
+    justifyContent: 'center',
     backgroundColor: '#263B5E',
-    padding: 10,
+    padding: 5,
     zIndex: 2,
   },
   linearProgress: {
     position: 'absolute',
     bottom: 0,
     height: 5,
-    zIndex: 100
+    zIndex: 10000
   }
 })
