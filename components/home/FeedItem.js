@@ -5,6 +5,8 @@ import TruncateText from '../../components/TruncateText'
 import ImageCarousel from '../ImageCarousel'
 import VideoPlayer from '../VideoPlayer'
 import { AirbnbRating } from '@rneui/themed'
+import EventTimeLine from './EventTimeLine'
+import ClubAvatar from './ClubAvatar'
 
 const DEVICE_WIDTH = Dimensions.get('window').width
 
@@ -16,12 +18,13 @@ export default function FeedItem({ item }) {
     description,
     category,
     startTime: starts,
-    endTime: end,
-    creator
+    endTime: ends,
+    club
   } = item
 
   return (
     <View>
+      <ClubAvatar club={club} />
       {
         assets.length > 0 ? 
           <ImageCarousel
@@ -30,6 +33,7 @@ export default function FeedItem({ item }) {
             layout='stack'
             itemWidth={DEVICE_WIDTH}
             itemHeight={500}
+            backgroundColor={'black'}
           />
           : <View style={styles.noAssetContainer}>
               <Image
@@ -64,6 +68,7 @@ export default function FeedItem({ item }) {
       <View style={styles.contentContainer}>
         <Text style={{ marginBottom: 5, fontFamily: 'Poppins', fontSize: 16, fontWeight: '600', }}>{title}</Text>
         <TruncateText text={description} />
+        <EventTimeLine fromDate={starts} toDate={ends}/>
       </View>
     </View>
   )
