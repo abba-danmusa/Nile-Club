@@ -2,11 +2,20 @@ import React from 'react'
 import {View, StyleSheet} from 'react-native'
 import { SearchBar } from '@rneui/themed'
 
-const Search = ({ placeholder, iconRight }) => {
+const Search = ({
+  placeholder = 'Search',
+  iconRight = () => {},
+  value = '',
+  setValue = () => { },
+  showLoading = false
+}) => {
   return (
     <SearchBar
       placeholder={placeholder}
       iconRight={iconRight}
+      showLoading={showLoading}
+      value={value}
+      onChangeText={setValue}
       containerStyle={styles.container}
       inputContainerStyle={styles.inputContainer}
     />

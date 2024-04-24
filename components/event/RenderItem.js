@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
   linearProgress: {
     position: 'absolute',
     bottom: 0,
-    height: 5,
+    height: 10,
     zIndex: 10000
   }
 })

@@ -36,6 +36,7 @@ export default function manage() {
 
   const signout = () => {
     AsyncStorage.removeItem('token')
+    AsyncStorage.removeItem('user')
     router.back()
     router.replace('signin')
   }

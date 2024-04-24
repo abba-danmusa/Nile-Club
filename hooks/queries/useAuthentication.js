@@ -63,6 +63,7 @@ export const useSignin = () => {
     onSuccess: data => {
       setInitialState()
       const token = AsyncStorage.setItem('token', data.data?.token)
+      AsyncStorage.setItem('user', JSON.stringify(data?.data?.user))
       router.replace('/home')
     },
     onError: (error) => {
