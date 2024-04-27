@@ -12,7 +12,7 @@ import { socket } from '../../socket.io/socket'
 export default function Discover() {
   
   const [searchValue, setSearchValue] = useState('')
-  const { data, isPending } = useChats()
+  const { data, isPending, refetch } = useChats()
 
   const queryCache = new QueryCache({
     // onError: error => toast(error.message)
@@ -26,6 +26,10 @@ export default function Discover() {
     //   return {...oldData, data: {...oldData.data, chats: newData } }
     // })
   })
+
+  React.useEffect(() => {
+    refetch()
+  }, [])
 
   return (
     <SafeAreaView>

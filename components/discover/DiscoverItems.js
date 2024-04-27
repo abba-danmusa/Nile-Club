@@ -1,48 +1,40 @@
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
-import { Image } from 'expo-image'
-import { SHADOW } from '../../utils/styles'
+import { Image } from 'expo-image';
+import React from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { AntDesign } from '@expo/vector-icons'
 import { router } from 'expo-router'
-import TruncateText from '../chats/TruncateText'
 
-export default function FeaturedItems({ club }) {
+const DiscoverItems = ({item}) => {
   return (
     <TouchableOpacity
-      onPress={() => router.push(`/club/${club?._id}`)}
-      key={club?._id}
+      onPress={() => router.push('/club')}
+      key={item._id}
       style={styles.container}
     >
-      <Image
-        source={club?.assets?.image?.secure_url}
-        style={styles.image}
-      />
+      <Image source={item.image} style={styles.image} />
       <View style={styles.content}>
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>{ club?.name }</Text>
+          <Text style={styles.title}>{item.name}</Text>
           <View style={styles.ratingsContainer}>
             <AntDesign name="star" size={8} color="#365486" />
-            <View style={{alignItems: 'flex-end', height: 10}}>
-              <Text style={styles.rating}>{ club?.ratings || '5.0' }</Text>
+            <View style={{ alignItems: 'flex-end', height: 10 }}>
+              <Text style={styles.rating}>{item.ratings}</Text>
             </View>
           </View>
         </View>
-        <TruncateText text={club?.description} maxLength={115}/>
+        <Text style={styles.description}>{item.description}</Text>
       </View>
     </TouchableOpacity>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    width: 200,
+    backgroundColor: 'white',
+    width: 170,
     height: 250,
-    // backgroundColor: '#F2F9FB',
-    backgroundColor: '#fff',
-    marginHorizontal: 6,
-    marginBottom: 10,
-    borderRadius: 8,
-    // ...SHADOW
+    borderRadius: 5,
+    marginHorizontal: 5
   },
   image: {
     height: 150,
@@ -85,3 +77,5 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
 })
+
+export default DiscoverItems;

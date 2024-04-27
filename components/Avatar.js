@@ -12,8 +12,9 @@ export default function Avatar({
     <View style={[styles.container, {width, height, borderWidth}]}>
       <Image
         source={image}
+        placeholder={require('../assets/home/avatar.png')}
         contentFit='cover'
-        style={{width: width - 6, height: height - 6}}
+        style={{width: width - 6, height: height - 6, borderRadius: 100}}
       />
     </View>
   )

@@ -53,7 +53,7 @@ export default function App() {
 
     checkLoggedIn();
   }, [])
-  console.log(socket.connected)
+  // console.log(socket.connected)
   const [fontsLoaded] = useFonts({
     'Poppins': require('../assets/fonts/Poppins-Regular.ttf'),
   })
@@ -67,10 +67,9 @@ export default function App() {
     
   }
 
-  socket.on('disconnect', () => console.log('Socket Disconnected'))
-  socket.on('connect', () => socket.emit('join room'))
-
   if (isLoggedIn) {
+    socket.on('disconnect', () => console.log('Socket Disconnected'))
+    socket.on('connect', () => socket.emit('join room'))
     return (
       <SafeAreaView >
         <StatusBar backgroundColor={'#EBEEF3'} barStyle="dark-content" />

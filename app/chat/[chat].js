@@ -6,6 +6,7 @@ import { socket } from '../../socket.io/socket';
 import { useChats } from '../../hooks/queries/useChat';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import toast from '../../utils/toast';
+import { QueryCache } from '@tanstack/react-query'
 
 let User
 
@@ -118,6 +119,11 @@ const QuotedMessage = ({ message, setQuotedMessage}) => {
 }
 
 const Chat = () => {
+  
+  const queryCache = new QueryCache({
+    onError: error => toast(error.message)
+  })
+
   const [messages, setMessages] = React.useState([]);
   const [quotedMessage, setQuotedMessage] = React.useState(null);
 
@@ -132,9 +138,14 @@ const Chat = () => {
 
   socket.on('incoming chat', message => {
     setMessages([message, ...messages])
+    queryCache.setQueryData(['chats'], (oldData) => {
+      const newData = [...oldData.data.chats, message]
+      return {...oldData, data: {...oldData.data, chats: newData } }
+    })
+    console.log(data)
   })
 
-  const sendMessage = (message) => {
+  const sendMessage = async (message) => {
     const newMessage = {
       content: message,
       timestamp: new Date().toLocaleTimeString(),
@@ -142,7 +153,8 @@ const Chat = () => {
       isMyMessage: true, // Assuming the user is always sending messages
     }
     setMessages([newMessage, ...messages])
-    socket.emit('incoming chat', newMessage, room)
+    const response = await socket.emitWithAck('incoming chat', newMessage, room).catch(e => console.log(e))
+    console.log(response)
     setQuotedMessage(null); // Clear quoted message after sending
   }
   const handleSelectMessage = (message) => {

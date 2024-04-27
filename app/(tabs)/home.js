@@ -1,4 +1,4 @@
-import { View, FlatList, Animated, StatusBar } from 'react-native'
+import { View, FlatList, Animated, StatusBar, ScrollView } from 'react-native'
 import SectionTitle from '../../components/SectionTitle'
 import EventItems from '../../components/home/EventItems'
 import FeaturedItems from '../../components/home/FeaturedItems'
@@ -10,10 +10,13 @@ import { FlashList } from "@shopify/flash-list"
 import FeedSkeleton from '../../components/FeedSkeleton'
 import FeedItem from '../../components/home/FeedItem'
 import { getStatusBarHeight } from '../../utils/methods'
+import FeaturedClubs from '../../components/home/FeaturedClubs'
+import { useFeaturedClubs } from '../../hooks/queries/useClub'
 
 export default function home() {
   
-  const { data, isSuccess, isPending, isError, error } = useFeeds()
+  const { data, refetch, isPending } = useFeeds()
+  const { data: featuredClubs } = useFeaturedClubs()
 
   const SECTIONS = [
     {
@@ -173,23 +176,97 @@ export default function home() {
       ]
     }
   ]
+  
+  // const featuredClubs = [
+  //   {
+  //     _id: '24242',
+  //     name: 'Drama Club',
+  //     image: require('../../assets/home/drama-club.png'),
+  //     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt',
+  //     members: [
+  //       {
+  //         image: require('../../assets/home/club-member-1.png'),
+  //       },
+  //       {
+  //         image: require('../../assets/home/club-member-2.png'),
+  //       },
+  //       {
+  //         image: require('../../assets/home/club-member-3.png'),
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     _id: '2424256',
+  //     name: 'Model UN Club',
+  //     image: require('../../assets/home/model-un-club.png'),
+  //     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt',
+  //     members: [
+  //       {
+  //         image: require('../../assets/home/club-member-1.png'),
+  //       },
+  //       {
+  //         image: require('../../assets/home/club-member-2.png'),
+  //       },
+  //       {
+  //         image: require('../../assets/home/club-member-3.png'),
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     _id: '36373333',
+  //     name: 'Music Club',
+  //     image: require('../../assets/home/drama-club.png'),
+  //     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt',
+  //     members: [
+  //       {
+  //         image: require('../../assets/home/club-member-1.png'),
+  //       },
+  //       {
+  //         image: require('../../assets/home/club-member-2.png'),
+  //       },
+  //       {
+  //         image: require('../../assets/home/club-member-3.png'),
+  //       }
+  //     ]
+  //   },
+  //   {
+  //     _id: '868453',
+  //     name: 'Social Club',
+  //     image: require('../../assets/home/drama-club.png'),
+  //     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt',
+  //     members: [
+  //       {
+  //         image: require('../../assets/home/club-member-1.png'),
+  //       },
+  //       {
+  //         image: require('../../assets/home/club-member-2.png'),
+  //       },
+  //       {
+  //         image: require('../../assets/home/club-member-3.png'),
+  //       }
+  //     ]
+  //   }
+  // ]
 
   const { translateY } = useAnimationStore()
 
-  if (isPending) return <FeedSkeleton/>
+  if (isPending) return <ScrollView><FeedSkeleton loading /></ScrollView>
 
   return (
     <Animated.View style={{ flex: 1 }}>
-      <StatusBar backgroundColor={'#EBEEF3'} barStyle="dark-content" />
+      <StatusBar backgroundColor={'#EBEEF3'} barStyle="dark-content"/>
       <AddEventButton/>
       <FlashList
         data={data?.data?.feeds}
+        ListHeaderComponentStyle={{marginBottom: 20}}
         ListEmptyComponent={<FeedSkeleton />}
-        ListHeaderComponent={<View style={{ marginTop: 100 + getStatusBarHeight() * 1.8 }} />}
         ItemSeparatorComponent={() => <View style={{ height: 50 }} />}
         ListFooterComponent={<View style={{paddingBottom: 100}}/>}
-        renderItem={({ item }) => <FeedItem item={item} />}
+        renderItem={({item}) => <FeedItem item={item} refetch={refetch}/>}
         estimatedItemSize={50}
+        ListHeaderComponent={
+          <FeaturedClubs clubs={featuredClubs?.data?.featuredClubs} />
+        }
         onScroll={(e) => {
           translateY.setValue(e.nativeEvent.contentOffset.y)
         }}

@@ -43,7 +43,7 @@ export default function Layout() {
             <Stack.Screen name='(welcome)' />
             <Stack.Screen name='(authentication)'/>
             <Stack.Screen name='(tabs)' />
-            <Stack.Screen name='(club)' />
+            <Stack.Screen name='club' />
             <Stack.Screen name='profile' />
             <Stack.Screen name='chat' />
           </Stack>

@@ -127,3 +127,47 @@ export default function ChatAvatar({ club }) {
     </TouchableOpacity>
   )
 }
+//   const pan = React.useRef(new Animated.ValueXY()).current;
+
+//   const panResponder = React.useRef(
+//     PanResponder.create({
+//       onMoveShouldSetPanResponder: () => true,
+//       onPanResponderMove: Animated.event(
+//         [
+//           null,
+//           { dx: pan.x } // move the Animated.View here
+//         ],
+//         { useNativeDriver: false }
+//       ),
+//       onPanResponderRelease: (_, gestureState) => {
+//         if (Math.abs(gestureState.dx) > 30) {
+//           onSelectMessage(message);
+//           Animated.spring(pan, {
+//             toValue: { x: 0, y: 0 },
+//             useNativeDriver: false
+//           }).start()
+//         } else {
+//           Animated.spring(pan, {
+//             toValue: 0,
+//             friction: 4,
+//             useNativeDriver: false,
+//           }).start()
+//         }
+//       },
+//     })
+//   ).current;
+
+//   return (
+//     <Animated.View
+//       style={[
+//         styles.bubbleContainer,
+//         isMyMessage && styles.myBubble,
+//         { transform: [{ translateX: pan.x }] } // Pass transform style here (translateY: pan.y)
+//       ]}
+//       {...panResponder.panHandlers} // Pass panHandlers to Animated.View
+//     >
+//       <Text style={styles.bubbleText}>{message.content}</Text>
+//       <Text style={styles.timestamp}>{message.timestamp}</Text>
+//     </Animated.View>
+//   );
+// };

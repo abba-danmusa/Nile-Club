@@ -12,7 +12,9 @@ const CustomizedButton = ({
   alignSelf = 'center',
   justifyContent = 'center',
   backgroundColor = '#365486',
-  position
+  position,
+  borderWidth = 0,
+  borderColor
 }) => {
 
   return <Button
@@ -26,6 +28,8 @@ const CustomizedButton = ({
           position,
           alignSelf,
           justifyContent,
+          borderWidth,
+          borderColor,
           bottom: position == 'absolute' ? 5 : '',
         }
       ]

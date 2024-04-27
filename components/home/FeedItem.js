@@ -10,7 +10,7 @@ import ClubAvatar from './ClubAvatar'
 
 const DEVICE_WIDTH = Dimensions.get('window').width
 
-export default function FeedItem({ item }) {
+export default function FeedItem({ item, refetch = () => { } }) {
 
   const {
     assets,
@@ -24,9 +24,9 @@ export default function FeedItem({ item }) {
 
   return (
     <View>
-      <ClubAvatar club={club} />
+      <ClubAvatar club={club} refetchFeeds={refetch}/>
       {
-        assets.length > 0 ? 
+        assets?.length > 0 ? 
           <ImageCarousel
             images={assets}
             renderItem={RenderItem}

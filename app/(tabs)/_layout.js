@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
   tabBarText: {
     fontSize: 10,
     fontFamily: 'Poppins',
-    fontWeight: '400',
+    fontWeight: '600',
     textTransform: 'capitalize',
   },
   icon: {
