@@ -8,7 +8,7 @@ export default function Layout() {
       }}
     >
       <Stack.Screen
-        name='club'
+        name='[club]'
       />
     </Stack>
   )

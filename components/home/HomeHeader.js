@@ -16,8 +16,8 @@ const HomeHeader = () => {
     .diffClamp(translateY, 0, 50 + STATUS_BAR_HEIGHT)
     .interpolate({
       inputRange: [0, 50 + STATUS_BAR_HEIGHT],
-      outputRange: [0, -50 + (-STATUS_BAR_HEIGHT)],
-      extrapolate: 'clamp'
+      outputRange: [0, -70 + (-STATUS_BAR_HEIGHT)],
+      extrapolate: 'clamp',
     })
 
   return (

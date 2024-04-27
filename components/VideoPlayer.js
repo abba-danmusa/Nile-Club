@@ -4,7 +4,7 @@ import { Video, ResizeMode } from 'expo-av';
 
 export default function VideoPlayer({
   uri = 'https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
-  width = 300,
+  width = '100%',
   height = 450,
   backgroundColor = 'inherit'
 }) {
@@ -21,7 +21,7 @@ export default function VideoPlayer({
         resizeMode={ResizeMode.CONTAIN}
         isLooping
         onPlaybackStatusUpdate={status => setStatus(() => status)}
-        style={[styles.video, { width: width, height: height, backgroundColor: backgroundColor, }]}
+        style={[styles.video, { width, height, backgroundColor }]}
       />
       {/* <View style={styles.buttons}>
         <Button
