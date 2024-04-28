@@ -13,6 +13,7 @@ const SCREEN_WIDTH = Dimensions.get('window').width
 const EMAIL_FORM_INDEX = 0
 const VERIFICATION_CODE_FORM_INDEX = 1
 const PASSWORD_FORM_INDEX = 2
+const ABOUT_FORM_INDEX = 3
 
 export default function signup() {
   
@@ -42,6 +43,9 @@ export default function signup() {
     }
     if (error.response?.status === 403) {
       scrollToScreen(PASSWORD_FORM_INDEX)
+    }
+    if (error.response?.status === 405) {
+      scrollToScreen(ABOUT_FORM_INDEX)
     }
   }
 

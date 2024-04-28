@@ -53,7 +53,7 @@ export default function VerifyEmailForm({ scrollToScreen }) {
         <SuccessScreen
           title="Email Verified"
           description='Your email has been verified'
-          scrollToPasswordForm={() => {
+          onSubmit={() => {
             scrollToScreen(PASSWORD_FORM_INDEX)
             setCodeConfirmed(false)
           }}

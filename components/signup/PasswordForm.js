@@ -65,7 +65,7 @@ const PasswordForm = ({scrollToScreen}) => {
         <SuccessScreen
           title={'Password created'}
           description={'Your Password has been created'}
-          scrollToScreen={() => {
+          onSubmit={() => {
             scrollToScreen(ABOUT_FORM_INDEX)
             setShowSuccessScreen(false)
           }}

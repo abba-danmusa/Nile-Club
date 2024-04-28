@@ -28,7 +28,6 @@ export default function create() {
 
     setIsPendingUploadingImages(true) // images are uploading
     
-    // const bannerAssets = await uploadImage(banner.uri)
     const bannerAssetsPromise = uploadImage(banner.uri)
     const imageAssetsPromise = uploadImage(image.uri)
 
@@ -96,7 +95,7 @@ export default function create() {
           />
         : null
       }
-      <SafeAreaView>
+      <SafeAreaView style={{flex: 1, marginBottom: 10}}>
         <ScrollView contentContainerStyle={styles.container}>
           <Text style={styles.screenTitle}>Club Creation Application</Text>
           <CustomizedInput

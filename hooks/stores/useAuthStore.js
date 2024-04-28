@@ -21,7 +21,7 @@ export const useAuthStore = create(set => ({
   setDepartment: department => set({ department }),
   setYear: year => set({ year }),
   setFaculty: faculty => set({ faculty }),
-  matriculationNumber: matriculationNumber => set({ matriculationNumber }),
+  setMatriculationNumber: matriculationNumber => set({matriculationNumber}),
   setCode: code => set({ code }),
   setFirstName: firstName => set({ firstName }),
   setLastName: lastName => set({ lastName }),

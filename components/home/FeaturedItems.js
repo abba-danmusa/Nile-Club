@@ -18,7 +18,11 @@ export default function FeaturedItems({ club }) {
       />
       <View style={styles.content}>
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>{ club?.name }</Text>
+          <TruncateText
+            text={club?.name}
+            maxLength={18}
+            style={styles.title}
+          />
           <View style={styles.ratingsContainer}>
             <AntDesign name="star" size={8} color="#365486" />
             <View style={{alignItems: 'flex-end', height: 10}}>

@@ -9,6 +9,7 @@ import { useAbout } from '../../hooks/queries/useAuthentication'
 import Loader from '../Loader'
 import SuccessScreen from '../SuccessScreen'
 import { router } from "expo-router"
+import Toast from '../../utils/toast'
 
 const DEVICE_WIDTH = Dimensions.get('window').width
 const DEVICE_HEIGHT = Dimensions.get('window').height
@@ -25,7 +26,8 @@ const FACULTIES = [
   { key: 10, value: 'Faculty of Health' },
 ]
 
-export default function AboutForm({scrollToScreen}) {
+export default function AboutForm({ scrollToScreen }) {
+  
   const {
     firstName,
     lastName,
@@ -126,6 +128,9 @@ export default function AboutForm({scrollToScreen}) {
   ]
 
   const createAbout = () => {
+    if (
+      !firstName || !lastName || !faculty || !department || !year || !email ||!matriculationNumber
+    ) return Toast('Please provide all information')
     
     sendAbout({
       firstName,
@@ -135,6 +140,10 @@ export default function AboutForm({scrollToScreen}) {
       year,
       email,
       matriculationNumber
+    }, {
+      onSuccess: () => {
+
+      }
     })
   }
 
@@ -151,7 +160,7 @@ export default function AboutForm({scrollToScreen}) {
           title="Thank you!"
           description='You have successfully created your account. You’re now ready to explore clubs and activities'
           image={require('../../assets/signup/completion_mark.png')}
-          scrollToScreen={onSubmit}
+          onSubmit={onSubmit}
         />
       }
 

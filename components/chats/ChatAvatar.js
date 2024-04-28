@@ -49,16 +49,16 @@ export default function ChatAvatar({ club }) {
             }}
           />
           <View style={{}}>
-            <Text
+            <TruncateText
               style={{
                 textTransform: 'capitalize',
                 fontFamily: 'Poppins',
                 fontSize: 16,
                 fontWeight: '600',
               }}
-            >
-              {club?.club?.name}
-            </Text>
+              text={club?.club?.name}
+              maxLength={18}
+            />
             <View
               style={{
                 display: 'flex',
@@ -127,7 +127,6 @@ export default function ChatAvatar({ club }) {
     </TouchableOpacity>
   )
 }
-//   const pan = React.useRef(new Animated.ValueXY()).current;
 
 //   const panResponder = React.useRef(
 //     PanResponder.create({

@@ -27,7 +27,7 @@ export default function AddEventButton() {
         { transform: [{ translateY: addEventButtonTranslateY }] },
       ]}
     >
-      <TouchableOpacity onPress={() => router.push('/event')}>
+      <TouchableOpacity onPress={() => router.push('/club/event')}>
         <AntDesign name='plus' size={24} color='#fff' />
       </TouchableOpacity>
     </Animated.View>

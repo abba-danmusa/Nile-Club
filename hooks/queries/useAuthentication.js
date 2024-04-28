@@ -5,7 +5,6 @@ import { router } from "expo-router";
 import { useAuthStore } from "../stores/useAuthStore";
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-
 export const useSignup = () => {
   return useMutation({
     mutationKey: ["signup"],
@@ -22,13 +21,13 @@ export const useSignup = () => {
 }
 
 export const useAbout = () => {
+  const { setInitialState } = useAuthStore()
   return useMutation({
     mutationKey: ["about"],
     mutationFn: async (data) => {
       return await axios.post("/authentication/about", data)
     },
     onSuccess: (data) => {
-      const { setInitialState } = useAuthStore()
       setInitialState()
       Toast(data.data?.message)
     },
@@ -62,7 +61,7 @@ export const useSignin = () => {
     },
     onSuccess: data => {
       setInitialState()
-      const token = AsyncStorage.setItem('token', data.data?.token)
+      const token = AsyncStorage.setItem('token', data?.data?.token)
       AsyncStorage.setItem('user', JSON.stringify(data?.data?.user))
       router.replace('/home')
     },
@@ -72,7 +71,10 @@ export const useSignin = () => {
         router.push('/signup')
       }
       if (error?.response?.status === 402) { // user is yet to verify email
-        router.push('/verification')
+        router.push('/signup')
+      }
+      if (error?.response?.status === 405) { // user has not submitted their name yet
+        router.push('/signup')
       }
     }
   })

@@ -1,6 +1,6 @@
 import { Image } from 'expo-image'
-import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, SectionList, FlatList, ScrollView, StatusBar} from 'react-native'
+import {useState} from 'react'
+import { View, Text, StyleSheet, TouchableOpacity, SectionList, FlatList, ScrollView, StatusBar, Modal} from 'react-native'
 import Avatar from '../../components/Avatar'
 import { SHADOW } from '../../utils/styles'
 import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons'
@@ -10,35 +10,7 @@ import SectionTitle from '../../components/SectionTitle'
 import FeaturedItems from '../../components/home/FeaturedItems'
 import NewsAnnouncement from '../../components/home/NewsAnnouncement'
 import { useLocalSearchParams } from 'expo-router'
-import { useClub, useClubFeeds, useFeaturedClubs } from '../../hooks/queries/useClub'
-
-const EXECUTIVES = [
-  {
-    name: 'Mimi Aminu',
-    image: require('../../assets/home/avatar.png'),
-    position: 'President'
-  },
-  {
-    name: 'Amma Danmusa',
-    image: require('../../assets/home/avatar.png'),
-    position: 'Vice President'
-  },
-  {
-    name: 'Some Random Name',
-    image: require('../../assets/home/avatar-1.png'),
-    position: 'Secretary'
-  },
-  {
-    name: 'Gentleman',
-    image: require('../../assets/home/avatar-2.png'),
-    position: 'Accountant'
-  },
-  {
-    name: 'Lady',
-    image: require('../../assets/home/avatar-2.png'),
-    position: 'Treasurer'
-  }
-]
+import { useClub, useClubFeeds, useFeaturedClubs, useSetFollowClub } from '../../hooks/queries/useClub'
 
 export default function club() {
   
@@ -46,6 +18,8 @@ export default function club() {
   const { data, isPending } = useClub(clubId)
   const { data: featuredClubs } = useFeaturedClubs()
   const { data: clubFeeds } = useClubFeeds(clubId)
+
+  const [modalVisible, setModalVisible] = useState(false)
 
   const SECTIONS = [
     {
@@ -58,36 +32,6 @@ export default function club() {
         showsHorizontalScrollIndicator={false}
       />,
       data: featuredClubs?.data?.featuredClubs
-      // data: [
-      //   {
-      //     _id: '42425',
-      //     image: require('../../assets/home/model-un-club.png'),
-      //     name: 'Model UN Club',
-      //     description: 'Model UN is a club that mimics the United Nations Conferences in New York.',
-      //     ratings: '5.0',
-      //   },
-      //   {
-      //     _id: '42425351414',
-      //     image: require('../../assets/home/model-un-club.png'),
-      //     name: 'Model UN Club',
-      //     description: 'Model UN is a club that mimics the United Nations Conferences in New York.',
-      //     ratings: '3.9',
-      //   },
-      //   {
-      //     _id: '4242535342',
-      //     image: require('../../assets/home/model-un-club.png'),
-      //     name: 'Model UN Club',
-      //     description: 'Model UN is a club that mimics the United Nations Conferences in New York.',
-      //     ratings: '4.5',
-      //   },
-      //   {
-      //     _id: '424253534',
-      //     image: require('../../assets/home/model-un-club.png'),
-      //     name: 'Model UN Club',
-      //     description: 'Model UN is a club that mimics the United Nations Conferences in New York.',
-      //     ratings: '2.9',
-      //   }
-      // ]
     },
     {
       title: 'News and Announcement',
@@ -98,32 +42,6 @@ export default function club() {
         showsHorizontalScrollIndicator={false}
       />,
       data: clubFeeds?.data?.feeds
-      // data: [
-      //   {
-      //     _id: '12425',
-      //     image: require('../../assets/home/model-un-club-1.png'),
-      //     name: 'Model UN Club',
-      //     description: 'Model UN announces a new president and new cabinet members for the model UN secretariat. The new appointees will be announced in our upcoming orientation',
-      //   },
-      //   {
-      //     _id: '14235',
-      //     image: require('../../assets/home/photography-club.png'),
-      //     name: 'Photography Club',
-      //     description: 'Model UN announces a new president and new cabinet members for the model UN secretariat. The new appointees will be announced in our upcoming orientation',
-      //   },
-      //   {
-      //     _id: '24235',
-      //     image: require('../../assets/home/model-un-club-1.png'),
-      //     name: 'Model UN Club',
-      //     description: 'Model UN announces a new president and new cabinet members for the model UN secretariat. The new appointees will be announced in our upcoming orientation',
-      //   },
-      //   {
-      //     _id: '14231',
-      //     image: require('../../assets/home/photography-club.png'),
-      //     name: 'Photography Club',
-      //     description: 'Model UN announces a new president and new cabinet members for the model UN secretariat. The new appointees will be announced in our upcoming orientation',
-      //   }
-      // ]
     }
   ]
 
@@ -137,10 +55,15 @@ export default function club() {
   return (
     <View style={styles.container}>
       <StatusBar hidden/>
+      <Modal
+        animation='slide'
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(!modalVisible)}
+      />
       <SectionList
         sections={SECTIONS}
         keyExtractor={({ _id }) => _id}
-        ItemSeparatorComponent={() => <View style={{ height: 5 }} />}
         ListFooterComponent={() => <View style={{ height: 150 }} />}
         ListHeaderComponent={() =>
           <ListHeaderComponent club={data?.data?.club} />
@@ -228,9 +151,6 @@ const ListHeaderComponent = ({club}) => {
       <Ratings />
       <View style={styles.descriptionContainer}>
         <Text style={styles.description}>{ club?.description }</Text>
-        {/* <Text style={styles.description}>
-          Model UN is a club that mimics the United Nations Conferences in New York. The purpose of this club is to create a generation of leaders that chose dialogue and peaceful resolutions over violence and bloodshed. Join us in making world a better place today!
-        </Text> */}
       </View>
       <Divider color='#58719B' />
       <Stats club={ club } />
@@ -257,7 +177,7 @@ const ListHeaderComponent = ({club}) => {
 
 const Hero = ({ club }) => {
   return (
-    <View style={styles.image}>
+    <View>
       <Image
         source={club?.assets?.banner?.secure_url}
         placeholder={require('../../assets/home/club-hero.png')}
@@ -270,7 +190,12 @@ const Hero = ({ club }) => {
   )
 }
 
-const Header = ({club}) => {
+const Header = ({ club, setModalVisible }) => {
+  
+  const { mutate: setFollowClub } = useSetFollowClub()
+
+  const [follow, setFollow] = useState(club?.follow ? true : false)
+  
   return (
     <View style={styles.headerContainer}>
       <View style={styles.headerLeft}>
@@ -281,12 +206,19 @@ const Header = ({club}) => {
           <MaterialCommunityIcons name="chat" size={24} color="#fff" />
         </TouchableOpacity>
         <CustomizedButton
-          title={'Join the Club'}
+          title={follow ? 'member' : 'Join the Club'}
+          disabled={follow ? true : false}
           height={35}
           lineHeight={16}
           width={90}
           alignSelf=''
           justifyContent=''
+          handlePress={() =>
+            setFollowClub(
+              { clubId: club?._id },
+              { onSuccess: () => setFollow(!follow) }
+            )
+          }
         />
       </View>
     </View>
@@ -341,6 +273,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     overflow: 'scroll',
+    marginTop: -20,
     backgroundColor: '#EBEEF3',
   },
   hero: {
@@ -351,10 +284,11 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: 298,
-    contentFit: 'contain',
+    contentFit: 'cover',
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
     marginBottom: 20,
+    position: 'relative'
   },
   avatar: {
     position: 'absolute',
@@ -367,6 +301,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginHorizontal: 10,
+    marginTop: 20,
   },
   headerLeft: {
     display: 'flex',
@@ -374,8 +309,9 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'Poppins',
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: '500',
+    width: 200
   },
   headerRight: {
     display: 'flex',
