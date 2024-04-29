@@ -1,5 +1,5 @@
 import { Image } from 'expo-image'
-import {useState} from 'react'
+import { useState, useRef, useCallback, useMemo} from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, SectionList, FlatList, ScrollView, StatusBar, Modal} from 'react-native'
 import Avatar from '../../components/Avatar'
 import { SHADOW } from '../../utils/styles'
@@ -11,6 +11,10 @@ import FeaturedItems from '../../components/home/FeaturedItems'
 import NewsAnnouncement from '../../components/home/NewsAnnouncement'
 import { useLocalSearchParams } from 'expo-router'
 import { useClub, useClubFeeds, useFeaturedClubs, useSetFollowClub } from '../../hooks/queries/useClub'
+import BottomSheet, { BottomSheetFlatList, BottomSheetFooter } from '@gorhom/bottom-sheet'
+import { NativeViewGestureHandler } from 'react-native-gesture-handler'
+import CommentItem from '../../components/club/CommentItem'
+import CommentFooter from '../../components/club/CommentFooter'
 
 export default function club() {
   
@@ -19,7 +23,11 @@ export default function club() {
   const { data: featuredClubs } = useFeaturedClubs()
   const { data: clubFeeds } = useClubFeeds(clubId)
 
-  const [modalVisible, setModalVisible] = useState(false)
+  const bottomSheetRef = useRef(null)
+
+  const handleSheetChanges = useCallback((index) => {
+    console.log('handleSheetChanges', index)
+  }, [])
 
   const SECTIONS = [
     {
@@ -51,36 +59,77 @@ export default function club() {
       <LoadingState />
     </>
   }
+  const comments = 
+      Array(6)
+        .fill(0)
+      .map((_, index) => `index-${index}`)
+  
+  const snapPoints = ["50%", "90%"]
 
   return (
-    <View style={styles.container}>
-      <StatusBar hidden/>
-      <Modal
-        animation='slide'
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(!modalVisible)}
-      />
-      <SectionList
-        sections={SECTIONS}
-        keyExtractor={({ _id }) => _id}
-        ListFooterComponent={() => <View style={{ height: 150 }} />}
-        ListHeaderComponent={() =>
-          <ListHeaderComponent club={data?.data?.club} />
-        }
-        renderSectionHeader={({ section }) =>
-          <>
-            <SectionTitle key={section.title} title={section.title} />
-            {section.renderItems(section.data)}
-          </>
-        }
-        renderItem={({ item, section }) => {
-          if (!section.horizontal) {
-            section.renderItems(section.data)
+    <NativeViewGestureHandler>
+      <View style={styles.container}>
+        <StatusBar hidden/>
+        <SectionList
+          sections={SECTIONS}
+          keyExtractor={({ _id }) => _id}
+          ListFooterComponent={() => <View style={{ height: 150 }} />}
+          ListHeaderComponent={() =>
+            <ListHeaderComponent club={data?.data?.club} />
           }
-        }}
-      />
-    </View>
+          renderSectionHeader={({ section }) =>
+            <>
+              <SectionTitle key={section.title} title={section.title} />
+              {section.renderItems(section.data)}
+            </>
+          }
+          renderItem={({ item, section }) => {
+            if (!section.horizontal) {
+              section.renderItems(section.data)
+            }
+          }}
+        />
+        <BottomSheet
+          ref={bottomSheetRef}
+          onChange={handleSheetChanges}
+          index={1}
+          enableDynamicSizing={true}
+          snapPoints={snapPoints}
+          handleHeight={50}
+          containerHeight={500}
+          // containerOffset={500}
+          handleIndicatorStyle={{ backgroundColor: 'grey' }}
+          footerComponent={CommentFooter}
+          backgroundStyle={{
+            flex: 1,
+            backgroundColor: 'black',
+            shadowColor: 'black',
+            shadowOffset: {
+              width: 20, // No horizontal offset
+              height: 15, // Vertical offset
+            },
+            shadowOpacity: 0.25, // Opacity of the shadow
+            shadowRadius: 3.84, // Spread of the shadow
+            elevation: 20, // Android elevation (affects shadow appearance)
+            borderRadius: 20,
+          }}
+          style={{
+            paddingHorizontal: 10,
+            alignContent: 'flex-end'
+          }}
+        >
+          <BottomSheetFlatList
+            data={comments}
+            keyExtractor={i => i}
+            renderItem={CommentItem}            
+            contentContainerStyle={{
+              flex: 1,
+              // backgroundColor: 'red',
+            }}
+          />
+        </BottomSheet>
+      </View>
+    </NativeViewGestureHandler>
   )
 }
 
