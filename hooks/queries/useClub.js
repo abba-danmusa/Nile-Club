@@ -139,21 +139,21 @@ export const useCreateComment = () => {
     onSuccess: (data) => {
       Toast(data.data?.message)
     },
-    onMutate: async (newComment) => {
-      await queryClient.cancelQueries(['comments'])
-      const previousComments = queryClient.getQueryData(['comments'])
+    // onMutate: async (newComment) => {
+    //   await queryClient.cancelQueries(['comments'])
+    //   const previousComments = queryClient.getQueryData(['comments'])
 
-      queryClient.setQueryData(['comments'], (oldQueryData) => {
-        if (!previousComments) return null // coz if there is no previous comments, we don't need to update the query data. besides, oldQueryData will be null or undefined and cannot be spread
-        return {
-          ...oldQueryData,
-          data: [...oldQueryData.data.comments, newComment]
-        }
-      })
-      return { previousComments }
-    },
+    //   queryClient.setQueryData(['comments'], (oldQueryData) => {
+    //     if (!previousComments) return null // coz if there is no previous comments, we don't need to update the query data. besides, oldQueryData will be null or undefined and cannot be spread
+    //     return {
+    //       ...oldQueryData,
+    //       data: [...oldQueryData.data.comments, newComment]
+    //     }
+    //   })
+    //   return { previousComments }
+    // },
     onError: (error, _request, context) => {
-      queryClient.setQueryData(['comments'], context.previousComments)
+      // queryClient.setQueryData(['comments'], context.previousComments)
 
       Toast(error.response?.data.message || error.message) // prioritize server error message, then client error message
       if (error?.response?.status === 401) { // user isn't logged in
@@ -162,6 +162,59 @@ export const useCreateComment = () => {
     },
     onSettled: async () => {
       return await queryClient.invalidateQueries(['comments'])
+    },
+  })
+}
+
+export const useClubMembers = () => {
+  return useQuery({
+    queryKey: ['club-members'],
+    queryFn: async () => {
+      return await axios.get(`/club/member`)
+    },
+    onError: (error) => {
+      Toast(error.response?.data.message || error.message) // prioritize server error message, then client error
+      if (error?.response?.status === 401) { // user isn't logged in
+        router.replace('/signin')
+      }
+    },
+  })
+}
+
+export const useAssignRole = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationKey: ["assign-role"],
+    mutationFn: async (data) => {
+      return await axios.post("/club/role", data)
+    },
+    onSuccess: (data) => {
+      Toast(data.data?.message)
+    },
+    onMutate: async (newMember) => {
+      await queryClient.cancelQueries(['club-members'])
+      const previousMembers = queryClient.getQueryData(['club-members'])
+
+      queryClient.setQueryData(['club-members'], (oldQueryData) => {
+        if (!previousMembers) return null // coz if there is no previous members, we don't need to update the query data. besides, oldQueryData will be null or undefined and cannot be spread
+        return {
+          ...oldQueryData,
+          data: [...oldQueryData.data.members, newMember]
+        }
+      })
+      return { previousMembers }
+    },
+    onError: (error, _request, context) => {
+      queryClient.setQueryData(['club-members'], context.previousMembers)
+
+      Toast(error.response?.data.message || error.message) // prioritize server error message, then client error message
+      if (error?.response?.status === 401) { // user isn't logged in
+        router.replace('/signin')
+      }
+    },
+    onSettled: async () => {
+      return await queryClient.invalidateQueries(['club-members'])
     },
   })
 }

@@ -40,7 +40,6 @@ export default function club() {
     refetchComments()
   }
 
-  console.log('from club component', 'done')
   const SECTIONS = [
     {
       title: 'Featured Clubs',
@@ -171,10 +170,11 @@ const ListHeaderComponent = ({club, onPressComment}) => {
           club?.executives?.map((executive, index) => (
             <Executive
               key={index}
-              name={executive?.user?.firstName}
+              name={`${executive?.user?.firstName} ${executive?.user?.lastName}`
+              }
               image={
                 executive?.user?.asset?.secure_url ||
-                require('../../assets/icon.png')
+                'https://i.pravatar.cc/300?img=1'
               }
               position={executive?.role}
             />

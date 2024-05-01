@@ -9,6 +9,13 @@ import { getStatusBarHeight } from '../../utils/methods'
 import FeaturedClubs from '../../components/home/FeaturedClubs'
 import { useFeaturedClubs } from '../../hooks/queries/useClub'
 import SectionTitle from '../../components/SectionTitle'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
+let User
+
+AsyncStorage.getItem('user').then(userString => {
+  if (userString) User = JSON.parse(userString)
+}).catch(error => console.log(error))
 
 export default function home() {
   
@@ -22,7 +29,7 @@ export default function home() {
   return (
     <Animated.View style={{ flex: 1 }}>
       <StatusBar backgroundColor={'#EBEEF3'} barStyle="dark-content"/>
-      <AddEventButton/>
+      { User.club && <AddEventButton /> }
       <FlashList
         data={data?.data?.feeds}
         ListHeaderComponentStyle={styles.listHeaderComponentStyle}

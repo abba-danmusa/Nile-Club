@@ -4,13 +4,20 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { router } from "expo-router"
 import { Image } from 'expo-image'
 import { SHADOW } from '../../utils/styles'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+
+let User
+
+AsyncStorage.getItem('user').then(userString => {
+  if (userString) User = JSON.parse(userString)
+}).catch(error => console.log(error))
 
 const PROFILE_ITEMS = [
   { title: 'manage profile', onPress: () => router.push('/profile/manage') },
   { title: 'my clubs', onPress: () => router.push('/clubs') },
   { title: 'my events', onPress: () => router.push('/events') },
   { title: 'roles', onPress: () => router.push('/roles') },
-  { title: 'create a club', onPress: () => router.push('/profile/create') },
+  { title: 'create club', onPress: () => router.push('/profile/create') },
 ]
 
 const profile = () => {
@@ -23,13 +30,17 @@ const profile = () => {
       <Hero/>
       <View style={styles.itemsContainer}>
         {
-          PROFILE_ITEMS.map(item => (
-            <Items
-              key={item.title}
-              title={item.title}
-              handlePress={item.onPress}
-            />
-          ))
+          PROFILE_ITEMS.map(item => {
+            if (!User.club && (item.title === 'my events' || item.title === 'roles' || item.title === 'my clubs')) {
+              return null
+            } else {
+              return <Items
+                key={item.title}
+                title={item.title}
+                handlePress={item.onPress}
+              />
+            }
+          })
         }
       </View>
     </SafeAreaView>
@@ -44,12 +55,15 @@ const Hero = () => {
         style={styles.avatarContainer}
       >
         <Image
-          source={require('../../assets/home/avatar.png')}
+          source={
+            User?.asset?.secure_url ||
+            'https://i.pravatar.cc/300?img=1'
+          }
           style={styles.avatar}
         />
       </TouchableOpacity>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>Hello Mimi!</Text>
+        <Text style={styles.title}>{`Hello ${User.firstName}!`}</Text>
         <Text style={styles.message}>What would you like to view?</Text>
       </View>
     </View>
@@ -84,8 +98,8 @@ const styles = StyleSheet.create({
   avatarContainer: {
     alignItems: 'center',
     backgroundColor: '#EBEEF3',
-    height: 40,
-    width: 40,
+    height: 50,
+    width: 50,
     borderRadius: 100,
     borderColor: '#58719B',
     borderWidth: 1.5,
@@ -93,8 +107,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   avatar: {
-    width: 35,
-    height: 35,
+    width: 45,
+    height: 45,
     borderRadius: 100,
   },
   titleContainer: {
@@ -124,7 +138,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 10,
-    marginTop: 20
+    marginTop: 20,
   },
   itemContainer: {
     width: 151,

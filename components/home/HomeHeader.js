@@ -43,7 +43,10 @@ const HomeHeader = () => {
         style={styles.avatarContainer}
       >
         <Image
-          source={require('../../assets/home/avatar.png')}
+          source={
+            User?.asset?.secure_url ||
+            'https://i.pravatar.cc/300?img=1'
+          }
           style={styles.avatar}
         />
       </TouchableOpacity>
