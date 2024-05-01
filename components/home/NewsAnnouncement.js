@@ -10,7 +10,7 @@ import ClubAvatar from './ClubAvatar'
 
 const DEVICE_WIDTH = Dimensions.get('window').width
 
-export default function FeedItem({ item, refetch = () => { } }) {
+export default function FeedItem({ item = {}, refetch = () => { } }) {
 
   const {
     assets,

@@ -1,6 +1,6 @@
 import { Image } from 'expo-image'
 import { useState, useRef, useCallback, useMemo} from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, SectionList, FlatList, ScrollView, StatusBar, Modal} from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, SectionList, FlatList, ScrollView, StatusBar } from 'react-native'
 import Avatar from '../../components/Avatar'
 import { SHADOW } from '../../utils/styles'
 import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons'
@@ -10,11 +10,12 @@ import SectionTitle from '../../components/SectionTitle'
 import FeaturedItems from '../../components/home/FeaturedItems'
 import NewsAnnouncement from '../../components/home/NewsAnnouncement'
 import { useLocalSearchParams } from 'expo-router'
-import { useClub, useClubFeeds, useFeaturedClubs, useSetFollowClub } from '../../hooks/queries/useClub'
-import BottomSheet, { BottomSheetFlatList, BottomSheetFooter } from '@gorhom/bottom-sheet'
+import { useClub, useClubFeeds, useComments, useFeaturedClubs, useSetFollowClub, useFollowingClub } from '../../hooks/queries/useClub'
 import { NativeViewGestureHandler } from 'react-native-gesture-handler'
-import CommentItem from '../../components/club/CommentItem'
-import CommentFooter from '../../components/club/CommentFooter'
+import CommentSheet from '../../components/club/CommentSheet'
+
+const blurhash =
+  '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj['
 
 export default function club() {
   
@@ -23,12 +24,23 @@ export default function club() {
   const { data: featuredClubs } = useFeaturedClubs()
   const { data: clubFeeds } = useClubFeeds(clubId)
 
+  const { refetch: refetchComments } = useComments(clubId)
+
   const bottomSheetRef = useRef(null)
 
-  const handleSheetChanges = useCallback((index) => {
-    console.log('handleSheetChanges', index)
-  }, [])
+  if (isPending) {
+    return <>
+      <StatusBar hidden/>
+      <LoadingState />
+    </>
+  }
 
+  const handleOpenComments = () => {
+    bottomSheetRef.current.snapToIndex(1)
+    refetchComments()
+  }
+
+  console.log('from club component', 'done')
   const SECTIONS = [
     {
       title: 'Featured Clubs',
@@ -39,7 +51,7 @@ export default function club() {
         renderItem={({ item }) => <FeaturedItems club={item} />}
         showsHorizontalScrollIndicator={false}
       />,
-      data: featuredClubs?.data?.featuredClubs
+      data: featuredClubs?.data?.featuredClubs || []
     },
     {
       title: 'News and Announcement',
@@ -49,22 +61,9 @@ export default function club() {
         renderItem={({ item }) => <NewsAnnouncement item={item} />}
         showsHorizontalScrollIndicator={false}
       />,
-      data: clubFeeds?.data?.feeds
+      data: clubFeeds?.data?.feeds || []
     }
   ]
-
-  if (isPending) {
-    return <>
-      <StatusBar hidden/>
-      <LoadingState />
-    </>
-  }
-  const comments = 
-      Array(6)
-        .fill(0)
-      .map((_, index) => `index-${index}`)
-  
-  const snapPoints = ["50%", "90%"]
 
   return (
     <NativeViewGestureHandler>
@@ -75,59 +74,21 @@ export default function club() {
           keyExtractor={({ _id }) => _id}
           ListFooterComponent={() => <View style={{ height: 150 }} />}
           ListHeaderComponent={() =>
-            <ListHeaderComponent club={data?.data?.club} />
+            <ListHeaderComponent club={data?.data?.club} onPressComment={handleOpenComments} />
           }
           renderSectionHeader={({ section }) =>
             <>
               <SectionTitle key={section.title} title={section.title} />
-              {section.renderItems(section.data)}
+              {section.renderItems(section?.data)}
             </>
           }
           renderItem={({ item, section }) => {
             if (!section.horizontal) {
-              section.renderItems(section.data)
+              section.renderItems(section?.data)
             }
           }}
         />
-        <BottomSheet
-          ref={bottomSheetRef}
-          onChange={handleSheetChanges}
-          index={1}
-          enableDynamicSizing={true}
-          snapPoints={snapPoints}
-          handleHeight={50}
-          containerHeight={500}
-          // containerOffset={500}
-          handleIndicatorStyle={{ backgroundColor: 'grey' }}
-          footerComponent={CommentFooter}
-          backgroundStyle={{
-            flex: 1,
-            backgroundColor: 'black',
-            shadowColor: 'black',
-            shadowOffset: {
-              width: 20, // No horizontal offset
-              height: 15, // Vertical offset
-            },
-            shadowOpacity: 0.25, // Opacity of the shadow
-            shadowRadius: 3.84, // Spread of the shadow
-            elevation: 20, // Android elevation (affects shadow appearance)
-            borderRadius: 20,
-          }}
-          style={{
-            paddingHorizontal: 10,
-            alignContent: 'flex-end'
-          }}
-        >
-          <BottomSheetFlatList
-            data={comments}
-            keyExtractor={i => i}
-            renderItem={CommentItem}            
-            contentContainerStyle={{
-              flex: 1,
-              // backgroundColor: 'red',
-            }}
-          />
-        </BottomSheet>
+        <CommentSheet bottomSheetRef={bottomSheetRef} clubId={clubId} />
       </View>
     </NativeViewGestureHandler>
   )
@@ -192,11 +153,11 @@ const LoadingState = () => {
   )
 }
 
-const ListHeaderComponent = ({club}) => {
+const ListHeaderComponent = ({club, onPressComment}) => {
   return (
     <>
       <Hero club={club} />
-      <Header club={club}/>
+      <Header club={club} onPressComment={ onPressComment } />
       <Ratings />
       <View style={styles.descriptionContainer}>
         <Text style={styles.description}>{ club?.description }</Text>
@@ -229,7 +190,7 @@ const Hero = ({ club }) => {
     <View>
       <Image
         source={club?.assets?.banner?.secure_url}
-        placeholder={require('../../assets/home/club-hero.png')}
+        placeholder={blurhash}
         style={styles.image}
       />
       <View style={styles.avatar}>
@@ -239,11 +200,10 @@ const Hero = ({ club }) => {
   )
 }
 
-const Header = ({ club, setModalVisible }) => {
+const Header = ({ club, onPressComment = () => {} }) => {
   
   const { mutate: setFollowClub } = useSetFollowClub()
-
-  const [follow, setFollow] = useState(club?.follow ? true : false)
+  const { data } = useFollowingClub(club?._id)
   
   return (
     <View style={styles.headerContainer}>
@@ -251,23 +211,17 @@ const Header = ({ club, setModalVisible }) => {
         <Text style={styles.title}>{ club?.name }</Text>
       </View>
       <View style={styles.headerRight}>
-        <TouchableOpacity style={styles.icon}>
+        <TouchableOpacity style={styles.icon} onPress={onPressComment}>
           <MaterialCommunityIcons name="chat" size={24} color="#fff" />
         </TouchableOpacity>
         <CustomizedButton
-          title={follow ? 'member' : 'Join the Club'}
-          disabled={follow ? true : false}
+          title={data?.data?.following ? 'MEMBER' : 'Join the Club'}
           height={35}
           lineHeight={16}
           width={90}
           alignSelf=''
           justifyContent=''
-          handlePress={() =>
-            setFollowClub(
-              { clubId: club?._id },
-              { onSuccess: () => setFollow(!follow) }
-            )
-          }
+          handlePress={() => setFollowClub({ clubId: club?._id }) }
         />
       </View>
     </View>
@@ -350,7 +304,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginHorizontal: 10,
-    marginTop: 20,
+    marginTop: 25,
   },
   headerLeft: {
     display: 'flex',
@@ -358,8 +312,9 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'Poppins',
-    fontSize: 18,
-    fontWeight: '500',
+    fontSize: 16,
+    fontWeight: '700',
+    textTransform: 'uppercase',
     width: 200
   },
   headerRight: {
@@ -387,7 +342,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 10,
     borderRadius: 2,
+    marginTop: 10,
     marginHorizontal: 10,
+    ...SHADOW
   },
   stars: {
     display: 'flex',

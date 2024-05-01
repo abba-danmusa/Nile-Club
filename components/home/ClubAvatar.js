@@ -5,6 +5,7 @@ import CustomizedButton from '../CustomizedButton'
 import { useSetFollowClub } from '../../hooks/queries/useClub'
 import { useState } from 'react'
 import { useFeeds } from '../../hooks/queries/useFeed'
+import TruncateText from '../chats/TruncateText'
 
 export default function ClubAvatar({ club, refetchFeeds = () => {} }) {
   
@@ -40,7 +41,15 @@ export default function ClubAvatar({ club, refetchFeeds = () => {} }) {
     >
       <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 5 }}>
         <Image source={club?.assets?.image?.secure_url} style={{ width: 40, height: 40, borderRadius: 20, }} />
-        <Text style={{ fontFamily: 'Poppins', color: '#fff', fontSize: 12, fontWeight: '400' }}>{club?.name}</Text>
+        <TruncateText
+          maxLength={30}
+          text={club?.name}
+          style={{
+            fontFamily: 'Poppins',
+            color: '#fff', fontSize: 12,
+            fontWeight: '400'
+          }}
+        />
         <CustomizedButton
           title={follows}
           width={100}

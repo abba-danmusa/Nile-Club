@@ -14,12 +14,14 @@ const CustomizedButton = ({
   backgroundColor = '#365486',
   position,
   borderWidth = 0,
-  borderColor
+  borderColor,
+  disabled = false
 }) => {
 
   return <Button
     title={title}
     titleStyle={ [styles.titleStyle, { color, lineHeight }] }
+    disabled={disabled}
     containerStyle={
       [
         styles.buttonContainer,

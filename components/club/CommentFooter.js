@@ -1,10 +1,21 @@
 import { useCallback, useState } from 'react'
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native'
 import { BottomSheetFooter, BottomSheetTextInput } from '@gorhom/bottom-sheet'
+import { useCreateComment } from '../../hooks/queries/useClub'
 
 const CommentFooter = (props) => {
   
   const [comment, setComment] = useState('')
+
+  const { mutate: createComment } = useCreateComment()
+
+  const submitComment = () => {
+    createComment({
+      content: comment,
+      club: props.clubId
+    }, {onError: error => console.log(error)})
+    setComment('')
+  }
 
   return (
     <BottomSheetFooter {...props} bottomInset={0}>
@@ -16,7 +27,7 @@ const CommentFooter = (props) => {
           placeholder="Type a comment..."
           multiline
         />
-        <TouchableOpacity onPress={() => { }} style={styles.sendButton}>
+        <TouchableOpacity onPress={submitComment} style={styles.sendButton}>
           <Text style={styles.sendButtonText}>Send</Text>
         </TouchableOpacity>
       </View>

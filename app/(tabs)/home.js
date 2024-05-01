@@ -35,6 +35,7 @@ export default function home() {
           <>
             <SectionTitle title={'Featured Clubs'} />
             <FeaturedClubs clubs={featuredClubs?.data?.featuredClubs} />
+            <SectionTitle title={'News and Announcements'} />
           </>
         }
         onScroll={(e) => {

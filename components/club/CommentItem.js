@@ -1,23 +1,29 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
 import { Image } from 'expo-image'
+import Timer from '../chats/Timer'
+import { StyleSheet, View, Text } from 'react-native';
+import { Divider } from '@rneui/base';
 
-const CommentItem = ({comment}) => {
+const CommentItem = ({ comment }) => {
   return (
-    <View style={{gap: 5}}>
+    <View style={{marginTop: 10}}>
       <View style={{ display: 'flex', flexDirection: 'row', gap: 10 }}>
-        
         <View style={styles.avatarContainer}>
           <Image
-            source={require('../../assets/home/avatar.png')}
+            source={
+              comment?.user?.asset?.secure_url ||
+              require('../../assets/home/avatar.png')
+            }
             style={styles.avatar}
           />
         </View>
         
         <View>
           <View>
-            <Text style={{ color: '#fff' }}>Abba Danmusa</Text>
-            <Text style={{ color: '#fff' }}>10:00 PM</Text>
+            <Text style={{ color: '#fff' }}>
+              {`${comment?.user?.firstName} ${comment?.user?.lastName}`}
+            </Text>
+            <Timer date={comment?.createdAt} />
           </View>
         </View>
 
@@ -25,10 +31,10 @@ const CommentItem = ({comment}) => {
 
       <View style={{ marginLeft: 55, marginBottom: 20 }}>
         <Text style={{ color: '#fff' }}>
-          Join us as we explore the endless possibilities of artistic expression, from traditional techniques to avant-garde experiments. Let's push boundaries, break molds, and redefine what it means to create. Together, we'll unleash our inner visionaries and paint the world in hues of passion and wonder.
+          {comment?.content}
         </Text>
       </View>
-      {/* <Text style={{color: '#fff'}}>Awesome</Text> */}
+      <Divider/>
     </View>
   );
 }
