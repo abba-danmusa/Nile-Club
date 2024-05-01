@@ -59,10 +59,10 @@ export const useSignin = () => {
     mutationFn: async (data) => {
       return await axios.post("/authentication/signin", data)
     },
-    onSuccess: data => {
+    onSuccess: async data => {
       setInitialState()
-      const token = AsyncStorage.setItem('token', data?.data?.token)
-      AsyncStorage.setItem('user', JSON.stringify(data?.data?.user))
+      await AsyncStorage.setItem('token', data?.data?.token)
+      await AsyncStorage.setItem('user', JSON.stringify(data?.data?.user))
       router.replace('/home')
     },
     onError: (error) => {

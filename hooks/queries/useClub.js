@@ -12,8 +12,10 @@ export const useCreateClub = () => {
     mutationFn: async (data) => {
       return await axios.post("/club", data)
     },
-    onSuccess: (data) => {
+    onSuccess: async data => {
       Toast(data.data?.message)
+      await AsyncStorage.removeItem('user')
+      await AsyncStorage.setItem('user', JSON.stringify(data?.data?.user))
     },
     onError: (error) => {
       Toast(error.response?.data.message || error.message) // prioritize server error message, then client error message
