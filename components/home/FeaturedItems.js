@@ -30,7 +30,11 @@ export default function FeaturedItems({ club }) {
             </View>
           </View>
         </View>
-        <TruncateText text={club?.description} maxLength={110}/>
+        <TruncateText
+          style={{ color: 'black', fontFamily: 'Poppins', fontSize: 10 }}
+          text={club?.description}
+          maxLength={165}
+        />
       </View>
     </TouchableOpacity>
   )

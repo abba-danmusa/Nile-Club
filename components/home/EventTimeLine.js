@@ -27,13 +27,13 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   text: {
-    fontSize: 12,
+    fontSize: 10,
     fontFamily: 'Poppins',
     // marginBottom: 5,
   },
   greyText: {
     color: 'grey',
-    fontSize: 12,
+    fontSize: 10,
     fontFamily: 'Poppins',
   },
 });

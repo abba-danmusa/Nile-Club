@@ -1,16 +1,18 @@
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native'
 import { Image } from 'expo-image'
-import { AntDesign, FontAwesome5 } from '@expo/vector-icons'
+import { FontAwesome5, FontAwesome } from '@expo/vector-icons'
 import TruncateText from '../../components/TruncateText'
 import ImageCarousel from '../ImageCarousel'
 import VideoPlayer from '../VideoPlayer'
 import { AirbnbRating } from '@rneui/themed'
 import EventTimeLine from './EventTimeLine'
 import ClubAvatar from './ClubAvatar'
+import ImageGallery from './ImageGallery'
+import { useSetLike } from '../../hooks/queries/useEvent'
 
 const DEVICE_WIDTH = Dimensions.get('window').width
 
-export default function FeedItem({ item, refetch = () => { } }) {
+export default function FeedItem({ item }) {
 
   const {
     assets,
@@ -19,85 +21,94 @@ export default function FeedItem({ item, refetch = () => { } }) {
     category,
     startTime: starts,
     endTime: ends,
-    club
+    club,
+    follow,
+    like,
+    likes,
+    totalLikes
   } = item
+
+  const { mutate: addToSetLike, isPending } = useSetLike()
 
   return (
     <View>
-      <ClubAvatar club={club} refetchFeeds={refetch}/>
+      <ClubAvatar club={club} follow={follow} />
       {
         assets?.length > 0 ? 
-          <ImageCarousel
-            images={assets}
-            renderItem={RenderItem}
-            layout='stack'
-            itemWidth={DEVICE_WIDTH}
-            itemHeight={500}
-            backgroundColor={'black'}
-          />
-          : <View style={styles.noAssetContainer}>
-              <Image
-                source={require('../../assets/icon.png')}
-                style={{
-                  width: 150,
-                  height: 150,
-                  borderRadius: 20  
-                }}
-              />
-            </View>
+          <ImageGallery images={assets} />
+          :
+          <View style={styles.noAssetContainer}>
+            <Image
+              source={require('../../assets/icon.png')}
+              style={{
+                width: 150,
+                height: 150,
+                borderRadius: 20
+              }}
+            />
+          </View>
       }
 
       <View
         style={{
         justifyContent: 'space-between',
-        flexDirection: 'row'
+          flexDirection: 'row',
+          // backgroundColor: 'red',
+          alignItems: 'center',
         }}
       >
-        <View style={{ flexDirection: 'row', marginTop: 5, marginLeft: 10 }}>
-          <AirbnbRating size={15} showRating={false} defaultRating={4} />
+        <View style={{marginLeft: 10}}>
+          <Text
+            style={{
+              fontFamily: 'Poppins',
+              fontSize: 15,
+              fontWeight: 700,
+              justifyContent: 'flex-end'
+            }}
+          >{ `${totalLikes} Likes` }</Text>
         </View>
-        <View style={{alignSelf: 'flex-end', flexDirection: 'row'}}>
+
+        <View
+          style={{
+            alignSelf: 'flex-end',
+            flexDirection: 'row',
+            marginTop: 10,
+            marginLeft: 10
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => addToSetLike({ eventId: item?._id })}
+            style={{ marginRight: 5, padding: 5, }}
+          >
+            {
+              isPending ? <ActivityIndicator color='red'/> :
+              like ?
+                <FontAwesome name="heart" size={20} color="red" />
+              :
+                <FontAwesome5 name="heart" size={20} color="black" />
+            }
+          </TouchableOpacity>
           <TouchableOpacity style={{ marginRight: 5, padding: 5, }}>
             <FontAwesome5 name="comment" size={20} color="black" />
           </TouchableOpacity>
-          <TouchableOpacity style={{marginRight: 10, padding: 5,}}>
-            <AntDesign name="hearto" size={20} color="black" />
-          </TouchableOpacity>
         </View>
+
       </View>
       <View style={styles.contentContainer}>
-        <Text style={{ marginBottom: 5, fontFamily: 'Poppins', fontSize: 16, fontWeight: '600', }}>{title}</Text>
+        <Text
+          style={{ 
+            marginBottom: 5, 
+            fontFamily: 'Poppins', 
+            fontSize: 16, 
+            fontWeight: '700',
+            color: '#365486'
+          }}
+        >{title}</Text>
         <TruncateText text={description} />
         <EventTimeLine fromDate={starts} toDate={ends}/>
       </View>
     </View>
   )
-}
-
-const RenderItem = ({ item, index }) => {
-  
-  const regex = /https:\/\/res\.cloudinary\.com\/feedmi\/(image|video)\//
-  const match = item?.secure_url?.match(regex)
-  const asset = match[1]
-
-  if (item?.resource_type === 'image') {
-    return (
-      <Image
-        source={ item?.secure_url }
-        style={[styles.image, { width: '100%', minHeight: 450 }]}
-      />
-    )
-  }
-  if (item?.resource_type === 'video') {
-    return (
-      <VideoPlayer
-        uri={item?.secure_url}
-        height={450}
-        width={'100%'}
-        backgroundColor='black'
-      />
-    )
-  }
 }
 
 const styles = StyleSheet.create({

@@ -6,27 +6,14 @@ import { useSetFollowClub } from '../../hooks/queries/useClub'
 import { useState } from 'react'
 import { useFeeds } from '../../hooks/queries/useFeed'
 import TruncateText from '../chats/TruncateText'
+import { SHADOW } from '../../utils/styles'
 
-export default function ClubAvatar({ club, refetchFeeds = () => {} }) {
+export default function ClubAvatar({ club, follow }) {
   
-  const [
-    follows,
-    setFollows
-  ] = useState(club?.follows ? 'Following' : 'Follow')
-
   const { mutate: setFollow } = useSetFollowClub()
 
   const setFollowClub = () => {
-    setFollow(
-      { clubId: club._id },
-      {
-        onSuccess: data => {
-          let followMessage = data?.data?.message
-          setFollows(followMessage == 'following' ? 'following' : 'follow')
-        }
-      }
-    )
-    refetchFeeds()
+    setFollow({ clubId: club._id })
   }
 
   return (
@@ -42,24 +29,34 @@ export default function ClubAvatar({ club, refetchFeeds = () => {} }) {
       <View style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: 5 }}>
         <Image source={club?.assets?.image?.secure_url} style={{ width: 40, height: 40, borderRadius: 20, }} />
         <TruncateText
-          maxLength={30}
+          maxLength={28}
           text={club?.name}
           style={{
             fontFamily: 'Poppins',
-            color: '#fff', fontSize: 12,
-            fontWeight: '400'
+            color: '#365486',
+            fontSize: 12,
+            fontWeight: '400',
+            textTransform: 'uppercase'
           }}
         />
-        <CustomizedButton
-          title={follows}
-          width={100}
-          height={'fit-content'}
-          backgroundColor={'transparent'}
-          borderColor={'#fff'}
-          borderWidth={.5}
-          lineHeight={12}
-          handlePress={setFollowClub}
-        />
+        <TouchableOpacity
+          onPress={setFollowClub}
+          style={{
+            backgroundColor: 'transparent',
+            borderWidth: .5,
+            borderColor: '#fff',
+            width: 100,
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: 30,
+            borderRadius: 20,
+            ...SHADOW
+          }}
+        >
+          <Text style={{ color: '#fff' }}>
+            { follow ? 'Following' : 'Follow' }
+          </Text>
+        </TouchableOpacity>
       </View>
     </TouchableOpacity>
   )

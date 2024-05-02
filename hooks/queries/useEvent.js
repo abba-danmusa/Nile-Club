@@ -3,6 +3,7 @@ import axios from "../../utils/axios"
 import Cloudinary from "../../utils/cloudinary"
 import Toast from '../../utils/toast'
 import { router } from "expo-router"
+import { useAnimatedStyle } from "react-native-reanimated"
 
 export const useCreateEvent = () => {
   
@@ -18,7 +19,7 @@ export const useCreateEvent = () => {
       if (error?.response?.status === 401) { // user isn't logged in
         return router.replace('/signin')
       }
-      queryClient.setQueryData(['feeds'], context.previousRequest)
+      // queryClient.setQueryData(['feeds'], context.previousRequest)
     },
     // onMutate: async (newRequest) => {
     //   await queryClient.cancelQueries(['feeds'])
@@ -33,6 +34,29 @@ export const useCreateEvent = () => {
     //   })
     //   return { previousRequest }
     // },
+    onSuccess: (data) => {
+      Toast(data.data?.message)
+    },
+    onSettled: async () => {
+      return await queryClient.invalidateQueries(['feeds'])
+    }
+  })
+}
+
+export const useSetLike = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationKey: ["like-event"],
+    mutationFn: async (data) => {
+      return axios.post("/event/like", data)
+    },
+    onError: (error, _request, context) => {
+      Toast(error.response?.data.message || error.message) // prioritize server error message, then client error message
+      if (error?.response?.status === 401) { // user isn't logged in
+        return router.replace('/signin')
+      }
+    },
     onSuccess: (data) => {
       Toast(data.data?.message)
     },

@@ -16,11 +16,11 @@ const TruncateText = ({ text }) => {
         numberOfLines={showFullText ? undefined : 5}>{text}</Text>
       {!showFullText ? (
         <TouchableOpacity onPress={toggleShowFullText}>
-          <Text style={{ color: 'blue', marginTop: 5, fontFamily: 'Poppins', fontSize: 12 }}>View more</Text>
+          <Text style={{ color: 'grey', marginTop: 5, fontFamily: 'Poppins', fontSize: 12 }}>View more</Text>
         </TouchableOpacity>
       ) : (
         <TouchableOpacity onPress={toggleShowFullText}>
-          <Text style={{ color: 'blue', marginTop: 5, fontFamily: 'Poppins', fontSize: 12 }}>Show less</Text>
+          <Text style={{ color: 'grey', marginTop: 5, fontFamily: 'Poppins', fontSize: 12 }}>Show less</Text>
         </TouchableOpacity>
       )}
     </View>

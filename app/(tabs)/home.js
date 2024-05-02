@@ -19,7 +19,7 @@ AsyncStorage.getItem('user').then(userString => {
 
 export default function home() {
   
-  const { data, refetch, isPending } = useFeeds()
+  const { data, isPending } = useFeeds()
   const { data: featuredClubs } = useFeaturedClubs()
   
   const { translateY } = useAnimationStore()
@@ -36,7 +36,7 @@ export default function home() {
         ListEmptyComponent={<FeedSkeleton />}
         ItemSeparatorComponent={() => <View style={{ height: 50 }} />}
         ListFooterComponent={<View style={{paddingBottom: 100}}/>}
-        renderItem={({item}) => <FeedItem item={item} refetch={refetch}/>}
+        renderItem={({item}) => <FeedItem item={item} />}
         estimatedItemSize={50}
         ListHeaderComponent={
           <>
