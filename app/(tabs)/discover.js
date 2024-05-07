@@ -3,10 +3,13 @@ import React, { useState } from 'react'
 import Search from '../../components/Search'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import DiscoverItems from '../../components/discover/DiscoverItems'
+import { useFeaturedClubs } from '../../hooks/queries/useClub'
 
 export default function Discover() {
   
   const [searchValue, setSearchValue] = useState('')
+
+  const { data, isPending } = useFeaturedClubs()
 
   const featuredClubs = [
     {
@@ -86,10 +89,11 @@ export default function Discover() {
         stickyHeaderHiddenOnScroll
         style={{ }}
         numColumns={2}
-        data={featuredClubs}
+        initialNumToRender={30}
+        data={data?.data?.featuredClubs || []}
         keyExtractor={(_item, index) => index}
-        ItemSeparatorComponent={<View style={{margin: 5}} />} 
-        renderItem={({ item }) => <DiscoverItems item={item} />}
+        ItemSeparatorComponent={<View style={{margin: 0}} />} 
+        renderItem={({ item }) => <DiscoverItems club={item} />}
         contentContainerStyle={{ paddingBottom: 80, paddingTop: 10 }}
         ListHeaderComponentStyle={{marginBottom: 20}}
         ListHeaderComponent={
