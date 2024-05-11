@@ -14,7 +14,6 @@ const TOKEN = AsyncStorage.getItem('token')
 const TabLayout = () => {
   
   useChats()
-  
   return (
     <>
       <Tabs
@@ -24,6 +23,15 @@ const TabLayout = () => {
           tabBarStyle: styles.tabBarStyle,
           tabBarActiveTintColor: '#fff',
           tabBarInactiveTintColor: 'black',
+          tabBarHideOnKeyboard: true,
+          tabBarVisibilityAnimationConfig: {
+            hidden: {
+              animation: 'slide-out-up',
+            },
+            visible: {
+              animation: 'slide-in-down',
+            }
+          }
         }}
       >
         <Tabs.Screen

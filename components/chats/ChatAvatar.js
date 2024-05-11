@@ -9,16 +9,13 @@ const DEVICE_WIDTH = Dimensions.get('window').width
 export default function ChatAvatar({ club }) {
 
   const sender = club?.chats?.at(-1)?.sender?.firstName
-  const latestChat = club?.chats?.at(-1)?.content
+  const latestChat = club?.unviewedChats?.at(-1)?.content
   const latestChatDate = club?.chats?.at(-1)?.createdAt
-  
-  // TODO
-  // change the number here to the actual number of unread chats.
-  const numberOfUnreadChats = club?.chats?.length
+  const numberOfUnreadChats = club?.unviewedChats?.length
   
   return (
     <TouchableOpacity
-      onPress={() => router.push(`/chat/${club?.club?._id}`)}
+      onPress={() => router.push(`/chat/${club?._id}`)}
       style={{ borderBottomWidth: .5, borderBottomColor: 'grey' }}
     >
       <View
@@ -41,7 +38,7 @@ export default function ChatAvatar({ club }) {
           }}
         >
           <Image
-            source={club?.club?.assets?.image?.secure_url}
+            source={club?.assets?.image?.secure_url}
             style={{
               width: 50,
               height: 50,
@@ -56,7 +53,7 @@ export default function ChatAvatar({ club }) {
                 fontSize: 16,
                 fontWeight: '600',
               }}
-              text={club?.club?.name}
+              text={club?.name}
               maxLength={18}
             />
             <View

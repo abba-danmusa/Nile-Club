@@ -33,6 +33,8 @@ const profile = () => {
           PROFILE_ITEMS.map(item => {
             if (!User.club && (item.title === 'my events' || item.title === 'roles' || item.title === 'my clubs')) {
               return null
+            } else if (User.club && (item.title === 'create club')) {
+              return null
             } else {
               return <Items
                 key={item.title}

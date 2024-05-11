@@ -51,17 +51,19 @@ const ChatBubble = ({ message, isMyMessage, onSelectMessage }) => {
   ).current;
 
   return (
-    <Animated.View
-      style={[
-        styles.bubbleContainer,
-        isMyMessage && styles.myBubble,
-        { transform: [{ translateX: pan.x }] } // Pass transform style here (translateY: pan.y)
-      ]}
-      {...panResponder.panHandlers} // Pass panHandlers to Animated.View
-    >
-      <Text style={styles.bubbleText}>{message.content}</Text>
-      <Text style={styles.timestamp}>{message.timestamp}</Text>
-    </Animated.View>
+    <>
+      <Animated.View
+        style={[
+          styles.bubbleContainer,
+          isMyMessage && styles.myBubble,
+          { transform: [{ translateX: pan.x }] } // Pass transform style here (translateY: pan.y)
+        ]}
+        {...panResponder.panHandlers} // Pass panHandlers to Animated.View
+      >
+        <Text style={styles.bubbleText}>{message.content}</Text>
+        <Text style={styles.timestamp}>{message.timestamp}</Text>
+      </Animated.View>
+    </>
   );
 }
 
@@ -128,12 +130,14 @@ const Chat = () => {
   const [quotedMessage, setQuotedMessage] = React.useState(null);
 
   const { chat: room } = useLocalSearchParams()
-  const { data: { data } } = useChats()
+  const { data: { data }, refetch } = useChats()
 
   
   useEffect(() => {
-    const [club] = data?.chats?.filter(club => club?.club?._id == room)
+    const [club] = data?.chats?.filter(club => club?._id == room)
     if (club) setMessages([...messages, ...club?.chats])
+    const markMessagesRead = club?.unviewedChats.map(chat => chat._id)
+    socket.emit('mark messages read', markMessagesRead)
   }, [data])
 
   socket.on('incoming chat', message => {
@@ -144,6 +148,8 @@ const Chat = () => {
     })
     console.log(data)
   })
+
+  socket.on(User._id, () => refetch())
 
   const sendMessage = async (message) => {
     const newMessage = {
@@ -169,12 +175,12 @@ const Chat = () => {
         renderItem={({ item }) => (
           <ChatBubble
             message={item}
+            onSelectMessage={handleSelectMessage}
             isMyMessage={
               item?.isMyMessage ? true
               :
               User._id == item?.sender?._id ? true : false
             }
-            onSelectMessage={handleSelectMessage}
           />
         )}
         initialNumToRender={100}

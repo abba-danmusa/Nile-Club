@@ -20,7 +20,7 @@ const CommentFooter = (props) => {
   return (
     <BottomSheetFooter {...props} bottomInset={0}>
       <View style={styles.inputContainer}>
-        <BottomSheetTextInput
+        <TextInput
           style={styles.input}
           value={comment}
           onChangeText={setComment}
@@ -43,9 +43,10 @@ const styles = StyleSheet.create({
     borderColor: '#dddddd',
     padding: 10,
     marginTop: 10,
-    backgroundColor: 'black'
-    // position: 'absolute',
-    // bottom: 0
+    backgroundColor: 'black',
+    position: 'absolute',
+    bottom: 0,
+    zIndex: 1000000000000000
   },
   input: {
     flex: 1,

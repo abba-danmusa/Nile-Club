@@ -20,7 +20,7 @@ const ImageGallery = ({ images }) => {
       <ScrollView
         horizontal
         pagingEnabled
-        contentContainerStyle={{ alignItems: 'center', }}
+        contentContainerStyle={{ alignItems: 'center', backgroundColor: 'black'}}
         style={{ 
           borderTopWidth: .5,
           borderBottomWidth: .5,

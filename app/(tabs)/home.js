@@ -34,8 +34,8 @@ export default function home() {
         data={data?.data?.feeds}
         ListHeaderComponentStyle={styles.listHeaderComponentStyle}
         ListEmptyComponent={<FeedSkeleton />}
-        ItemSeparatorComponent={() => <View style={{ height: 50 }} />}
-        ListFooterComponent={<View style={{paddingBottom: 100}}/>}
+        ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
+        ListFooterComponent={<Footer/>}
         renderItem={({item}) => <FeedItem item={item} />}
         estimatedItemSize={50}
         ListHeaderComponent={
@@ -50,6 +50,22 @@ export default function home() {
         }}
       />
     </Animated.View>
+  )
+}
+
+const Footer = () => {
+  return (
+    <View style={{ height: 200, justifyContent: 'center' }}>
+      <View
+        style={{
+          width: 10,
+          height: 10,
+          borderRadius: 20,
+          backgroundColor: 'black',
+          alignSelf: 'center'
+        }}
+      />
+    </View>
   )
 }
 
