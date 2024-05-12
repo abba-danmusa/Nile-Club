@@ -29,7 +29,7 @@ export default function FeedItem({ item }) {
     totalLikes
   } = item
 
-  const { mutate: addToSetLike, isPending } = useSetLike()
+  const { mutate: addToSetLike } = useSetLike()
   const [isLiked, setIsLiked] = useState(like)
   const [numberOfLikes, setNumberOfLikes] = useState(totalLikes)
 

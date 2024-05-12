@@ -220,3 +220,26 @@ export const useAssignRole = () => {
     },
   })
 }
+
+export const useReviewClub = (clubId) => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationKey: ["review-club"],
+    mutationFn: async (data) => {
+      return await axios.post("/club/review", data)
+    },
+    onSuccess: (data) => {
+      Toast(data.data?.message)
+    },
+    onError: (error) => {
+      Toast(error.response?.data.message || error.message) // prioritize server error message, then client error message
+      if (error?.response?.status === 401) { // user isn't logged in
+        router.replace('/signin')
+      }
+    },
+    onSettled: async () => {
+      queryClient.invalidateQueries(['club', clubId])
+    }
+  })
+}

@@ -1,4 +1,4 @@
-import { View, FlatList, Animated, StatusBar, ScrollView, StyleSheet } from 'react-native'
+import { View, Animated, StatusBar, ScrollView, StyleSheet } from 'react-native'
 import { useAnimationStore } from '../../hooks/stores/useAnimationStore'
 import AddEventButton from '../../components/AddEventButton'
 import { useFeeds } from '../../hooks/queries/useFeed'
@@ -35,7 +35,7 @@ export default function home() {
         ListHeaderComponentStyle={styles.listHeaderComponentStyle}
         ListEmptyComponent={<FeedSkeleton />}
         ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
-        ListFooterComponent={<Footer/>}
+        ListFooterComponent={<Footer />}
         renderItem={({item}) => <FeedItem item={item} />}
         estimatedItemSize={50}
         ListHeaderComponent={

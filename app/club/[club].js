@@ -1,6 +1,6 @@
 import { Image } from 'expo-image'
-import { useState, useRef, useCallback, useMemo} from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, SectionList, FlatList, ScrollView, StatusBar } from 'react-native'
+import { useState, useRef } from 'react'
+import { View, Text, StyleSheet, TouchableOpacity, SectionList, FlatList, ScrollView, StatusBar, Modal, Button } from 'react-native'
 import Avatar from '../../components/Avatar'
 import { SHADOW } from '../../utils/styles'
 import { MaterialCommunityIcons, AntDesign } from '@expo/vector-icons'
@@ -10,9 +10,11 @@ import SectionTitle from '../../components/SectionTitle'
 import FeaturedItems from '../../components/home/FeaturedItems'
 import NewsAnnouncement from '../../components/home/NewsAnnouncement'
 import { useLocalSearchParams } from 'expo-router'
-import { useClub, useClubFeeds, useComments, useFeaturedClubs, useSetFollowClub, useFollowingClub } from '../../hooks/queries/useClub'
+import { useClub, useClubFeeds, useComments, useFeaturedClubs, useSetFollowClub, useFollowingClub, useReviewClub } from '../../hooks/queries/useClub'
 import { NativeViewGestureHandler } from 'react-native-gesture-handler'
 import CommentSheet from '../../components/club/CommentSheet'
+import { AirbnbRating } from '@rneui/base'
+import toast from '../../utils/toast'
 
 const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj['
@@ -157,7 +159,7 @@ const ListHeaderComponent = ({club, onPressComment}) => {
     <>
       <Hero club={club} />
       <Header club={club} onPressComment={ onPressComment } />
-      <Ratings />
+      <Ratings club={club} />
       <View style={styles.descriptionContainer}>
         <Text style={styles.description}>{ club?.description }</Text>
       </View>
@@ -228,18 +230,70 @@ const Header = ({ club, onPressComment = () => {} }) => {
   )
 }
 
-const Ratings = () => {
+const Ratings = (club) => {
+  const clubId = club?.club?._id
+  const rating = club?.club?.ratings
+  const [modalVisible, setModalVisible] = useState(false)
+  const [ratingValue, setRatingValue] = useState(rating || 5)
+  const { mutate: createView } = useReviewClub(clubId)
+
+  const handleSubmit = () => {
+    createView({review: ratingValue, clubId})
+    setModalVisible(false)
+  }
+
   return (
-    <View style={styles.ratings}>
-      <Text>Rating</Text>
-      <View style={styles.stars}>
-        <AntDesign name="star" size={12} color="#E7B400" />
-        <AntDesign name="star" size={12} color="#E7B400" />
-        <AntDesign name="star" size={12} color="#E7B400" />
-        <AntDesign name="star" size={12} color="#E7B400" />
-        <AntDesign name="star" size={12} color="#E7B400" />
-      </View>
-    </View>
+    <TouchableOpacity
+      style={styles.ratings}
+      onPress={() => {
+        if (!club?.club?.follows) {
+          toast('Please join the club to rate it')
+          return
+        }
+        setModalVisible(true)
+      }}
+    >
+      <AirbnbRating
+        count={6}
+        size={15}
+        showRating={false}
+        isDisabled={true}
+        defaultRating={ratingValue}
+      />
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <TouchableOpacity
+              onPress={() => setModalVisible(false)}
+              style={{
+                position: 'absolute',
+                right: 10,
+                top: 10,
+                padding: 5,
+              }}
+            >
+              <AntDesign name="close" size={20} color="tomato" />
+            </TouchableOpacity>
+            <Text style={styles.modalTitle}>Rate us!!!</Text>
+            <AirbnbRating
+              count={6}
+              defaultRating={ratingValue}
+              onFinishRating={number => setRatingValue(number)}
+              starContainerStyle={{ alignSelf: 'center', marginBottom: 20 }}
+              reviews={
+                ['Terrible', 'Bad', 'Meh!', 'OK!', 'Good!!', 'Superb!!!']
+              }
+            />
+            <Button title="Confirm" onPress={handleSubmit} />
+          </View>
+        </View>
+      </Modal>
+    </TouchableOpacity>
   )
 }
 
@@ -335,7 +389,6 @@ const styles = StyleSheet.create({
   ratings: {
     backgroundColor: '#CBE8EF',
     width: 127,
-    height: 25,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
@@ -417,5 +470,23 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins',
     fontSize: 8,
     fontWeight: '500',
-  }
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    alignSelf: 'center'
+  },
 })
