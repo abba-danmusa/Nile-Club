@@ -8,9 +8,9 @@ const DEVICE_WIDTH = Dimensions.get('window').width
 
 export default function ChatAvatar({ club }) {
 
-  const sender = club?.chats?.at(-1)?.sender?.firstName
-  const latestChat = club?.unviewedChats?.at(-1)?.content
-  const latestChatDate = club?.chats?.at(-1)?.createdAt
+  const sender = club?.chats?.at(0)?.sender?.firstName
+  const latestChat = club?.chats?.at(0)?.content
+  const latestChatDate = club?.chats?.at(0)?.createdAt
   const numberOfUnreadChats = club?.unviewedChats?.length
   
   return (
@@ -94,7 +94,7 @@ export default function ChatAvatar({ club }) {
             : null
           }
           {
-            club?.chats?.length ? 
+            club?.unviewedChats?.length ? 
               <View
                 style={{
                   backgroundColor: '#365486',
@@ -124,46 +124,3 @@ export default function ChatAvatar({ club }) {
     </TouchableOpacity>
   )
 }
-
-//   const panResponder = React.useRef(
-//     PanResponder.create({
-//       onMoveShouldSetPanResponder: () => true,
-//       onPanResponderMove: Animated.event(
-//         [
-//           null,
-//           { dx: pan.x } // move the Animated.View here
-//         ],
-//         { useNativeDriver: false }
-//       ),
-//       onPanResponderRelease: (_, gestureState) => {
-//         if (Math.abs(gestureState.dx) > 30) {
-//           onSelectMessage(message);
-//           Animated.spring(pan, {
-//             toValue: { x: 0, y: 0 },
-//             useNativeDriver: false
-//           }).start()
-//         } else {
-//           Animated.spring(pan, {
-//             toValue: 0,
-//             friction: 4,
-//             useNativeDriver: false,
-//           }).start()
-//         }
-//       },
-//     })
-//   ).current;
-
-//   return (
-//     <Animated.View
-//       style={[
-//         styles.bubbleContainer,
-//         isMyMessage && styles.myBubble,
-//         { transform: [{ translateX: pan.x }] } // Pass transform style here (translateY: pan.y)
-//       ]}
-//       {...panResponder.panHandlers} // Pass panHandlers to Animated.View
-//     >
-//       <Text style={styles.bubbleText}>{message.content}</Text>
-//       <Text style={styles.timestamp}>{message.timestamp}</Text>
-//     </Animated.View>
-//   );
-// };

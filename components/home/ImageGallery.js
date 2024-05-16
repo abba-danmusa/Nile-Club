@@ -47,9 +47,10 @@ const ImageGallery = ({ images }) => {
           } else if (image.resource_type === 'video') {
             return (
               <VideoPlayer
-                uri={item?.secure_url}
+                uri={image?.secure_url}
                 height={imageHeight}
                 width={'100%'}
+                key={index}
                 // backgroundColor='black'
               />
             )

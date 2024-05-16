@@ -15,5 +15,6 @@ export const useChats = () => {
       }
     },
     retry: true,
+    refetchInterval: 10000 // refetch every after 10 secs
   })
 }

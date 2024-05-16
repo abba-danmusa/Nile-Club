@@ -13,8 +13,10 @@ import { useLocalSearchParams } from 'expo-router'
 import { useClub, useClubFeeds, useComments, useFeaturedClubs, useSetFollowClub, useFollowingClub, useReviewClub } from '../../hooks/queries/useClub'
 import { NativeViewGestureHandler } from 'react-native-gesture-handler'
 import CommentSheet from '../../components/club/CommentSheet'
+import FeedItem from '../../components/club/FeedItem'
 import { AirbnbRating } from '@rneui/base'
 import toast from '../../utils/toast'
+import { FlashList } from "@shopify/flash-list"
 
 const blurhash =
   '|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj['
@@ -42,35 +44,35 @@ export default function club() {
     refetchComments()
   }
 
-  const SECTIONS = [
-    {
-      title: 'Featured Clubs',
-      horizontal: true,
-      renderItems: data => <FlatList
-        horizontal
-        data={data}
-        renderItem={({ item }) => <FeaturedItems club={item} />}
-        showsHorizontalScrollIndicator={false}
-      />,
-      data: featuredClubs?.data?.featuredClubs || []
-    },
-    {
-      title: 'News and Announcement',
-      horizontal: false,
-      renderItems: data => <FlatList
-        data={data}
-        renderItem={({ item }) => <NewsAnnouncement item={item} />}
-        showsHorizontalScrollIndicator={false}
-      />,
-      data: clubFeeds?.data?.feeds || []
-    }
-  ]
+  // const SECTIONS = [
+  //   {
+  //     title: 'Featured Clubs',
+  //     horizontal: true,
+  //     renderItems: data => <FlatList
+  //       horizontal
+  //       data={data}
+  //       renderItem={({ item }) => <FeaturedItems club={item} />}
+  //       showsHorizontalScrollIndicator={false}
+  //     />,
+  //     data: featuredClubs?.data?.featuredClubs || []
+  //   },
+  //   {
+  //     title: 'News and Announcement',
+  //     horizontal: false,
+  //     renderItems: data => <FlatList
+  //       data={data}
+  //       renderItem={({ item }) => <NewsAnnouncement item={item} />}
+  //       showsHorizontalScrollIndicator={false}
+  //     />,
+  //     data: clubFeeds?.data?.feeds || []
+  //   }
+  // ]
 
   return (
     <NativeViewGestureHandler>
       <View style={styles.container}>
-        <StatusBar hidden/>
-        <SectionList
+        <StatusBar hidden />
+        {/* <SectionList
           sections={SECTIONS}
           keyExtractor={({ _id }) => _id}
           ListFooterComponent={() => <View style={{ height: 150 }} />}
@@ -88,6 +90,29 @@ export default function club() {
               section.renderItems(section?.data)
             }
           }}
+        /> */}
+        <FlashList
+          data={clubFeeds?.data?.feeds || []}
+          ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
+          ListFooterComponent={<Footer />}
+          renderItem={({ item }) => <FeedItem item={item} />}
+          estimatedItemSize={50}
+          ListHeaderComponent={
+            <>
+              <ListHeaderComponent
+                club={data?.data?.club}
+                onPressComment={handleOpenComments}
+              />
+              <SectionTitle title={'Similar Club'} />
+              <FlatList
+                horizontal
+                data={featuredClubs?.data?.featuredClubs || []}
+                renderItem={({ item }) => <FeaturedItems club={item} />}
+                showsHorizontalScrollIndicator={false}
+              />
+              <SectionTitle title={'News and Announcement'} />
+            </>
+          }
         />
         <CommentSheet bottomSheetRef={bottomSheetRef} clubId={clubId} />
       </View>
@@ -151,6 +176,22 @@ const LoadingState = () => {
       <View style={{ marginBottom: 25 }} />
       <Divider color='#58719B' />
     </ScrollView>
+  )
+}
+
+const Footer = () => {
+  return (
+    <View style={{ height: 200, justifyContent: 'center' }}>
+      <View
+        style={{
+          width: 10,
+          height: 10,
+          borderRadius: 20,
+          backgroundColor: 'black',
+          alignSelf: 'center'
+        }}
+      />
+    </View>
   )
 }
 
@@ -238,7 +279,10 @@ const Ratings = (club) => {
   const { mutate: createView } = useReviewClub(clubId)
 
   const handleSubmit = () => {
-    createView({review: ratingValue, clubId})
+    createView(
+      { review: ratingValue, clubId },
+      { onError: () => setRatingValue(rating) }
+    )
     setModalVisible(false)
   }
 

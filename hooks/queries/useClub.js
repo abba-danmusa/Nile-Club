@@ -168,11 +168,11 @@ export const useCreateComment = () => {
   })
 }
 
-export const useClubMembers = () => {
+export const useClubMembers = clubId => {
   return useQuery({
-    queryKey: ['club-members'],
+    queryKey: ['club-members', clubId],
     queryFn: async () => {
-      return await axios.get(`/club/member`)
+      return await axios.get(`/club/member?clubId=${clubId}`)
     },
     onError: (error) => {
       Toast(error.response?.data.message || error.message) // prioritize server error message, then client error

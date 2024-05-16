@@ -1,12 +1,17 @@
-import React, {useEffect, useState, useRef} from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Animated, PanResponder } from 'react-native';
+import React, {useEffect, useState, useRef } from 'react';
+import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Animated, PanResponder, StatusBar } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router'
 import { socket } from '../../socket.io/socket';
 import { useChats } from '../../hooks/queries/useChat';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useChatStore } from '../../hooks/stores/useChatStore';
 import toast from '../../utils/toast';
 import { QueryCache } from '@tanstack/react-query'
+import { SHADOW } from '../../utils/styles';
+import { Image } from 'expo-image'
+import TimeAgo from '../../components/chats/Timer';
+import { Divider } from '@rneui/base';
 
 let User
 
@@ -14,7 +19,11 @@ AsyncStorage.getItem('user').then(userString => {
   if (userString) User = JSON.parse(userString)
 }).catch(error => console.log(error))
 
-const ChatBubble = ({ message, isMyMessage, onSelectMessage }) => {
+const ChatBubble = ({ message, isMyMessage, onSelectMessage, isRead = true }) => {
+
+  // I swear I have no idea how line 20 is working but since it's working, great!!!
+  if (message.viewed == false && isRead == true) return // return if the user hasn't seen this chat (to be displayed in New Messages)
+
   const pan = React.useRef(new Animated.ValueXY()).current;
   const [isEnabled, setIsEnabled] = useState(true)
 
@@ -51,7 +60,16 @@ const ChatBubble = ({ message, isMyMessage, onSelectMessage }) => {
   ).current;
 
   return (
-    <>
+    <View style={
+      [{ display: 'flex', flexDirection: 'row', gap: 10, marginTop: 20 }, isMyMessage && { alignSelf: 'flex-end', flexDirection: 'row-reverse' }]
+    }>
+      <Image
+        source={
+          message?.sender?.asset?.secure_url ||
+          'https://i.pravatar.cc/300?img=1'
+        }
+        style={[{ width: 35, height: 35, borderRadius: 35, alignSelf: 'flex-end' }]}
+      />
       <Animated.View
         style={[
           styles.bubbleContainer,
@@ -60,10 +78,18 @@ const ChatBubble = ({ message, isMyMessage, onSelectMessage }) => {
         ]}
         {...panResponder.panHandlers} // Pass panHandlers to Animated.View
       >
+        <View style={{}}>
+          <Text style={{ fontFamily: 'Poppins', color: '#365486', fontSize: 10}}>
+            {`${message?.sender?.firstName} ${message?.sender?.lastName}`}
+          </Text>
+        </View>
+        <Divider/>
         <Text style={styles.bubbleText}>{message.content}</Text>
-        <Text style={styles.timestamp}>{message.timestamp}</Text>
+        <View style={styles.timestamp}>
+          <TimeAgo date={message?.createdAt || message?.timestamp}/>
+        </View>
       </Animated.View>
-    </>
+    </View>
   );
 }
 
@@ -72,7 +98,7 @@ const ChatInput = ({ onSendMessage, quotedMessage }) => {
 
   const handleSend = () => {
     if (message.trim() !== '') {
-      onSendMessage(message, quotedMessage);
+      onSendMessage(message);
       setMessage('');
     }
   };
@@ -92,7 +118,7 @@ const ChatInput = ({ onSendMessage, quotedMessage }) => {
         multiline
       />
       <TouchableOpacity onPress={handleSend} style={styles.sendButton}>
-        <Text style={styles.sendButtonText}>Send</Text>
+        <MaterialIcons name="send" size={24} color="#fff" />
       </TouchableOpacity>
     </View>
   );
@@ -120,42 +146,114 @@ const QuotedMessage = ({ message, setQuotedMessage}) => {
   );
 }
 
+const NewMessages = ({
+  unreadMessages = [],
+  handleSelectMessage,
+  setListHeaderHeight
+}) => {
+  return (
+    <View
+      onLayout={(event) => {
+        setListHeaderHeight(event.nativeEvent.layout.height)
+      }}
+    >
+      {
+        !(unreadMessages.length < 1) &&
+        <View
+          style={{
+            backgroundColor: '#CBE8EF',
+            alignItems: 'center',
+            padding: 10,
+            marginVertical: 20,
+            width: '70%',
+            alignSelf: 'center',
+            ...SHADOW
+          }}
+        >
+          <Text
+            style={{ fontFamily: 'Poppins', fontSize: 14, color: '#365486' }}
+          >
+            New Messages
+          </Text>
+        </View>
+      }
+      {
+        unreadMessages?.map(message =>
+          <ChatBubble
+            key={message._id}
+            message={message}
+            onSelectMessage={handleSelectMessage}
+            isRead={false}
+            isMyMessage={
+              message?.isMyMessage ? true
+              : User._id == message?.sender?._id ? true : false
+            }
+          />
+        )
+      }
+    </View>
+  )
+  return null
+}
+
 const Chat = () => {
   
-  const queryCache = new QueryCache({
-    onError: error => toast(error.message)
-  })
+  // const queryCache = new QueryCache({
+  //   onError: error => toast(error.message)
+  // })
 
-  const [messages, setMessages] = React.useState([]);
-  const [quotedMessage, setQuotedMessage] = React.useState(null);
+  const [messages, setMessages] = useState([]);
+  const [unreadMessages, setUnreadMessages] = useState([]);
+  const [quotedMessage, setQuotedMessage] = useState(null);
+  const [listHeaderHeight, setListHeaderHeight] = useState(0)
+  const [isInitialRender, setIsInitialRender] = useState(true)
+  const flatListRef = useRef(null)
+
+  const { setClub } = useChatStore()
 
   const { chat: room } = useLocalSearchParams()
   const { data: { data }, refetch } = useChats()
 
-  
+
   useEffect(() => {
     const [club] = data?.chats?.filter(club => club?._id == room)
-    if (club) setMessages([...messages, ...club?.chats])
-    const markMessagesRead = club?.unviewedChats.map(chat => chat._id)
-    socket.emit('mark messages read', markMessagesRead)
-  }, [data])
+    let markMessagesRead = []
+    if (club) {
+      setMessages([...club.chats])
+      setUnreadMessages([...club.unviewedChats])
+      setClub({
+        _id: club._id,
+        name: club.name,
+        description: club.description,
+        banner: club.assets.banner.secure_url,
+        image: club.assets.image.secure_url,
+      })
+      markMessagesRead = [...club.unviewedChats.map(chat => chat._id)]
+    }
+    
+    const timeoutId = setTimeout(() => {
+      socket.emit('mark messages read', markMessagesRead);
+      refetch(); // Get the latest chats
+    }, 10000)
+    
+    return () => clearTimeout(timeoutId)
+  }, [])
 
   socket.on('incoming chat', message => {
-    setMessages([message, ...messages])
-    queryCache.setQueryData(['chats'], (oldData) => {
-      const newData = [...oldData.data.chats, message]
-      return {...oldData, data: {...oldData.data, chats: newData } }
-    })
-    console.log(data)
+    setMessages([...messages, message])
+    // queryCache.setQueryData(['chats'], (oldData) => {
+    //   const newData = [...oldData.data.chats, message]
+    //   return {...oldData, data: {...oldData.data, chats: newData } }
+    // })
+    // console.log(data)
   })
-
-  socket.on(User._id, () => refetch())
 
   const sendMessage = async (message) => {
     const newMessage = {
       content: message,
-      timestamp: new Date().toLocaleTimeString(),
+      timestamp: Date.now(),
       timeSent: Date.now(),
+      sender: User,
       isMyMessage: true, // Assuming the user is always sending messages
     }
     setMessages([newMessage, ...messages])
@@ -168,24 +266,50 @@ const Chat = () => {
     setQuotedMessage(message);
   };
 
+  const scrollToNewMessages = () => {
+    if (flatListRef.current && listHeaderHeight > 0) {
+      console.log('Scrolling to new messages', listHeaderHeight)
+      flatListRef
+        .current
+        .scrollToOffset({ offset: listHeaderHeight, animated: true })
+    }
+  }
+
+  const handleContentSizeChange = (contentWidth, contentHeight) => {
+    console.log('i just change')
+    if (isInitialRender && flatListRef.current) {
+      scrollToNewMessages()
+      if (listHeaderHeight > 0) setIsInitialRender(false)
+    }
+  }
+
   return (
     <View style={styles.container}>
+      <StatusBar hidden/>
       <FlatList
+        inverted
         data={messages}
+        ref={flatListRef}
+        initialNumToRender={100}
+        keyExtractor={(item, index) => index}
+        onContentSizeChange={handleContentSizeChange}
+        ListHeaderComponent={
+          <NewMessages
+            unreadMessages={unreadMessages}
+            handleSelectMessage={handleSelectMessage}
+            setListHeaderHeight={setListHeaderHeight}
+          />
+        }
         renderItem={({ item }) => (
           <ChatBubble
             message={item}
             onSelectMessage={handleSelectMessage}
             isMyMessage={
               item?.isMyMessage ? true
-              :
-              User._id == item?.sender?._id ? true : false
+              : User._id == item?.sender?._id ? true : false
             }
           />
         )}
-        initialNumToRender={100}
-        keyExtractor={(item, index) => index.toString()}
-        inverted
       />
       <QuotedMessage
         message={quotedMessage}
@@ -208,18 +332,21 @@ const styles = StyleSheet.create({
     // paddingTop: 20,
   },
   bubbleContainer: {
-    maxWidth: '80%',
+    maxWidth: '70%',
+    minWidth: '35%',
     padding: 10,
     marginVertical: 5,
     borderRadius: 10,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#fff',
+    ...SHADOW
   },
   myBubble: {
     alignSelf: 'flex-end',
     backgroundColor: '#dcf8c6',
   },
   bubbleText: {
-    fontSize: 16,
+    fontSize: 14,
+    fontFamily: 'Poppins'
   },
   timestamp: {
     fontSize: 12,
@@ -236,16 +363,17 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: '#fff',
     borderRadius: 20,
     paddingHorizontal: 15,
     paddingVertical: 10,
     marginRight: 10,
+    ...SHADOW
   },
   sendButton: {
     // backgroundColor: '#007bff',
     backgroundColor: '#365486',
-    borderRadius: 20,
+    borderRadius: 50,
     paddingVertical: 10,
     paddingHorizontal: 20,
   },
