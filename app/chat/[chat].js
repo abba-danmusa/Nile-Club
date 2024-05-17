@@ -86,7 +86,7 @@ const ChatBubble = ({ message, isMyMessage, onSelectMessage, isRead = true }) =>
         <Divider/>
         <Text style={styles.bubbleText}>{message.content}</Text>
         <View style={styles.timestamp}>
-          <TimeAgo date={message?.createdAt || message?.timestamp}/>
+          <TimeAgo date={message?.createdAt || message?.timeSent || message?.timestamp}/>
         </View>
       </Animated.View>
     </View>
@@ -161,13 +161,11 @@ const NewMessages = ({
         !(unreadMessages.length < 1) &&
         <View
           style={{
-            backgroundColor: '#CBE8EF',
             alignItems: 'center',
             padding: 10,
             marginVertical: 20,
             width: '70%',
             alignSelf: 'center',
-            ...SHADOW
           }}
         >
           <Text
@@ -214,7 +212,6 @@ const Chat = () => {
   const { chat: room } = useLocalSearchParams()
   const { data: { data }, refetch } = useChats()
 
-
   useEffect(() => {
     const [club] = data?.chats?.filter(club => club?._id == room)
     let markMessagesRead = []
@@ -234,18 +231,13 @@ const Chat = () => {
     const timeoutId = setTimeout(() => {
       socket.emit('mark messages read', markMessagesRead);
       refetch(); // Get the latest chats
-    }, 10000)
+    }, 5000)
     
     return () => clearTimeout(timeoutId)
   }, [])
 
   socket.on('incoming chat', message => {
-    setMessages([...messages, message])
-    // queryCache.setQueryData(['chats'], (oldData) => {
-    //   const newData = [...oldData.data.chats, message]
-    //   return {...oldData, data: {...oldData.data, chats: newData } }
-    // })
-    // console.log(data)
+    setMessages([message, ...messages])
   })
 
   const sendMessage = async (message) => {
@@ -268,7 +260,6 @@ const Chat = () => {
 
   const scrollToNewMessages = () => {
     if (flatListRef.current && listHeaderHeight > 0) {
-      console.log('Scrolling to new messages', listHeaderHeight)
       flatListRef
         .current
         .scrollToOffset({ offset: listHeaderHeight, animated: true })
@@ -276,7 +267,6 @@ const Chat = () => {
   }
 
   const handleContentSizeChange = (contentWidth, contentHeight) => {
-    console.log('i just change')
     if (isInitialRender && flatListRef.current) {
       scrollToNewMessages()
       if (listHeaderHeight > 0) setIsInitialRender(false)

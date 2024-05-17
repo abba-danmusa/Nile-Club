@@ -23,21 +23,13 @@ export default function Layout() {
         name='[chat]'
         options={{
           headerShown: true,
+          headerStyle: {backgroundColor: '#365486', ...SHADOW},
+          headerRight: props =>
+          { return <HeaderRight {...props} members={data?.data?.members} /> },
           headerLeft: props => {
             return (
               <HeaderLeft {...props} members={data?.data?.members?.length} />
             )
-          },
-          headerRight: props =>
-          { return <HeaderRight {...props} members={data?.data?.members} /> },
-          headerStyle: {
-            // backgroundColor: '#fff'
-            backgroundColor: '#365486',
-            ...SHADOW 
-          },
-          headerTitleStyle: { color: '#fff', fontFamily: 'Poppins' },
-          headerTitle: props => {
-            console.log(props.children)
           },
         }}
       />
