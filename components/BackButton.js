@@ -22,11 +22,12 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     left: 10,
-    top: STATUS_BAR_HEIGHT,
+    top: STATUS_BAR_HEIGHT + 7,
     width: 40,
     height: 40,
     borderRadius: 100,
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: 10
   },
 })

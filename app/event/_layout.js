@@ -8,13 +8,7 @@ export default function Layout() {
       }}
     >
       <Stack.Screen
-        name='manage'
-      />
-      <Stack.Screen
-        name='clubs'
-      />
-      <Stack.Screen
-        name='admin'
+        name='[event]'
       />
     </Stack>
   )

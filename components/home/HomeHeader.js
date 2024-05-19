@@ -51,7 +51,7 @@ const HomeHeader = () => {
         />
       </TouchableOpacity>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>{`Hello ${User.firstName},` }</Text>
+        <Text style={styles.title}>{`Hello ${User?.firstName},` }</Text>
         <Text style={styles.message}>Let’s see what your clubs are up to!</Text>
       </View>
       <TouchableOpacity style={styles.notificationContainer}>

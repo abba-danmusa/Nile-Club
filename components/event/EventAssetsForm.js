@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions, TouchableOpacity } from 'react-native'
+import { StyleSheet, Dimensions, TouchableOpacity, StatusBar } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import BottomButton from '../../components/BottomButton'
 import ImageCarousel from '../ImageCarousel'
@@ -9,9 +9,10 @@ import { useEventStore } from '../../hooks/stores/useEventStore'
 import Toast from '../../utils/toast'
 import BackButton from '../../components/BackButton'
 import RenderItem from './RenderItem'
-import { useCreateEvent } from '../../hooks/queries/useEvent'
+import { useCreateEvent, useUpdateEvent } from '../../hooks/queries/useEvent'
 import Loader from '../../components/Loader'
 import { router } from 'expo-router'
+import AssetGallery from './AssetGallery'
 
 const DEVICE_WIDTH = Dimensions.get('window').width
 const EVENT_FORM_SCREEN = 0
@@ -21,6 +22,7 @@ export default function EventAssetsForm({
 }) {
 
   const {
+    _id,
     date,
     startTime,
     endTime,
@@ -35,6 +37,7 @@ export default function EventAssetsForm({
   } = useEventStore()
 
   const { mutate: createEvent, isPending } = useCreateEvent()
+  const { mutate: updateEvent, isPendingUpdate } = useUpdateEvent()
 
   /**
    * Submits the event creation form.
@@ -48,6 +51,34 @@ export default function EventAssetsForm({
       scrollToScreen(EVENT_FORM_SCREEN)
       return
     }
+
+    if (_id) { // edit event
+      updateEvent(
+        {
+          _id,
+          date,
+          startTime,
+          endTime,
+          title,
+          description,
+          setTitle,
+          category,
+          assets: [...uploadedAssets]
+        },
+        {
+          onSuccess: data => {
+            setInitialState()
+            router.back()
+          },
+          onError: error => {
+            console.log(error)
+            Toast(error.message)
+          }
+        }
+      )
+      return
+    }
+
     // create the event
     createEvent(
       {
@@ -87,7 +118,7 @@ export default function EventAssetsForm({
 
     if (!result.canceled) {
       // set the asset and filter out the asset placeholder
-      setAssets([...assets, asset].reverse())
+      setAssets([...assets, asset])
     }
   }
 
@@ -101,8 +132,10 @@ export default function EventAssetsForm({
 
   return (
     <>
-      
-      {isPending ? <Loader message={'Creating Event...'} /> : null}
+      <StatusBar hidden/>
+      {isPending || isPendingUpdate ?
+        <Loader message={'Creating Event...'} /> : null
+      }
       
       <BackButton
         handlePress={() => scrollToScreen(EVENT_FORM_SCREEN)}
@@ -110,20 +143,14 @@ export default function EventAssetsForm({
         iconColor='#fff'
       />
       <SafeAreaView style={styles.container}>
-        <ImageCarousel
-          images={assets}
-          setImages={setAssets}
-          keyExtractor={item => item.uri}
-          renderItem={({ item, index }) =>
-            <RenderItem item={item} index={index} />
-          }
-        />
-        <TouchableOpacity onPress={upload} style={styles.addImageButton}>
-          <AntDesign name="plus" size={24} color="black"/>
-        </TouchableOpacity>
         
+        <AssetGallery images={assets} />
         <BottomButton title='Submit' handlePress={submit} />
+
       </SafeAreaView>
+      <TouchableOpacity onPress={upload} style={styles.addImageButton}>
+        <AntDesign name="plus" size={24} color="black"/>
+      </TouchableOpacity>
     </>
   )
 }
@@ -146,9 +173,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   container: {
-    marginTop: 70,
     alignItems: 'center',
-    paddingBottom: 120
   },
   imageContainer: {
     marginTop: 10,
@@ -187,7 +212,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     position: 'absolute',
     right: 10,
-    bottom: 120,
+    bottom: '20%',
     zIndex: 1000,
     ...SHADOW
   },

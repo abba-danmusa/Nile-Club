@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet} from 'react-native'
 import React from 'react'
 import { Image } from 'expo-image'
+import { BLURHASH } from '../utils/styles'
 
 export default function Avatar({
   image = require('../assets/home/avatar.png'),
@@ -12,7 +13,7 @@ export default function Avatar({
     <View style={[styles.container, {width, height, borderWidth}]}>
       <Image
         source={image}
-        placeholder={require('../assets/home/avatar.png')}
+        placeholder={BLURHASH}
         contentFit='cover'
         style={{width: width - 6, height: height - 6, borderRadius: 100}}
       />

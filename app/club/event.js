@@ -1,8 +1,10 @@
-import { StyleSheet, Dimensions, View, ScrollView } from 'react-native'
-import { useState, useRef } from 'react'
+import { StyleSheet, Dimensions, View, ScrollView, BackHandler, Alert } from 'react-native'
+import { useState, useRef, useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import NewEventForm from '../../components/event/NewEventForm'
 import EventAssetsForm from '../../components/event/EventAssetsForm'
+import { useNavigation } from 'expo-router'
+import { useEventStore } from '../../hooks/stores/useEventStore'
 
 const DEVICE_WIDTH = Dimensions.get('window').width
 
@@ -10,6 +12,8 @@ export default function event() {
 
   const [slideIndex, setSlideIndex] = useState(0)
   const scrollViewRef = useRef(null)
+
+  const { setInitialState } = useEventStore()
 
   const scrollToScreen = (index) => {
     const nextPageOffset = index * DEVICE_WIDTH
@@ -22,9 +26,34 @@ export default function event() {
     { renderSlide: key => <EventAssetsForm key={key} scrollToScreen={scrollToScreen} /> }
   ]
 
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      // Handle back button press here
+      Alert.alert('Now, hold on a sec!', 'Are you sure you want to go back?', [
+        {
+          text: 'Cancel',
+          onPress: () => null,
+          style: 'cancel',
+        },
+        {
+          text: 'YES',
+          onPress: () => {
+            setInitialState()
+            navigation.goBack()
+          }
+        },
+      ]);
+      return true; // Prevent the default back button behavior
+    });
+
+    return () => backHandler.remove();
+  }, [navigation])
+
   const CurrentSlideIndicator = () => {
     return (
-      <View style={styles.indicatorContainer}>
+      <View style={[styles.indicatorContainer, slideIndex === 1 && {backgroundColor: 'black'}]}>
         {
           SLIDES.map((slide, index) =>
             <View
@@ -44,7 +73,7 @@ export default function event() {
   }
 
   return (
-    <SafeAreaView> 
+    <SafeAreaView style={slideIndex === 1 && {backgroundColor: 'black', flex: 1}}> 
       <CurrentSlideIndicator/>
       <ScrollView
         style={{height: '100%'}}
@@ -60,10 +89,10 @@ export default function event() {
           setSlideIndex(index)
         }}
       > 
-        <View style={styles.slideContainer}>
+        <View style={[styles.slideContainer]}>
           <NewEventForm scrollToScreen={scrollToScreen} />
         </View>
-        <View style={styles.slideContainer}>
+        <View style={[styles.slideContainer, slideIndex === 1 && {backgroundColor: 'black'}]}>
           <EventAssetsForm scrollToScreen={scrollToScreen} />
         </View>
       </ScrollView>

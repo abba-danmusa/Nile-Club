@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { router } from "expo-router"
 import { Image } from 'expo-image'
@@ -8,17 +8,23 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 let User
 
-AsyncStorage.getItem('user').then(userString => {
-  if (userString) User = JSON.parse(userString)
-}).catch(error => console.log(error))
-
 const PROFILE_ITEMS = [
   { title: 'manage profile', onPress: () => router.push('/profile/manage') },
   { title: 'my clubs', onPress: () => router.push('/clubs') },
-  { title: 'my events', onPress: () => router.push('/events') },
+  { title: 'my events', onPress: () => router.push('/profile/events') },
   { title: 'roles', onPress: () => router.push('/roles') },
   { title: 'create club', onPress: () => router.push('/profile/create') },
 ]
+
+AsyncStorage.getItem('user').then(userString => {
+  if (userString) {
+    User = JSON.parse(userString)
+    if (User?.admin) PROFILE_ITEMS.push({
+      title: 'admin',
+      onPress: () => router.push('/profile/admin')
+    })
+  }
+}).catch(error => console.log(error))
 
 const profile = () => {
   const signout = () => {
@@ -31,9 +37,9 @@ const profile = () => {
       <View style={styles.itemsContainer}>
         {
           PROFILE_ITEMS.map(item => {
-            if (!User.club && (item.title === 'my events' || item.title === 'roles' || item.title === 'my clubs')) {
+            if (!User?.club && (item.title === 'my events' || item.title === 'roles' || item.title === 'my clubs')) {
               return null
-            } else if (User.club && (item.title === 'create club')) {
+            } else if (User?.club && (item.title === 'create club')) {
               return null
             } else {
               return <Items
@@ -65,7 +71,7 @@ const Hero = () => {
         />
       </TouchableOpacity>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>{`Hello ${User.firstName}!`}</Text>
+        <Text style={styles.title}>{`Hello ${User?.firstName}!`}</Text>
         <Text style={styles.message}>What would you like to view?</Text>
       </View>
     </View>

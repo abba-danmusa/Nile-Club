@@ -1,31 +1,33 @@
 import * as React from 'react';
-import { View, StyleSheet, Button } from 'react-native';
+import { View, StyleSheet, Button, Dimensions } from 'react-native';
 import { Video, ResizeMode } from 'expo-av';
 
+const DEVICE_WIDTH = Dimensions.get('window').width
+
 export default function VideoPlayer({
-  uri = 'https://d23dyxeqlo5psv.cloudfront.net/big_buck_bunny.mp4',
+  uri = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
   width = '100%',
   height = 450,
-  backgroundColor = 'inherit'
+  backgroundColor = 'inherit',
 }) {
-  
-  const video = React.useRef(null)
-  const [status, setStatus] = React.useState({})
+  const video = React.useRef(null);
+  const [status, setStatus] = React.useState({});
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {height}]}>
       <Video
         ref={video}
-        source={{ uri }}
+        style={[styles.video, {width, height, maxHeight: 640, backgroundColor}]}
+        source={{uri}}
         useNativeControls
         resizeMode={ResizeMode.CONTAIN}
         isLooping
         onPlaybackStatusUpdate={status => setStatus(() => status)}
-        style={[styles.video, { width, height, backgroundColor }]}
       />
       {/* <View style={styles.buttons}>
         <Button
           title={status.isPlaying ? 'Pause' : 'Play'}
+          color={'#365486'}
           onPress={() =>
             status.isPlaying ? video.current.pauseAsync() : video.current.playAsync()
           }
@@ -39,15 +41,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: '#ecf0f1',
+    width: DEVICE_WIDTH
+    // backgroundColor: '#ecf0f1',
   },
   video: {
-    alignItems: 'center',
+    alignSelf: 'center',
     justifyContent: 'center',
   },
   buttons: {
-    flexDirection: 'row',
+    position: 'absolute',
+    alignSelf: 'center',
     justifyContent: 'center',
-    alignItems: 'center',
+    borderRadius: 10
   },
-});
+})

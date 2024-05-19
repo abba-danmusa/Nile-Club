@@ -4,16 +4,13 @@ import { create } from 'zustand'
  * Creates a zustand store.
  */
 const initialState = {
+  _id: '',
   date: new Date(),
   startTime: new Date(),
   endTime: new Date(),
   title: '',
   description: '',
-  assets: [{
-    _id: 1,
-    title: 'Add some image(s) or video(s)',
-    text: 'Tab on the plus button'
-  }],
+  assets: [],
   uploadedAssets: [],
   images: [],
   videos: [],
@@ -36,5 +33,15 @@ export const useEventStore = create((set) => ({
   setCategory: (category) => set({ category }),
   setVideos: (videos) => set({ videos }),
   setImages: (images) => set({ images }),
-  setInitialState: () => set({...initialState}),
-}));
+  setInitialState: () => set({ ...initialState }),
+  setEvent: (event) => set((state) => ({
+    _id: event.item._id,
+    date: new Date(event.item.date),
+    startTime: new Date(event.item.startTime),
+    endTime: new Date(event.item.endTime),
+    title: event.item.title,
+    description: event.item.description,
+    assets: [...event.item.assets],
+    category: [...event.item.category],
+  })),
+}))

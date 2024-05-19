@@ -243,3 +243,41 @@ export const useReviewClub = (clubId) => {
     }
   })
 }
+
+export const useClubs = () => {
+  return useQuery({
+    queryKey: ['clubs-approval'],
+    queryFn: async () => {
+      return await axios.get(`/club/approval`)
+    },
+    onError: (error) => {
+      Toast(error.response?.data.message || error.message) // prioritize server error message, then client error
+      if (error?.response?.status === 401) { // user isn't logged in
+        router.replace('/signin')
+      }
+    },
+  })
+}
+
+export const useApproveClub = (clubId) => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationKey: ["approve-club", clubId],
+    mutationFn: async (data) => {
+      return await axios.post("/club/approval", data)
+    },
+    onSuccess: (data) => {
+      Toast(data.data?.message)
+    },
+    onError: (error) => {
+      Toast(error.response?.data.message || error.message) // prioritize server error message, then client error message
+      if (error?.response?.status === 401) { // user isn't logged in
+        router.replace('/signin')
+      }
+    },
+    onSettled: async () => {
+      queryClient.invalidateQueries(['clubs-approval'])
+    }
+  })
+}
