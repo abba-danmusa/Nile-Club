@@ -1,15 +1,10 @@
 import React from 'react'
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native'
+import {StyleSheet, View, Text } from 'react-native'
 import { Tabs } from 'expo-router'
-import { AntDesign, Ionicons, Feather } from '@expo/vector-icons'
+import { AntDesign, Ionicons } from '@expo/vector-icons'
 import HomeHeader from '../../components/home/HomeHeader'
 import { SHADOW } from '../../utils/styles'
-import { useEffect, useState } from 'react'
-import { socket } from '../../socket.io/socket'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useChats } from '../../hooks/queries/useChat'
-
-const TOKEN = AsyncStorage.getItem('token')
 
 const TabLayout = () => {
   

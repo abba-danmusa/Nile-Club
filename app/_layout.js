@@ -34,7 +34,7 @@ export default function Layout() {
   // }, [])
 
   // console.log(isConnected ? 'connected' : 'disconnected', transport) 
-
+  
   return (
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>

@@ -7,6 +7,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { socket } from '../../socket.io/socket'
 
 export const useCreateClub = () => {
+
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationKey: ["create-club"],
     mutationFn: async (data) => {
@@ -14,8 +17,30 @@ export const useCreateClub = () => {
     },
     onSuccess: async data => {
       Toast(data.data?.message)
-      await AsyncStorage.removeItem('user')
-      await AsyncStorage.setItem('user', JSON.stringify(data?.data?.user))
+      await queryClient.invalidateQueries(['user'])
+    },
+    onError: (error) => {
+      Toast(error.response?.data.message || error.message) // prioritize server error message, then client error message
+      if (error?.response?.status === 401) { // user isn't logged in
+        router.replace('/signin')
+      }
+    },
+  })
+}
+
+export const useEditClub = () => {
+
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationKey: ["edit-club"],
+    mutationFn: async (data) => {
+      return await axios.put("/club", data)
+    },
+    onSuccess: async data => {
+      Toast(data.data?.message)
+      await queryClient.invalidateQueries(['user'])
+      await queryClient.invalidateQueries(['club', data?.data?.club?._id])
     },
     onError: (error) => {
       Toast(error.response?.data.message || error.message) // prioritize server error message, then client error message
@@ -109,8 +134,10 @@ export const useSetFollowClub = () => {
       }
     },
     onSettled: async () => {
+      queryClient.invalidateQueries(['chats'])
       queryClient.invalidateQueries(['feeds'])
       queryClient.invalidateQueries(['following-club'])
+      queryClient.invalidateQueries(['club-membership'])
     }
   })
 }
@@ -168,11 +195,28 @@ export const useCreateComment = () => {
   })
 }
 
-export const useClubMembers = clubId => {
+export const useClubMembership = () => {
+  return useQuery({
+    queryKey: ['club-membership'],
+    queryFn: async () => {
+      return await axios.get(`/club/membership`)
+    },
+    onError: (error) => {
+      Toast(error.response?.data.message || error.message) // prioritize server error message, then client error
+      if (error?.response?.status === 401) { // user isn't logged in
+        router.replace('/signin')
+      }
+    },
+  })
+}
+
+export const useClubMembers = queries => {
+  const { search, clubId } = queries
+  console.log(search)
   return useQuery({
     queryKey: ['club-members', clubId],
     queryFn: async () => {
-      return await axios.get(`/club/member?clubId=${clubId}`)
+      return await axios.get(`/club/member?clubId=${clubId}&?search=${search}`)
     },
     onError: (error) => {
       Toast(error.response?.data.message || error.message) // prioritize server error message, then client error

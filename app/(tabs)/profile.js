@@ -1,61 +1,62 @@
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
-import React, { useEffect } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { router } from "expo-router"
 import { Image } from 'expo-image'
-import { SHADOW } from '../../utils/styles'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-
-let User
-
-const PROFILE_ITEMS = [
-  { title: 'manage profile', onPress: () => router.push('/profile/manage') },
-  { title: 'my clubs', onPress: () => router.push('/clubs') },
-  { title: 'my events', onPress: () => router.push('/profile/events') },
-  { title: 'roles', onPress: () => router.push('/roles') },
-  { title: 'create club', onPress: () => router.push('/profile/create') },
-]
-
-AsyncStorage.getItem('user').then(userString => {
-  if (userString) {
-    User = JSON.parse(userString)
-    if (User?.admin) PROFILE_ITEMS.push({
-      title: 'admin',
-      onPress: () => router.push('/profile/admin')
-    })
-  }
-}).catch(error => console.log(error))
+import { useUser } from '../../hooks/queries/useAuthentication'
 
 const profile = () => {
+  const { data } = useUser();
+  const User = data?.data?.user;
+
+  const PROFILE_ITEMS = [
+    { title: "manage profile", onPress: () => router.push("/profile/manage") },
+    { title: "my club", onPress: () => router.push("/profile/club") },
+    { title: "my events", onPress: () => router.push("/profile/events") },
+    { title: "roles", onPress: () => router.push("/roles") },
+    { title: "create club", onPress: () => router.push("/profile/create") },
+    User?.admin
+      ? {
+          title: "Approve Clubs",
+          onPress: () => router.push("/profile/admin"),
+        }
+      : null,
+  ]
+
   const signout = () => {
-    router.replace('signin')
-  }
+    router.replace("signin");
+  };
 
   return (
     <SafeAreaView style={styles.container}>
-      <Hero/>
+      <Hero User={User} />
       <View style={styles.itemsContainer}>
-        {
-          PROFILE_ITEMS.map(item => {
-            if (!User?.club && (item.title === 'my events' || item.title === 'roles' || item.title === 'my clubs')) {
-              return null
-            } else if (User?.club && (item.title === 'create club')) {
-              return null
-            } else {
-              return <Items
+        {PROFILE_ITEMS.map((item) => {
+          if (!item) return
+          if (
+            !User?.club &&
+            (item.title === "my events" ||
+              item.title === "roles" ||
+              item.title === "my clubs")
+          ) {
+            return null;
+          } else if (User?.club && item.title === "create club") {
+            return null;
+          } else {
+            return (
+              <Items
                 key={item.title}
                 title={item.title}
                 handlePress={item.onPress}
               />
-            }
-          })
-        }
+            );
+          }
+        })}
       </View>
     </SafeAreaView>
-  )
-}
+  );
+};
 
-const Hero = () => {
+const Hero = ({User}) => {
   return (
     <View style={styles.headerContainer}>
       <TouchableOpacity
@@ -161,7 +162,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins',
     fontSize: 20,
     fontWeight: '500',
-    textTransform: 'capitalize'
+    textTransform: 'capitalize',
+    textAlign: 'center'
   }
 })
 

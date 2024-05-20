@@ -9,19 +9,16 @@ import { getStatusBarHeight } from '../../utils/methods'
 import FeaturedClubs from '../../components/home/FeaturedClubs'
 import { useFeaturedClubs } from '../../hooks/queries/useClub'
 import SectionTitle from '../../components/SectionTitle'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-
-let User
-
-AsyncStorage.getItem('user').then(userString => {
-  if (userString) User = JSON.parse(userString)
-}).catch(error => console.log(error))
+import { useUser } from '../../hooks/queries/useAuthentication'
+import { useChats } from '../../hooks/queries/useChat'
 
 export default function home() {
   
   const { data, isPending } = useFeeds()
   const { data: featuredClubs } = useFeaturedClubs()
-  
+  const { data: User} = useUser()
+  useChats()
+
   const { translateY } = useAnimationStore()
 
   if (isPending) return <ScrollView><FeedSkeleton loading /></ScrollView>
@@ -29,7 +26,7 @@ export default function home() {
   return (
     <Animated.View style={{ flex: 1 }}>
       <StatusBar backgroundColor={'#EBEEF3'} barStyle="dark-content"/>
-      { User?.club && <AddEventButton /> }
+      { User?.data?.user?.club && <AddEventButton /> }
       <FlashList
         data={data?.data?.feeds}
         ListHeaderComponentStyle={styles.listHeaderComponentStyle}

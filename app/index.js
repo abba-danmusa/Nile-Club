@@ -7,6 +7,7 @@ import { useFonts } from 'expo-font'
 import { socket } from '../socket.io/socket'
 import { useEffect, useState } from 'react'
 import { useChats } from '../hooks/queries/useChat';
+import { useUser } from '../hooks/queries/useAuthentication';
 
 export default function App() {
   
@@ -48,8 +49,7 @@ export default function App() {
     const checkLoggedIn = async () => {
       const token = await AsyncStorage.getItem('token');
       setIsLoggedIn(token);
-    };
-
+    }
 
     checkLoggedIn();
   }, [])
@@ -70,6 +70,7 @@ export default function App() {
   if (isLoggedIn) {
     socket.on('disconnect', () => console.log('Socket Disconnected'))
     socket.on('connect', () => socket.emit('join room'))
+
     return (
       <SafeAreaView >
         <StatusBar backgroundColor={'#EBEEF3'} barStyle="dark-content" />

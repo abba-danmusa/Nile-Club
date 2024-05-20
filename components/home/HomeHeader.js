@@ -6,16 +6,14 @@ import { Image } from 'expo-image'
 import { router } from "expo-router"
 import { useAnimationStore } from '../../hooks/stores/useAnimationStore'
 import { getStatusBarHeight } from '../../utils/methods'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-
-let User
-
-AsyncStorage.getItem('user').then(userString => {
-  if (userString) User = JSON.parse(userString)
-}).catch(error => console.log(error))
+import { useUser } from '../../hooks/queries/useAuthentication'
 
 const HomeHeader = () => {
   
+  const { data } = useUser()
+
+  const User = data?.data?.user
+
   const STATUS_BAR_HEIGHT = getStatusBarHeight()
 
   const { translateY } = useAnimationStore()
@@ -51,7 +49,7 @@ const HomeHeader = () => {
         />
       </TouchableOpacity>
       <View style={styles.titleContainer}>
-        <Text style={styles.title}>{`Hello ${User?.firstName},` }</Text>
+        <Text style={styles.title}>{`Hello ${User?.firstName||''},` }</Text>
         <Text style={styles.message}>Let’s see what your clubs are up to!</Text>
       </View>
       <TouchableOpacity style={styles.notificationContainer}>

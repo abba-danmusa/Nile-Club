@@ -1,25 +1,37 @@
-import { Text, StyleSheet, Dimensions, ScrollView } from 'react-native'
+import { Text, StyleSheet, Dimensions, ScrollView, BackHandler, Alert } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import CustomizedInput from '../../components/CustomizedInput'
 import ImagePickerProvider from '../../components/ImagePicker'
 import BottomButton from '../../components/BottomButton'
 import { useState } from 'react'
-import { useCreateClub } from '../../hooks/queries/useClub' 
+import { useCreateClub, useEditClub } from '../../hooks/queries/useClub' 
 import toast from '../../utils/toast'
 import Loader from '../../components/Loader'
 import cloudinary from '../../utils/cloudinary'
 import TextArea from '../../components/TextArea'
+import { useClubStore } from '../../hooks/stores/useClubStore'
+import { router, useNavigation } from 'expo-router'
+import { useEffect } from 'react'
 
 const DEVICE_WIDTH = Dimensions.get('window').width
 
 export default function create() {
   
-  const [banner, setBanner] = useState(null)
-  const [image, setImage] = useState(null)
-  const [name, setName] = useState(null)
-  const [description, setDescription] = useState(null)
+  const {
+    banner,
+    setBanner,
+    image,
+    setImage,
+    name,
+    setName,
+    description,
+    setDescription,
+    setInitialState,
+    _id
+  } = useClubStore()
 
-  const {mutate: createClub, isPending: isPendingCreatingClub} = useCreateClub()
+  const { mutate: createClub, isPending: isPendingCreatingClub } = useCreateClub()
+  const { mutate: editClub, isPending: isPendingEditClub } = useEditClub()
    
   const [isPendingUploadingImages, setIsPendingUploadingImages] = useState(false)
 
@@ -43,16 +55,46 @@ export default function create() {
       name, // the name of the club
       description, // the description of the club,
       assets: {
-        banner: {...bannerAssets},
-        image: {...imageAssets}
+        banner: { ...bannerAssets },
+        image: { ...imageAssets }
       }
     }, {
-      onSuccess: data => {
-        setName('')
-        setDescription('')
-        setBanner('')
-        setImage('')
-      } 
+      onSuccess: () => setInitialState()
+    })
+  }
+
+  const submitEditClub = async () => {
+    if (!image || !banner || !name || !description) {
+      return toast('Please all inputs are required')
+    }
+
+    let bannerAssets
+    let imageAssets
+
+    if (banner.uri) {
+      setIsPendingUploadingImages(true) // images are uploading
+      bannerAssets = await uploadImage(banner.uri)
+      setIsPendingUploadingImages(false)
+    }
+    if (image.uri) {
+      setIsPendingUploadingImages(true)
+      imageAssets = await uploadImage(image.uri)
+      setIsPendingUploadingImages(false)
+    }
+
+    editClub({
+      _id, // the id of the club
+      name, // the name of the club
+      description, // the description of the club,
+      assets: {
+        banner: bannerAssets ? { ...bannerAssets } : { ...banner },
+        image: imageAssets ? { ...imageAssets } : { ...image }
+      }
+    }, {
+      onSuccess: () => {
+        setInitialState()
+        router.back()
+      }
     })
   }
 
@@ -84,13 +126,38 @@ export default function create() {
     return { url, secure_url, signature }
   }
 
+  const navigation = useNavigation()
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      // Handle back button press here
+      Alert.alert('Now hold on a sec!', 'Are you sure you\'d want to go back?', [
+        {
+          text: 'Cancel',
+          onPress: () => null,
+          style: 'cancel',
+        },
+        {
+          text: 'YES',
+          onPress: () => {
+            setInitialState()
+            navigation.goBack()
+          }
+        },
+      ]);
+      return true; // Prevent the default back button behavior
+    });
+
+    return () => backHandler.remove();
+  }, [navigation])
+
   return (
     <>
       {
         (isPendingUploadingImages || isPendingCreatingClub) ?
           <Loader
             message={
-              isPendingUploadingImages ? 'Uploading images...' : isPendingCreatingClub ? 'Creating your club...' : 'Done!'
+              isPendingUploadingImages ? 'Uploading images...' : isPendingCreatingClub || isPendingEditClub ? 'Creating your club...' : 'Done!'
             }
           />
         : null
@@ -115,7 +182,10 @@ export default function create() {
             setImage={setImage}
             title='Club Avatar Image'
           />
-          <BottomButton title='Submit' handlePress={submit} />
+          {
+            _id ? <BottomButton title='Edit Club' handlePress={submitEditClub} />
+            : <BottomButton title='Submit' handlePress={submit} />
+          }
         </ScrollView>
       </SafeAreaView>
     </>

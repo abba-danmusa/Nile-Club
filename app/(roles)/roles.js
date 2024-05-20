@@ -14,7 +14,7 @@ const ClubMembersList = () => {
   const [roleInput, setRoleInput] = useState('')
   const [searchValue, setSearchValue] = useState('')
 
-  const { data, isPending } = useClubMembers()
+  const { data, isPending } = useClubMembers({search: searchValue})
   const { mutate: assignRole } = useAssignRole()
 
   if (isPending) {

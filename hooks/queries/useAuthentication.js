@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "../../utils/axios";
 import Toast from '../../utils/toast'
 import { router } from "expo-router";
@@ -37,6 +37,28 @@ export const useAbout = () => {
   })
 }
 
+export const useEditProfile = () => {
+  
+  const { setInitialState } = useAuthStore()
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationKey: ["edit-about"],
+    mutationFn: async (data) => {
+      return await axios.put("/authentication/about", data)
+    },
+    onSuccess: async (data) => {
+      await queryClient.invalidateQueries(['user'])
+      setInitialState()
+      Toast(data.data?.message)
+      router.back()
+    },
+    onError: (error) => {
+      Toast(error.response?.data.message || error.message) // prioritize server error message, then client error message
+    },
+  })
+}
+
 export const useCreatePassword = () => {
   return useMutation({
     mutationKey: ["create-password"],
@@ -44,6 +66,24 @@ export const useCreatePassword = () => {
       return await axios.post("/authentication/password/create", data)
     },
     onSuccess: (data) => {
+      Toast(data.data?.message)
+    },
+    onError: (error) => {
+      Toast(error.response?.data.message || error.message) // prioritize server error message, then client error message
+    },
+  })
+}
+
+export const useChangePassword = () => {
+  const { setInitialState } = useAuthStore()
+  
+  return useMutation({
+    mutationKey: ["change-password"],
+    mutationFn: async (data) => {
+      return await axios.put("/authentication/password", data)
+    },
+    onSuccess: (data) => {
+      setInitialState()
       Toast(data.data?.message)
     },
     onError: (error) => {
@@ -62,7 +102,6 @@ export const useSignin = () => {
     onSuccess: async data => {
       setInitialState()
       await AsyncStorage.setItem('token', data?.data?.token)
-      await AsyncStorage.setItem('user', JSON.stringify(data?.data?.user))
       router.replace('/home')
     },
     onError: (error) => {
@@ -77,6 +116,22 @@ export const useSignin = () => {
         router.push('/signup')
       }
     }
+  })
+}
+
+export const useUser = () => {
+  return useQuery({
+    queryKey: ['user'],
+    queryFn: async () => {
+      return await axios.get(`/authentication/user`)
+    },
+    onError: (error) => {
+      Toast(error.response?.data.message || error.message) // prioritize server error message, then client error
+      if (error?.response?.status === 401) { // user isn't logged in
+        router.replace('/signin')
+      }
+    },
+    refetchInterval: 60 * 1000 // one minute
   })
 }
 

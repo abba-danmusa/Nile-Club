@@ -16,6 +16,15 @@ export default function Layout() {
       <Stack.Screen
         name='admin'
       />
+      <Stack.Screen
+        name='edit'
+      />
+      <Stack.Screen
+        name='membership'
+      />
+      <Stack.Screen
+        name='security'
+      />
     </Stack>
   )
 }

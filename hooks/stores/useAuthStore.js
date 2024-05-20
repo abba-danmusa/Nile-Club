@@ -2,9 +2,11 @@ import { create } from 'zustand'
 
 const initialState = {
   email: '',
+  asset: null,
   firstName: '',
   lastName: '',
   password: '',
+  newPassword: '',
   confirmPassword: '',
   code: '',
   faculty: '',
@@ -16,7 +18,9 @@ const initialState = {
 export const useAuthStore = create(set => ({
   ...initialState,
   setEmail: email => set({ email }),
+  setAsset: asset => set({ asset }),
   setPassword: password => set({ password }),
+  setNewPassword: newPassword => set({ newPassword }),
   setConfirmPassword: confirmPassword => set({ confirmPassword }),
   setDepartment: department => set({ department }),
   setYear: year => set({ year }),
@@ -25,5 +29,13 @@ export const useAuthStore = create(set => ({
   setCode: code => set({ code }),
   setFirstName: firstName => set({ firstName }),
   setLastName: lastName => set({ lastName }),
-  setInitialState: () => set(initialState)
+  setInitialState: () => set(initialState),
+  setProfile: profile => set((state) => ({
+    firstName: profile?.User?.firstName,
+    lastName: profile?.User?.lastName,
+    faculty: profile?.User?.faculty,
+    department: profile?.User?.department,
+    year: profile.User?.year,
+    matriculationNumber: profile?.User?.matriculationNumber,
+  }))
 }))

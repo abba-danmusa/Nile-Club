@@ -42,7 +42,7 @@ export default function ImagePickerProvider({
         {
           image && <View style={{marginTop: 10}}>
             <Image
-              source={{ uri: image.uri }}
+              source={{ uri: image.uri || image.secure_url }}
               style={styles.image}
             />
             <TouchableOpacity style={styles.cancelIcon} onPress={removeImage}>

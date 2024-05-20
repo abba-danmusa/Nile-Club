@@ -25,8 +25,16 @@ const FACULTIES = [
   { key: 9, value: 'Faculty of Education' },
   { key: 10, value: 'Faculty of Health' },
 ]
+const LEVELS = [
+  { key: 1, value: '100 Level' },
+  { key: 2, value: '200 Level' },
+  { key: 3, value: '300 Level' },
+  { key: 4, value: '400 Level' },
+  { key: 5, value: '500 Level' },
+  { key: 6, value: '600 Level' }
+]
 
-export default function AboutForm({ scrollToScreen }) {
+export default function AboutForm({ scrollToScreen, editProfile = () => { }, edit = false }) {
   
   const {
     firstName,
@@ -89,7 +97,7 @@ export default function AboutForm({ scrollToScreen }) {
         : null
     },
     {
-      data:  FACULTIES ,
+      data: LEVELS,
       setSelected:  setYear ,
       searchPlaceholder: 'Please choose what level/year you’re currently in',
       placeholder: 'Please choose what level/year you’re currently in',
@@ -129,8 +137,20 @@ export default function AboutForm({ scrollToScreen }) {
 
   const createAbout = () => {
     if (
-      !firstName || !lastName || !faculty || !department || !year || !email ||!matriculationNumber
+      !firstName || !lastName || !faculty || !department || !year ||!matriculationNumber
     ) return Toast('Please provide all information')
+
+    if (edit) {
+      editProfile({
+        firstName,
+        lastName,
+        faculty,
+        department,
+        year,
+        matriculationNumber
+      })
+      return
+    }
     
     sendAbout({
       firstName,
@@ -204,7 +224,7 @@ export default function AboutForm({ scrollToScreen }) {
         }
 
         <Button
-          title={'Create account'}
+          title={edit ? 'Edit Profile' : 'Create account'}
           buttonStyle={{
             backgroundColor: '#365486',
             borderRadius: 12,

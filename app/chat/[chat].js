@@ -4,7 +4,6 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router'
 import { socket } from '../../socket.io/socket';
 import { useChats } from '../../hooks/queries/useChat';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useChatStore } from '../../hooks/stores/useChatStore';
 import toast from '../../utils/toast';
 import { QueryCache } from '@tanstack/react-query'
@@ -12,12 +11,7 @@ import { SHADOW } from '../../utils/styles';
 import { Image } from 'expo-image'
 import TimeAgo from '../../components/chats/Timer';
 import { Divider } from '@rneui/base';
-
-let User
-
-AsyncStorage.getItem('user').then(userString => {
-  if (userString) User = JSON.parse(userString)
-}).catch(error => console.log(error))
+import { useUser } from '../../hooks/queries/useAuthentication';
 
 const ChatBubble = ({ message, isMyMessage, onSelectMessage, isRead = true }) => {
 
@@ -149,7 +143,8 @@ const QuotedMessage = ({ message, setQuotedMessage}) => {
 const NewMessages = ({
   unreadMessages = [],
   handleSelectMessage,
-  setListHeaderHeight
+  setListHeaderHeight,
+  User
 }) => {
   return (
     <View
@@ -211,6 +206,9 @@ const Chat = () => {
 
   const { chat: room } = useLocalSearchParams()
   const { data: { data }, refetch } = useChats()
+  const { data: userData } = useUser()
+  
+  const User = userData?.data?.user
 
   useEffect(() => {
     const [club] = data?.chats?.filter(club => club?._id == room)
@@ -288,6 +286,7 @@ const Chat = () => {
             unreadMessages={unreadMessages}
             handleSelectMessage={handleSelectMessage}
             setListHeaderHeight={setListHeaderHeight}
+            User={User}
           />
         }
         renderItem={({ item }) => (
