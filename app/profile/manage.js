@@ -92,14 +92,14 @@ const Hero = ({ User }) => {
     }
   }
 
-  const updateAvatar = async () => {
+  const updateAvatar = async (_id) => {
     if (!image) return toast('Please provide an image')
 
     setIsPendingUpload(true)
     const asset = await uploadImage(image.uri)
     setIsPendingUpload(false)
 
-    mutate({asset})
+    mutate({asset, _id})
   }
 
   const uploadImage = async (imageURI) => {
@@ -152,7 +152,7 @@ const Hero = ({ User }) => {
                     padding: 2,
                     borderRadius: 2
                   }}
-                  onPress={updateAvatar}
+                  onPress={() => updateAvatar(User._id)}
                 >
                   <Text style={{
                     textTransform: 'capitalize',
