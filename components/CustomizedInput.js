@@ -16,6 +16,7 @@ export default function CustomizedInput({
   keyboardType = 'default',
   rightIcon = () => { },
   showPassword,
+  height
 }) {
 
   return (
@@ -32,7 +33,7 @@ export default function CustomizedInput({
       returnKeyType={returnKeyType}
       style={styles.input}
       labelStyle={styles.inputLabel}
-      containerStyle={styles.inputMainContainer}
+      containerStyle={[styles.inputMainContainer, {height}]}
       inputContainerStyle={styles.inputContainer}
       rightIcon={rightIcon}
       secureTextEntry={showPassword}

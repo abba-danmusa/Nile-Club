@@ -24,17 +24,17 @@ export default function home() {
   if (isPending) return <ScrollView><FeedSkeleton loading /></ScrollView>
 
   return (
-    <Animated.View style={{ flex: 1 }}>
+    <Animated.View style={{ flex: 1, backgroundColor: '#fff' }}>
       <StatusBar backgroundColor={'#EBEEF3'} barStyle="dark-content"/>
       { User?.data?.user?.club && <AddEventButton /> }
       <FlashList
         data={data?.data?.feeds}
         ListHeaderComponentStyle={styles.listHeaderComponentStyle}
         ListEmptyComponent={<FeedSkeleton />}
-        ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
+        ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
         ListFooterComponent={<Footer />}
         renderItem={({item}) => <FeedItem item={item} />}
-        estimatedItemSize={50}
+        estimatedItemSize={data?.data?.length || 50}
         ListHeaderComponent={
           <>
             <SectionTitle title={'Featured Clubs'} />
@@ -55,8 +55,8 @@ const Footer = () => {
     <View style={{ height: 200, justifyContent: 'center' }}>
       <View
         style={{
-          width: 10,
-          height: 10,
+          width: 5,
+          height:5,
           borderRadius: 20,
           backgroundColor: 'black',
           alignSelf: 'center'

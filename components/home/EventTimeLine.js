@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, View, StyleSheet } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons'
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -16,15 +17,21 @@ const formatDate = (dateString) => {
 const EventTimeLine = ({ fromDate, toDate }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>From: <Text style={styles.greyText}>{formatDate(fromDate)}</Text></Text>
-      <Text style={styles.text}>To: <Text style={styles.greyText}>{formatDate(toDate)}</Text></Text>
+      <View style={styles.eventTime}>
+        <MaterialIcons name="timer" size={12} color="#365486" />
+        <Text style={styles.greyText}>{formatDate(fromDate)}</Text>
+      </View>
+      <View style={styles.eventTime}>
+        <MaterialIcons name="timer-off" size={12} color="tomato" />
+        <Text style={styles.greyText}>{formatDate(toDate)}</Text>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 10,
+    marginVertical: 2,
   },
   text: {
     fontSize: 10,
@@ -36,6 +43,11 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontFamily: 'Poppins',
   },
+  eventTime: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 2.5,
+  }
 });
 
-export default EventTimeLine;
+export default EventTimeLine

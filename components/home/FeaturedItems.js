@@ -45,12 +45,12 @@ const styles = StyleSheet.create({
     flex: 1,
     width: 200,
     height: 250,
-    // backgroundColor: '#F2F9FB',
-    backgroundColor: '#fff',
+    backgroundColor: '#F2F9FB',
+    backgroundColor: '#EBEEF3',
     marginHorizontal: 6,
     marginBottom: 10,
     borderRadius: 8,
-    // ...SHADOW
+    ...SHADOW
   },
   image: {
     height: 150,

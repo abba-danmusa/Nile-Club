@@ -44,53 +44,10 @@ export default function club() {
     refetchComments()
   }
 
-  // const SECTIONS = [
-  //   {
-  //     title: 'Featured Clubs',
-  //     horizontal: true,
-  //     renderItems: data => <FlatList
-  //       horizontal
-  //       data={data}
-  //       renderItem={({ item }) => <FeaturedItems club={item} />}
-  //       showsHorizontalScrollIndicator={false}
-  //     />,
-  //     data: featuredClubs?.data?.featuredClubs || []
-  //   },
-  //   {
-  //     title: 'News and Announcement',
-  //     horizontal: false,
-  //     renderItems: data => <FlatList
-  //       data={data}
-  //       renderItem={({ item }) => <NewsAnnouncement item={item} />}
-  //       showsHorizontalScrollIndicator={false}
-  //     />,
-  //     data: clubFeeds?.data?.feeds || []
-  //   }
-  // ]
-
   return (
     <NativeViewGestureHandler>
       <View style={styles.container}>
         <StatusBar hidden />
-        {/* <SectionList
-          sections={SECTIONS}
-          keyExtractor={({ _id }) => _id}
-          ListFooterComponent={() => <View style={{ height: 150 }} />}
-          ListHeaderComponent={() =>
-            <ListHeaderComponent club={data?.data?.club} onPressComment={handleOpenComments} />
-          }
-          renderSectionHeader={({ section }) =>
-            <>
-              <SectionTitle key={section.title} title={section.title} />
-              {section.renderItems(section?.data)}
-            </>
-          }
-          renderItem={({ item, section }) => {
-            if (!section.horizontal) {
-              section.renderItems(section?.data)
-            }
-          }}
-        /> */}
         <FlashList
           data={clubFeeds?.data?.feeds || []}
           ItemSeparatorComponent={() => <View style={{ height: 20 }} />}
@@ -184,8 +141,8 @@ const Footer = () => {
     <View style={{ height: 200, justifyContent: 'center' }}>
       <View
         style={{
-          width: 10,
-          height: 10,
+          width: 5,
+          height: 5,
           borderRadius: 20,
           backgroundColor: 'black',
           alignSelf: 'center'
@@ -275,7 +232,7 @@ const Ratings = (club) => {
   const clubId = club?.club?._id
   const rating = club?.club?.ratings
   const [modalVisible, setModalVisible] = useState(false)
-  const [ratingValue, setRatingValue] = useState(rating || 5)
+  const [ratingValue, setRatingValue] = useState(rating || 4)
   const { mutate: createView } = useReviewClub(clubId)
 
   const handleSubmit = () => {
@@ -298,7 +255,7 @@ const Ratings = (club) => {
       }}
     >
       <AirbnbRating
-        count={6}
+        count={5}
         size={15}
         showRating={false}
         isDisabled={true}
@@ -325,12 +282,12 @@ const Ratings = (club) => {
             </TouchableOpacity>
             <Text style={styles.modalTitle}>Rate us!!!</Text>
             <AirbnbRating
-              count={6}
+              count={5}
               defaultRating={ratingValue}
               onFinishRating={number => setRatingValue(number)}
               starContainerStyle={{ alignSelf: 'center', marginBottom: 20 }}
               reviews={
-                ['Terrible', 'Bad', 'Meh!', 'OK!', 'Good!!', 'Superb!!!']
+                ['Terrible', 'Meh!', 'OK!', 'Good!!', 'Superb!!!']
               }
             />
             <Button title="Confirm" onPress={handleSubmit} />

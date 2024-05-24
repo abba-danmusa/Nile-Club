@@ -1,40 +1,28 @@
-import { Text, StyleSheet, Dimensions, View, TouchableOpacity, ScrollView } from 'react-native'
+import { Text, StyleSheet, Dimensions, View } from 'react-native'
 import CustomizedInput from '../../components/CustomizedInput'
 import TextArea from '../../components/TextArea'
-import DatePicker from '../../components/DatePicker'
-import TimePicker from '../../components/TimePicker'
-import { SHADOW } from '../../utils/styles'
-import { Entypo } from '@expo/vector-icons'
-import BottomButton from '../../components/BottomButton'
 import { useEventStore } from '../../hooks/stores/useEventStore'
+import BottomButton from '../../components/BottomButton'
+import { CheckBox } from '@rneui/themed'
 
-const ASSETS_UPLOAD_SCREEN = 1
+const EVENT_DETAIL_SCREEN = 1
 const DEVICE_WIDTH = Dimensions.get('window').width
-const CATEGORIES = [
-  {title: 'Event'},
-  {title: 'Party'},
-  {title: 'Conference'},
-  {title: 'Workshop'},
-  {title: 'Others'},
-]
 
 const NewEventForm = ({ scrollToScreen = () => { } }) => {
 
   const {
-    date,
-    startTime,
-    endTime,
-    setDate,
-    setStartTime,
-    setEndTime,
     title, 
     description,
+    virtual,
+    physical,
+    setVirtual,
+    setPhysical,
     setTitle,
     setDescription,
   } = useEventStore()
 
   const submitEventForm = () => {
-    scrollToScreen(ASSETS_UPLOAD_SCREEN)
+    scrollToScreen(EVENT_DETAIL_SCREEN)
   }
 
   return (
@@ -47,82 +35,33 @@ const NewEventForm = ({ scrollToScreen = () => { } }) => {
         autoCorrect={true}
         autoCapitalize='sentences'
         autoComplete='additional-name'
+        height={50}
       />
       <TextArea
         value={description}
         onChangeText={setDescription}
       />
-      <DatePicker date={date} setDate={setDate} />
-      <View style={styles.eventTimeContainer}>
-        <TimePicker
-          date={date}
-          time={startTime}
-          setTime={setStartTime}
-          title={'Starts'}
+
+      <View style={{display: 'flex', flexDirection: 'row', gap: 10, marginTop: 10}}>
+        <CheckBox
+          center
+          title="Virtual Event"
+          checked={virtual}
+          onPress={() => setVirtual(!virtual)}
+          disabled={physical ? true : false}
+          fontFamily='Poppins'
         />
-        <TimePicker
-          date={date}
-          time={endTime}
-          setTime={setEndTime}
-          title={'Ends'}
+        <CheckBox
+          center
+          title="Physical Event"
+          checked={physical}
+          onPress={() => setPhysical(!physical)}
+          disabled={virtual ? true : false}
+          fontFamily='Poppins'
         />
-      </View>
-      <View style={styles.categoryMainContainer}>
-        <Text style={{ marginLeft: 10 }}>Select Category</Text>
-        <ScrollView
-          horizontal
-          scrollEnabled={true}
-          scrollToOverflowEnabled={true}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.categoryContainer}
-        >
-          {
-            CATEGORIES.map((item, index) =>
-              <CategoryItem key={index} item={item} />
-            )
-          }
-        </ScrollView>
       </View>
       <BottomButton title={'Next'} handlePress={submitEventForm} />
     </>
-  )
-}
-
-const CategoryItem = ({ item }) => {
-
-  const { category, setCategory } = useEventStore()
-  let categories = [...category.map(item => item.title)]
-
-  return (
-    <TouchableOpacity
-      key={item.title}
-      onPress={() => 
-        setCategory(
-          categories.includes(item.title) ?
-            category.filter(i => i.title !== item.title)
-            : [...category, item]
-        )
-      }
-      style={[
-        styles.categoryItemContainer,
-        categories.includes(item.title) ?
-          { ...SHADOW } : {}
-      ]}
-    >
-      <Entypo
-        name="circle"
-        size={10}
-        color={categories.includes(item.title) ? '#00B383' : 'black'}
-      />
-      <Text
-        style={[
-          styles.categoryItem, categories.includes(item.title) ?
-            { color: '#365486' } : {}]
-        }
-      >
-        {item.title}
-      </Text>
-    </TouchableOpacity>
   )
 }
 
@@ -159,41 +98,7 @@ const styles = StyleSheet.create({
     color: '#365486',
     alignSelf: 'flex-start',
     marginLeft: 20,
-    marginTop: 40
-  },
-  eventTimeContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: DEVICE_WIDTH - 40,
-  },
-  categoryMainContainer: {
-    height: 100,
-  },
-  categoryContainer: {
-    height: 60,
-    padding: 5,
-    alignItems: 'center',
-    alignContent: 'center',
-    alignSelf: 'center'
-  },
-  categoryItemContainer: {
-    backgroundColor: '#CBE8EF',
-    height: 44,
-    marginHorizontal: 5,
-    paddingHorizontal: 10,
-    borderRadius: 10,
-    alignItems: 'center',
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  categoryItem: {
-    fontFamily: 'Poppins',
-    fontWeight: '500',
-    fontSize: 10,
-    alignSelf: 'center',
-    textTransform: 'capitalize',
-    marginLeft: 4
+    marginTop: 50
   },
 })
 

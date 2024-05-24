@@ -111,7 +111,7 @@ const AssetGallery = ({ images }) => {
           const imageHeight = DEVICE_WIDTH * aspectRatio
           if (image.resource_type === 'image' || image.type === 'image') {
             return (
-              <View>
+              <View key={index}>
                 <View style={{
                   flex: 1, justifyContent: 'center',
                   width: DEVICE_WIDTH
@@ -133,7 +133,7 @@ const AssetGallery = ({ images }) => {
             )
           } else if (image.resource_type === 'video' || image.type === 'video') {
             return (
-              <View>
+              <View key={index}>
                 <VideoPlayer
                   uri={image?.secure_url || image.uri}
                   height={imageHeight}

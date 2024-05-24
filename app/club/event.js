@@ -5,6 +5,7 @@ import NewEventForm from '../../components/event/NewEventForm'
 import EventAssetsForm from '../../components/event/EventAssetsForm'
 import { useNavigation } from 'expo-router'
 import { useEventStore } from '../../hooks/stores/useEventStore'
+import EventDetails from '../../components/event/EventDetails'
 
 const DEVICE_WIDTH = Dimensions.get('window').width
 
@@ -21,10 +22,7 @@ export default function event() {
     setSlideIndex(index)
   }
 
-  const SLIDES = [
-    { renderSlide: key => <NewEventForm key={key} scrollToScreen={scrollToScreen} /> },
-    { renderSlide: key => <EventAssetsForm key={key} scrollToScreen={scrollToScreen} /> }
-  ]
+  const SLIDES = [1,2,3]
 
   const navigation = useNavigation();
 
@@ -53,7 +51,7 @@ export default function event() {
 
   const CurrentSlideIndicator = () => {
     return (
-      <View style={[styles.indicatorContainer, slideIndex === 1 && {backgroundColor: 'black'}]}>
+      <View style={[styles.indicatorContainer, slideIndex === 2 && {backgroundColor: 'black'}]}>
         {
           SLIDES.map((slide, index) =>
             <View
@@ -73,7 +71,14 @@ export default function event() {
   }
 
   return (
-    <SafeAreaView style={slideIndex === 1 && {backgroundColor: 'black', flex: 1}}> 
+    <SafeAreaView 
+      style={
+        [
+          { backgroundColor: '#fff' },
+          slideIndex === 2 && { backgroundColor: 'black', flex: 1 }
+        ]
+      }
+    > 
       <CurrentSlideIndicator/>
       <ScrollView
         style={{height: '100%'}}
@@ -89,10 +94,19 @@ export default function event() {
           setSlideIndex(index)
         }}
       > 
-        <View style={[styles.slideContainer]}>
+        <View key={1} style={[styles.slideContainer]}>
           <NewEventForm scrollToScreen={scrollToScreen} />
         </View>
-        <View style={[styles.slideContainer, slideIndex === 1 && {backgroundColor: 'black'}]}>
+        <View key={2} style={[styles.slideContainer]}>
+          <EventDetails scrollToScreen={scrollToScreen} />
+        </View>
+        <View
+          key={3}
+          style={[
+            styles.slideContainer,
+            slideIndex === 2 && { backgroundColor: 'black' }
+          ]}
+        >
           <EventAssetsForm scrollToScreen={scrollToScreen} />
         </View>
       </ScrollView>

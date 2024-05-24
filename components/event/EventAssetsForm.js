@@ -15,7 +15,7 @@ import { router } from 'expo-router'
 import AssetGallery from './AssetGallery'
 
 const DEVICE_WIDTH = Dimensions.get('window').width
-const EVENT_FORM_SCREEN = 0
+const EVENT_DETAILS_SCREEN = 1
 
 export default function EventAssetsForm({
   scrollToScreen = () => { }
@@ -28,6 +28,10 @@ export default function EventAssetsForm({
     endTime,
     title,
     description,
+    physical,
+    virtual,
+    venue,
+    link,
     setTitle,
     assets,
     uploadedAssets,
@@ -46,9 +50,15 @@ export default function EventAssetsForm({
    */
   const submit = async () => {
     
-    if (!date || !startTime || !endTime || !title || !description) {
+    if ( !title || !description || !(physical || virtual) ) {
       Toast('Please fill in all the fields')
       scrollToScreen(EVENT_FORM_SCREEN)
+      return
+    }
+
+    if (!startTime || !endTime || !date || !venue ) {
+      Toast('Please fill in all the fields')
+      scrollToScreen(EVENT_DETAILS_SCREEN)
       return
     }
 
@@ -63,6 +73,10 @@ export default function EventAssetsForm({
           description,
           setTitle,
           category,
+          physical,
+          virtual,
+          venue,
+          link,
           assets: [...uploadedAssets]
         },
         {
@@ -89,6 +103,10 @@ export default function EventAssetsForm({
         description,
         setTitle,
         category,
+        physical,
+        virtual,
+        venue,
+        link,
         assets: [...uploadedAssets]
       },
       {
@@ -138,7 +156,7 @@ export default function EventAssetsForm({
       }
       
       <BackButton
-        handlePress={() => scrollToScreen(EVENT_FORM_SCREEN)}
+        handlePress={() => scrollToScreen(EVENT_DETAILS_SCREEN)}
         color='#365486'
         iconColor='#fff'
       />

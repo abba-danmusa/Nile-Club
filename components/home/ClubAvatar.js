@@ -34,6 +34,7 @@ export default function ClubAvatar({ club, follow }) {
           style={{
             fontFamily: 'Poppins',
             color: '#365486',
+            color: '#fff',
             fontSize: 12,
             fontWeight: '400',
             textTransform: 'uppercase'

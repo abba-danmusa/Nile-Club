@@ -20,16 +20,19 @@ const ImageGallery = ({ images }) => {
       <ScrollView
         horizontal
         pagingEnabled
-        contentContainerStyle={{ alignItems: 'center', backgroundColor: 'black'}}
+        ref={scrollViewRef}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{
+          alignItems: 'center',
+          backgroundColor: 'black'
+        }}
         style={{ 
           borderTopWidth: .5,
           borderBottomWidth: .5,
           borderColor: 'grey'
         }}
-        showsHorizontalScrollIndicator={false}
-        ref={scrollViewRef}
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
       >
         {images.map((image, index) => {
           // Calculate the aspect ratio of the image

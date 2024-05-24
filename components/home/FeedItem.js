@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native'
 import { Image } from 'expo-image'
-import { FontAwesome5, FontAwesome } from '@expo/vector-icons'
+import { FontAwesome5, FontAwesome, MaterialIcons, EvilIcons } from '@expo/vector-icons'
 import TruncateText from '../../components/TruncateText'
 import EventTimeLine from './EventTimeLine'
 import ClubAvatar from './ClubAvatar'
@@ -8,6 +8,7 @@ import ImageGallery from './ImageGallery'
 import { useSetLike } from '../../hooks/queries/useEvent'
 import { useState } from 'react'
 import { NativeViewGestureHandler } from 'react-native-gesture-handler'
+import { SHADOW } from '../../utils/styles'
 
 const DEVICE_WIDTH = Dimensions.get('window').width
 
@@ -26,7 +27,11 @@ export default function FeedItem({ item }) {
     follow,
     like,
     likes,
-    totalLikes
+    totalLikes,
+    physical,
+    virtual,
+    venue,
+    link
   } = item
 
   const { mutate: addToSetLike } = useSetLike()
@@ -35,13 +40,13 @@ export default function FeedItem({ item }) {
 
   const likeEvent = () => {
     setIsLiked(!isLiked)
-    setNumberOfLikes(isLiked? numberOfLikes - 1 : numberOfLikes + 1)
+    setNumberOfLikes(isLiked ? numberOfLikes - 1 : numberOfLikes + 1)
     addToSetLike(
       { eventId: item?._id },
       {
         onError: () => {
           setIsLiked(!isLiked)
-          setNumberOfLikes(numberOfLikes - 1)
+          setNumberOfLikes(isLiked ? numberOfLikes - 1 : numberOfLikes + 1)
         }
       }
     )
@@ -124,7 +129,37 @@ export default function FeedItem({ item }) {
             }}
           >{title}</Text>
           <TruncateText text={description} />
-          <EventTimeLine fromDate={starts} toDate={ends}/>
+          <View
+            style={{
+              ...SHADOW,
+              backgroundColor: '#fff',
+              // backgroundColor: '#CBE8EF',
+              padding: 2,
+              width: 100,
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginTop: 10
+            }}
+          >
+            <Text>{physical ? 'Physical Event' : 'Virtual Event'}</Text>
+          </View>
+          <View>
+            {
+              link &&
+              <View style={styles.linkContainer}>
+                <EvilIcons name="link" size={12} color="black" />
+                <Text>{link}</Text>
+              </View>
+            }
+            {
+              venue &&
+              <View style={styles.linkContainer}>
+                <MaterialIcons name="location-on" size={12} color="black" />
+                <Text>{venue}</Text>
+              </View>
+            }
+          </View>
+          <EventTimeLine fromDate={starts} toDate={ends} />
         </View>
       </View>
     </NativeViewGestureHandler>
@@ -145,5 +180,10 @@ const styles = StyleSheet.create({
     height: 400,
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  linkContainer: {
+    // marginVertical: 2,
+    flexDirection: 'row',
+    alignItems: 'center'
   }
 })
