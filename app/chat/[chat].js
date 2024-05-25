@@ -315,8 +315,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f0f0f0',
-    // paddingHorizontal: 10,
-    // paddingTop: 20,
   },
   bubbleContainer: {
     maxWidth: '70%',
@@ -365,7 +363,6 @@ const styles = StyleSheet.create({
     ...SHADOW
   },
   sendButton: {
-    // backgroundColor: '#007bff',
     backgroundColor: '#365486',
     borderRadius: 50,
     paddingVertical: 10,
@@ -386,14 +383,7 @@ const styles = StyleSheet.create({
   quotedText: {
     fontSize: 14,
   },
-  // container: {
-  //   flex: 1,
-  //   backgroundColor: '#f0f0f0',
-  //   paddingHorizontal: 10,
-  //   paddingTop: 20,
-  // },
   quotedMessageContainer: {
-    // backgroundColor: '#eeeeee',
     backgroundColor: 'lightblue',
     padding: 10,
     borderRadius: 10,
