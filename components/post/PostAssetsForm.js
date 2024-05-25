@@ -115,7 +115,7 @@ export default function PostAssetsForm({
     <>
       <StatusBar hidden />
       {isPending || isPendingUpdate ?
-        <Loader message={'Creating Event...'} /> : null
+        <Loader message={'Creating Post...'} /> : null
       }
 
       <BackButton

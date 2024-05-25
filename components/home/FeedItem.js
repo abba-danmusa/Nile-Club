@@ -5,7 +5,8 @@ import TruncateText from '../../components/TruncateText'
 import EventTimeLine from './EventTimeLine'
 import ClubAvatar from './ClubAvatar'
 import ImageGallery from './ImageGallery'
-import { useSetLike } from '../../hooks/queries/useEvent'
+import { useSetLike as setLikeEvent } from '../../hooks/queries/useEvent'
+import { useSetLike as setLikePost } from '../../hooks/queries/usePost'
 import { useState } from 'react'
 import { NativeViewGestureHandler } from 'react-native-gesture-handler'
 import { SHADOW } from '../../utils/styles'
@@ -30,18 +31,33 @@ export default function FeedItem({ item }) {
     totalLikes,
     physical,
     virtual,
+    content,
     venue,
-    link
+    link,
+    itemType
   } = item
 
-  const { mutate: addToSetLike } = useSetLike()
+  const { mutate: addToSetLikeEvent } = setLikeEvent()
+  const { mutate: addToSetLikePost } = setLikePost()
   const [isLiked, setIsLiked] = useState(like)
   const [numberOfLikes, setNumberOfLikes] = useState(totalLikes)
 
   const likeEvent = () => {
     setIsLiked(!isLiked)
     setNumberOfLikes(isLiked ? numberOfLikes - 1 : numberOfLikes + 1)
-    addToSetLike(
+    if (itemType === 'post') {
+      addToSetLikePost(
+        { postId: item?._id },
+        {
+          onError: () => {
+            setIsLiked(!isLiked)
+            setNumberOfLikes(isLiked ? numberOfLikes - 1 : numberOfLikes + 1)
+          }
+        }
+      )
+      return
+    }
+    addToSetLikeEvent(
       { eventId: item?._id },
       {
         onError: () => {
@@ -57,7 +73,7 @@ export default function FeedItem({ item }) {
       <View>
         <ClubAvatar club={club} follow={follow} />
         {
-          assets?.length > 0 ? 
+          assets?.length > 0 ?
             <ImageGallery images={assets} />
             :
             <View style={styles.noAssetContainer}>
@@ -74,12 +90,14 @@ export default function FeedItem({ item }) {
 
         <View
           style={{
-          justifyContent: 'space-between',
+            justifyContent: 'space-between',
             flexDirection: 'row',
             alignItems: 'center',
+            paddingVertical: 10,
+            // backgroundColor: 'red'
           }}
         >
-          <View style={{marginLeft: 10}}>
+          <View style={{ marginLeft: 10, alignItems: 'center' }}>
             <Text
               style={{
                 fontFamily: 'Poppins',
@@ -87,14 +105,15 @@ export default function FeedItem({ item }) {
                 fontWeight: 700,
                 justifyContent: 'flex-end'
               }}
-            >{ `${numberOfLikes} Likes` }</Text>
+            >{`${numberOfLikes} Likes`}</Text>
           </View>
 
           <View
             style={{
               alignSelf: 'flex-end',
               flexDirection: 'row',
-              marginTop: 10,
+              alignItems: 'center',
+              // marginTop: 10,
               marginLeft: 10
             }}
           >
@@ -104,63 +123,70 @@ export default function FeedItem({ item }) {
             >
               {
                 isLiked ?
-                  <FontAwesome name="heart" size={20} color="red" />
-                :
-                  <FontAwesome5 name="heart" size={20} color="black" />
+                  <FontAwesome name="heart" size={22} color="red" />
+                  :
+                  <FontAwesome5 name="heart" size={22} color="black" />
               }
             </TouchableOpacity>
             <TouchableOpacity
               style={{ marginRight: 5, padding: 5, }}
               onPress={() => setOpenComments(openComments)}
             >
-              <FontAwesome5 name="comment" size={20} color="black" />
+              <FontAwesome5 name="comment" size={22} color="black" />
             </TouchableOpacity>
           </View>
 
         </View>
-        <View style={styles.contentContainer}>
-          <Text
-            style={{ 
-              marginBottom: 5, 
-              fontFamily: 'Poppins', 
-              fontSize: 16, 
-              fontWeight: '700',
-              color: '#365486'
-            }}
-          >{title}</Text>
-          <TruncateText text={description} />
-          <View
-            style={{
-              ...SHADOW,
-              backgroundColor: '#fff',
-              // backgroundColor: '#CBE8EF',
-              padding: 2,
-              width: 100,
-              alignItems: 'center',
-              justifyContent: 'center',
-              marginTop: 10
-            }}
-          >
-            <Text>{physical ? 'Physical Event' : 'Virtual Event'}</Text>
-          </View>
-          <View>
-            {
-              link &&
-              <View style={styles.linkContainer}>
-                <EvilIcons name="link" size={12} color="black" />
-                <Text>{link}</Text>
+        {
+          itemType === 'event' ?
+            <View style={styles.contentContainer}>
+              <Text
+                style={{
+                  marginBottom: 5,
+                  fontFamily: 'Poppins',
+                  fontSize: 14,
+                  fontWeight: '700',
+                  color: '#365486'
+                }}
+              >{title}</Text>
+              <TruncateText text={description} />
+              <View
+                style={{
+                  ...SHADOW,
+                  backgroundColor: '#fff',
+                  // backgroundColor: '#CBE8EF',
+                  padding: 2,
+                  width: 100,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginTop: 10
+                }}
+              >
+                <Text>{physical ? 'Physical Event' : 'Virtual Event'}</Text>
               </View>
-            }
-            {
-              venue &&
-              <View style={styles.linkContainer}>
-                <MaterialIcons name="location-on" size={12} color="black" />
-                <Text>{venue}</Text>
+              <View>
+                {
+                  link &&
+                  <View style={styles.linkContainer}>
+                    <EvilIcons name="link" size={12} color="black" />
+                    <Text>{link}</Text>
+                  </View>
+                }
+                {
+                  venue &&
+                  <View style={styles.linkContainer}>
+                    <MaterialIcons name="location-on" size={12} color="black" />
+                    <Text>{venue}</Text>
+                  </View>
+                }
               </View>
-            }
-          </View>
-          <EventTimeLine fromDate={starts} toDate={ends} />
-        </View>
+              <EventTimeLine fromDate={starts} toDate={ends} />
+            </View>
+          :
+            <View style={styles.contentContainer}>
+              <TruncateText text={content} />
+            </View>
+        }
       </View>
     </NativeViewGestureHandler>
   )
@@ -172,7 +198,7 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     marginHorizontal: 10,
-    marginTop: 5
+    // marginTop: 5
   },
   noAssetContainer: {
     backgroundColor: 'black',

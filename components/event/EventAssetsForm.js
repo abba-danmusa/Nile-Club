@@ -16,6 +16,7 @@ import AssetGallery from './AssetGallery'
 
 const DEVICE_WIDTH = Dimensions.get('window').width
 const EVENT_DETAILS_SCREEN = 1
+const EVENT_FORM_SCREEN = 0
 
 export default function EventAssetsForm({
   scrollToScreen = () => { }
