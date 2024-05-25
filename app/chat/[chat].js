@@ -5,7 +5,6 @@ import { useLocalSearchParams } from 'expo-router'
 import { socket } from '../../socket.io/socket';
 import { useChats } from '../../hooks/queries/useChat';
 import { useChatStore } from '../../hooks/stores/useChatStore';
-import toast from '../../utils/toast';
 import { QueryCache } from '@tanstack/react-query'
 import { SHADOW } from '../../utils/styles';
 import { Image } from 'expo-image'
