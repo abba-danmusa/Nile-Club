@@ -74,7 +74,7 @@ export default function post() {
       style={
         [
           { backgroundColor: '#fff' },
-          slideIndex === 2 && { backgroundColor: 'black', flex: 1 }
+          slideIndex === 1 && { backgroundColor: 'black', flex: 1 }
         ]
       }
     >

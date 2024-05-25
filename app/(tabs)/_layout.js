@@ -4,11 +4,14 @@ import { Tabs } from 'expo-router'
 import { AntDesign, Ionicons } from '@expo/vector-icons'
 import HomeHeader from '../../components/home/HomeHeader'
 import { SHADOW } from '../../utils/styles'
-import { useChats } from '../../hooks/queries/useChat'
+import { useChats, useChatsNotification } from '../../hooks/queries/useChat'
 
 const TabLayout = () => {
   
   useChats()
+  const {data, isPending} = useChatsNotification()
+  const totalUnviewedChats = data?.data?.notifications?.totalUnviewedChats
+  
   return (
     <>
       <Tabs
@@ -69,30 +72,39 @@ const TabLayout = () => {
                 name={'chats'}
                 color={color}
                 focused={focused}
-                icon={ size =>
-                  <Ionicons
-                    name="chatbubble-ellipses-outline"
-                    size={size}
-                    color={color}
-                  />
-                }
+                icon={size => {
+                  if (totalUnviewedChats > 0) {
+                    return (
+                      <View>
+                        <View style={styles.totalUnviewedChats}>
+                          <Text style={styles.totalUnviewedChatsTitle}>
+                            {
+                              totalUnviewedChats > 99 ? '99+' : totalUnviewedChats
+                            }
+                          </Text>
+                        </View>
+                        <Ionicons
+                          name="chatbubble-outline"
+                          size={size}
+                          color={color}
+                        />
+                      </View>
+                    )
+                  } else {
+                    return (
+                      <View>
+                        <Ionicons
+                          name="chatbubble-outline"
+                          size={size}
+                          color={color}
+                        />
+                      </View>
+                    )
+                  }
+                }}
               />
           }}
         />
-        {/* <Tabs.Screen
-          name="clubs"
-          options={{           
-            tabBarIcon: ({ color, focused }) =>
-              <TabIcon
-                name={'clubs'}
-                color={color}
-                focused={focused}
-                icon={ size =>
-                  <Feather name="shield" size={size} color={color} />
-                }
-              />
-          }}
-        /> */}
         <Tabs.Screen
           name="profile"
           options={{
@@ -115,7 +127,7 @@ const TabLayout = () => {
 function TabIcon({name, focused, color, icon = () => {}, iconSize = 24}) {
   return (
     <View style={[styles.icon, focused ? { ...styles.activeTab } : {}]}>
-      { icon(iconSize) }
+      {icon(iconSize)}
       <Text
         style={[styles.tabBarText, { color: focused ? color : '#252427' }]}
       >
@@ -129,7 +141,6 @@ const styles = StyleSheet.create({
   tabBarStyle: {
     position: 'absolute',
     backgroundColor: '#CFD7E2',
-    // height: 76,
     height: 66,
     elevation: 1000,
     borderTopRightRadius: 20,
@@ -155,26 +166,31 @@ const styles = StyleSheet.create({
     height: 50,
   },
   container: {
-    // backgroundColor: 'tomato',
     backgroundColor: '#EBEEF3',
-    // height: 50,
-    // paddingHorizontal: 10,
-    // paddingVertical: 5,
-    // display: 'flex',
-    // flexDirection: 'row',
-    // alignItems: 'center',
     ...SHADOW
   },
-  notificationContainer: {
-    backgroundColor: '#365486',
-    width: 40,
-    height: 40,
-    marginRight: 10,
+  totalUnviewedChats: {
+    position: 'absolute',
+    top: -5,
+    right: -10,
+    backgroundColor: 'tomato',
+    maxWidth: 25,
+    minWidth: 15,
+    height: 15,
+    paddingHorizontal: 2,
+    paddingVertical: 1,
+    zIndex: 1,
     borderRadius: 100,
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
     ...SHADOW
   },
+  totalUnviewedChatsTitle: {
+    fontFamily: 'Poppins',
+    fontSize: 10,
+    fontWeight: '500',
+    color: '#fff'
+  }
 })
 
 export default TabLayout

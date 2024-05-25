@@ -15,7 +15,7 @@ import { useUser } from '../../hooks/queries/useAuthentication';
 
 const ChatBubble = ({ message, isMyMessage, onSelectMessage, isRead = true }) => {
 
-  // I swear I have no idea how line 20 is working but since it's working, great!!!
+  // I swear I have no idea how line 19 is working but since it's working, great!!!
   if (message.viewed == false && isRead == true) return // return if the user hasn't seen this chat (to be displayed in New Messages)
 
   const pan = React.useRef(new Animated.ValueXY()).current;
@@ -62,7 +62,7 @@ const ChatBubble = ({ message, isMyMessage, onSelectMessage, isRead = true }) =>
           message?.sender?.asset?.secure_url ||
           'https://i.pravatar.cc/300?img=1'
         }
-        style={[{ width: 35, height: 35, borderRadius: 35, alignSelf: 'flex-end' }]}
+        style={[{ width: 35, height: 35, borderRadius: 35, alignSelf: 'flex-end', marginLeft: 2 }, isMyMessage && { marginRight: 2, marginLeft: 0 }]}
       />
       <Animated.View
         style={[
@@ -212,7 +212,6 @@ const Chat = () => {
 
   useEffect(() => {
     const [club] = data?.chats?.filter(club => club?._id == room)
-    let markMessagesRead = []
     if (club) {
       setMessages([...club.chats])
       setUnreadMessages([...club.unviewedChats])
@@ -223,13 +222,12 @@ const Chat = () => {
         banner: club.assets.banner.secure_url,
         image: club.assets.image.secure_url,
       })
-      markMessagesRead = [...club.unviewedChats.map(chat => chat._id)]
     }
     
     const timeoutId = setTimeout(() => {
-      socket.emit('mark messages read', markMessagesRead);
+      socket.emit('mark messages read', [...club?.unviewedChats]);
       refetch(); // Get the latest chats
-    }, 5000)
+    }, 1000)
     
     return () => clearTimeout(timeoutId)
   }, [])
@@ -260,7 +258,7 @@ const Chat = () => {
     if (flatListRef.current && listHeaderHeight > 0) {
       flatListRef
         .current
-        .scrollToOffset({ offset: listHeaderHeight, animated: true })
+        .scrollToOffset({ offset: listHeaderHeight - 200, animated: true })
     }
   }
 
@@ -324,13 +322,20 @@ const styles = StyleSheet.create({
     maxWidth: '70%',
     minWidth: '35%',
     padding: 10,
-    marginVertical: 5,
     borderRadius: 10,
+    borderTopLeftRadius: 25,
+    borderBottomRightRadius: 5,
+    borderBottomLeftRadius: 1,
+    marginVertical: 5,
     backgroundColor: '#fff',
     ...SHADOW
   },
   myBubble: {
     alignSelf: 'flex-end',
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 25,
+    borderBottomRightRadius: 1,
+    borderBottomLeftRadius: 5,
     backgroundColor: '#dcf8c6',
   },
   bubbleText: {

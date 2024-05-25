@@ -113,7 +113,6 @@ export default function FeedItem({ item }) {
               alignSelf: 'flex-end',
               flexDirection: 'row',
               alignItems: 'center',
-              // marginTop: 10,
               marginLeft: 10
             }}
           >
@@ -154,7 +153,6 @@ export default function FeedItem({ item }) {
                 style={{
                   ...SHADOW,
                   backgroundColor: '#fff',
-                  // backgroundColor: '#CBE8EF',
                   padding: 2,
                   width: 100,
                   alignItems: 'center',
@@ -198,7 +196,6 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     marginHorizontal: 10,
-    // marginTop: 5
   },
   noAssetContainer: {
     backgroundColor: 'black',
@@ -208,7 +205,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   linkContainer: {
-    // marginVertical: 2,
     flexDirection: 'row',
     alignItems: 'center'
   }

@@ -1,9 +1,9 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { Image } from 'expo-image'
 import { SHADOW } from '../../utils/styles'
-import { AntDesign } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import TruncateText from '../chats/TruncateText'
+import { AirbnbRating } from '@rneui/base'
 
 export default function FeaturedItems({ club }) {
   return (
@@ -24,9 +24,9 @@ export default function FeaturedItems({ club }) {
             style={styles.title}
           />
           <View style={styles.ratingsContainer}>
-            <AntDesign name="star" size={8} color="#365486" />
-            <View style={{alignItems: 'flex-end', height: 10}}>
-              <Text style={styles.rating}>{ club?.ratings || '5.0' }</Text>
+            <AirbnbRating count={1} size={8} showRating={false} />
+            <View style={{alignItems: 'flex-end', height: 10,}}>
+              <Text style={styles.rating}>{ `${club?.ratings}.0` || '5.0' }</Text>
             </View>
           </View>
         </View>
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: 21,
+    width: 25,
   },
   rating: {
     fontSize: 8,
