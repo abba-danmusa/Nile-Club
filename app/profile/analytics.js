@@ -7,20 +7,25 @@ import PieChartWithDynamicSlices from '../../components/analytics/PieChart';
 import LineChart from '../../components/analytics/LineChart';
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import BarChart from '../../components/analytics/BarChart';
+import { useAnalytics } from '../../hooks/queries/useClub';
 
 const Analytics = () => {
+  
+  const { data, isPending } = useAnalytics()
+  const analytics = data?.data?.analytics
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar backgroundColor={'#fff'} barStyle="dark-content" />
       <ScrollView>
         <Card containerStyle={{ height: 350, ...SHADOW, borderRadius: 10 }}>
-          <PieChartWithDynamicSlices/>
+          <PieChartWithDynamicSlices analytics={analytics} />
         </Card>
         <Card containerStyle={{ height: 350, ...SHADOW, borderRadius: 10 }}>
           <Card.Title>
             <Text>Ratings (Latest 15)</Text>
           </Card.Title>
-          <LineChart />
+          <LineChart analytics={analytics} />
           <View style={{alignSelf: 'flex-end'}}>
             <Text style={{ fontFamily: 'Poppins', fontSize: 14, fontWeight: '700', marginBottom: 20 }}>Keys:</Text>
             <View style={{flexDirection: 'row'}}>
@@ -43,7 +48,7 @@ const Analytics = () => {
             <Text>New Members</Text>
           </Card.Title>
           <Divider />
-          <BarChart />
+          <BarChart analytics={analytics} />
           <View style={{ alignSelf: 'flex-end' }}>
             <Text style={{ fontFamily: 'Poppins', fontSize: 14, fontWeight: '700', marginBottom: 10, marginTop: 20 }}>Keys:</Text>
             <View style={{ flexDirection: 'row' }}>

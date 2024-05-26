@@ -34,7 +34,7 @@ class PieChartWithDynamicSlices extends React.PureComponent {
       }
     })
     const deviceWidth = Dimensions.get('window').width
-    const contentInset = { top: 20, bottom: 20 }
+    const contentInset = { top: 0, bottom: 20 }
     
     return (
       <View style={{ justifyContent: 'center', flex: 1, marginTop: 150 }}>

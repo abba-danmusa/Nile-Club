@@ -6,7 +6,7 @@ class LineChart extends React.PureComponent {
 
   render() {
 
-    const data = [5, 4, 5, 1, 4, 2, 5, 1, 3, 5, 5, 2, 3, 4, 3]
+    const data = [4, 4, 5, 1, 4, 2, 5, 1, 3, 5, 5, 2, 3, 4, 3]
     // const data = [50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80]
     const Y_AXIS = [1, 2, 3, 4, 5]
     const contentInset = { top: 20, bottom: 20 }

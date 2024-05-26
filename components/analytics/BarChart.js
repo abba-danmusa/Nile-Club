@@ -8,7 +8,7 @@ class BarChart extends React.PureComponent {
   render() {
 
     const data = [10, 5, 25, 15, 20]
-    // const Y_AXIS = [0, 20, 30, 40, 50]
+    const X_AXIS = [0, 20, 30, 40, 50]
 
     const CUT_OFF = 20
     const Labels = ({ x, y, bandwidth, data }) => (
@@ -30,7 +30,7 @@ class BarChart extends React.PureComponent {
     return (
       <View style={{ flexDirection: 'row', height: 200, paddingVertical: 16 }}>
         {/* <YAxis
-          data={Y_AXIS}
+          data={X_AXIS}
           contentInset={{ top: 10, bottom: 10 }}
           svg={{
             fill: 'grey',

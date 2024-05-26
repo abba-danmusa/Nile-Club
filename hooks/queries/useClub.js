@@ -212,7 +212,6 @@ export const useClubMembership = () => {
 
 export const useClubMembers = queries => {
   const { search, clubId } = queries
-  console.log(search)
   return useQuery({
     queryKey: ['club-members', clubId],
     queryFn: async () => {
@@ -323,5 +322,20 @@ export const useApproveClub = (clubId) => {
     onSettled: async () => {
       queryClient.invalidateQueries(['clubs-approval'])
     }
+  })
+}
+
+export const useAnalytics = () => {
+  return useQuery({
+    queryKey: ['club-analytics'],
+    queryFn: async () => {
+      return await axios.get(`/club/analytic`)
+    },
+    onError: (error) => {
+      Toast(error.response?.data.message || error.message) // prioritize server error message, then client error
+      if (error?.response?.status === 401) { // user isn't logged in
+        router.replace('/signin')
+      }
+    },
   })
 }
