@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { router } from "expo-router"
 import { Image } from 'expo-image'
@@ -20,6 +20,11 @@ const profile = () => {
           onPress: () => router.push("/profile/admin"),
         }
       : null,
+    User?.club &&
+    {
+      title: 'Analytics',
+      onPress: () => router.push('/profile/analytics')
+    },
   ]
 
   const signout = () => {
@@ -29,7 +34,10 @@ const profile = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Hero User={User} />
-      <View style={styles.itemsContainer}>
+      <ScrollView
+        style={styles.itemsContainer}
+        contentContainerStyle={styles.itemsContentContainer}
+      >
         {PROFILE_ITEMS.map((item) => {
           if (!item) return
           if (
@@ -51,7 +59,7 @@ const profile = () => {
             );
           }
         })}
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -141,8 +149,11 @@ const styles = StyleSheet.create({
     width: 150,
   },
   itemsContainer: {
-    alignSelf: 'center',
+    
+  },
+  itemsContentContainer: {
     justifyContent: 'center',
+    alignSelf: 'center',
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',
