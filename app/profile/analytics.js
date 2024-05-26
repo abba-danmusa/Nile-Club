@@ -1,26 +1,83 @@
 import React from 'react';
 import { StyleSheet, View, ScrollView, Text, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Card } from '@rneui/themed'
+import { Card, Divider } from '@rneui/themed'
 import { SHADOW } from '../../utils/styles';
 import PieChartWithDynamicSlices from '../../components/analytics/PieChart';
 import LineChart from '../../components/analytics/LineChart';
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import BarChart from '../../components/analytics/BarChart';
 
 const Analytics = () => {
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1 }}>
       <StatusBar backgroundColor={'#fff'} barStyle="dark-content" />
       <ScrollView>
         <Card containerStyle={{ height: 350, ...SHADOW, borderRadius: 10 }}>
           <PieChartWithDynamicSlices/>
         </Card>
-        <View style={styles.itemsContainer}>
+        <Card containerStyle={{ height: 350, ...SHADOW, borderRadius: 10 }}>
+          <Card.Title>
+            <Text>Ratings (Latest 15)</Text>
+          </Card.Title>
+          <LineChart />
+          <View style={{alignSelf: 'flex-end'}}>
+            <Text style={{ fontFamily: 'Poppins', fontSize: 14, fontWeight: '700', marginBottom: 20 }}>Keys:</Text>
+            <View style={{flexDirection: 'row'}}>
+              <MaterialCommunityIcons name="chart-line" size={18} color="#d966ff" />
+              <Text style={{ fontFamily: 'Poppins', fontSize: 12, color: '#d966ff' }}>: </Text>
+              <Text style={{ fontFamily: 'Poppins', fontSize: 12}}>
+                Number of stars
+              </Text>
+            </View>
+            <View style={{flexDirection: 'row'}}>
+              <MaterialCommunityIcons name="chart-line-variant" size={20} color="#d966ff" />
+              <Text style={{ fontFamily: 'Poppins', fontSize: 12, color: '#d966ff' }}>: </Text>
+              <Text style={{ fontFamily: 'Poppins', fontSize: 12 }}>Ratings</Text>
+            </View>
+          </View>
+        </Card>
+
+        <Card containerStyle={{ height: 350, ...SHADOW, borderRadius: 10 }}>
+          <Card.Title>
+            <Text>New Members</Text>
+          </Card.Title>
+          <Divider />
+          <BarChart />
+          <View style={{ alignSelf: 'flex-end' }}>
+            <Text style={{ fontFamily: 'Poppins', fontSize: 14, fontWeight: '700', marginBottom: 10, marginTop: 20 }}>Keys:</Text>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={{ fontFamily: 'Poppins', fontSize: 12, color: '#d966ff' }}>Y-Axis: </Text>
+              <Text style={{ fontFamily: 'Poppins', fontSize: 12 }}>
+                New Members
+              </Text>
+            </View>
+            <View style={{ flexDirection: 'row' }}>
+              <Text style={{ fontFamily: 'Poppins', fontSize: 12, color: '#d966ff' }}>X-Axis: </Text>
+              <Text style={{ fontFamily: 'Poppins', fontSize: 12 }}>Month</Text>
+            </View>
+          </View>
+        </Card>
+
+        {/* <View style={styles.itemsContainer}>
+          
           <Card containerStyle={styles.itemContainer}>
-            <LineChart/>
+            <Card.Title>
+              <Text>New Members</Text>
+            </Card.Title>
+            <Divider />
+            <BarChart/>
           </Card>
+
           <Card containerStyle={styles.itemContainer}>
+            <Card.Title>
+              <Text>Total Likes</Text>
+            </Card.Title>
+            <Divider />
           </Card>
-        </View>
+
+        </View> */}
+
       </ScrollView>
     </SafeAreaView>
   );

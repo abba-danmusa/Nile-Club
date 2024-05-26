@@ -6,7 +6,8 @@ class LineChart extends React.PureComponent {
 
   render() {
 
-    const data = [1, 4, 5, 1, 4, 2, 5, 1, 3, 5, 5, 2, 5, 2, 3]
+    const data = [5, 4, 5, 1, 4, 2, 5, 1, 3, 5, 5, 2, 3, 4, 3]
+    // const data = [50, 10, 40, 95, -4, -24, 85, 91, 35, 53, -53, 24, 50, -20, -80]
     const Y_AXIS = [1, 2, 3, 4, 5]
     const contentInset = { top: 20, bottom: 20 }
 
@@ -16,28 +17,29 @@ class LineChart extends React.PureComponent {
         y={2}
         d={line}
         fill={'none'}
-        strokeWidth={4}
+        strokeWidth={5}
         stroke={'rgba(134, 65, 244, 0.2)'}
       />
     )
 
     return (
       <View style={{ height: 200, flexDirection: 'row' }}>
-        {/* <YAxis
+        <YAxis
           data={Y_AXIS}
           contentInset={contentInset}
           svg={{
             fill: 'grey',
             fontSize: 10,
           }}
-          numberOfTicks={10}
-          formatLabel={(value) => `${value}ºC`}
-        /> */}
+          style={{height: 200}}
+          numberOfTicks={5}
+          formatLabel={(value) => `${value}*`}
+        />
         <LineChartAnalytics
-          style={{ height: 100 }}
+          style={{ height: 200, width: '100%', paddingRight: 10 }}
           data={data}
           svg={{ stroke: 'rgb(134, 65, 244)' }}
-          contentInset={{ top: 0, bottom: 20 }}
+          contentInset={{ top: 10, bottom: 20 }}
         >
           <Grid />
           <Shadow />
