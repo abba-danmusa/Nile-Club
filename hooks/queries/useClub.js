@@ -340,9 +340,25 @@ export const useAnalytics = () => {
   })
 }
 
-export const useDiscover = (search) => {
+export const useDiscover = () => {
   return useQuery({
     queryKey: ['discover'],
+    queryFn: async () => {
+      return await axios.get(`/feed/discover`)
+    },
+    onError: (error) => {
+      Toast(error.response?.data.message || error.message) // prioritize server error message, then client error
+      if (error?.response?.status === 401) { // user isn't logged in
+        router.replace('/signin')
+      }
+    },
+    retry: 1
+  })
+}
+
+export const useDiscoverSearch = (search) => {
+  return useQuery({
+    queryKey: ['discover', search],
     queryFn: async () => {
       return await axios.get(`/feed/discover?search=${search}`)
     },
@@ -352,6 +368,6 @@ export const useDiscover = (search) => {
         router.replace('/signin')
       }
     },
-    retry: true
+    enabled: search.length > 0
   })
 }

@@ -6,12 +6,12 @@ import { router } from 'expo-router'
 import TruncateText from '../chats/TruncateText'
 import { AirbnbRating } from '@rneui/base'
 
-export default function FeaturedItems({ discover }) {
+export default function FeaturedItems({ discover, width = '50%'}) {
   return (
     <TouchableOpacity
       onPress={() => router.push(`/club/${discover._id}`)}
       key={discover?._id}
-      style={styles.container}
+      style={[styles.container, {width}]}
     >
       <Image
         source={discover?.assets?.image?.secure_url}

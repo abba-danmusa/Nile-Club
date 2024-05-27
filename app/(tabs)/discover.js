@@ -3,15 +3,25 @@ import React, { useState } from 'react'
 import Search from '../../components/Search'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import DiscoverItems from '../../components/discover/DiscoverItems'
-import { useDiscover } from '../../hooks/queries/useClub'
+import { useDiscover, useDiscoverSearch } from '../../hooks/queries/useClub'
+import useDebounce from '../../hooks/queries/useDebounce'
+import { Divider } from '@rneui/base'
 
 const DEVICE_WIDTH = Dimensions.get('window').width
 
 export default function Discover() {
   
   const [search, setSearch] = useState('')
+  const debouncedSearchTerm = useDebounce(search, 1000)
 
-  const { data, isPending } = useDiscover(search)
+  const { data, isPending } = useDiscover()
+  const {
+    data: searchData,
+    isPending: isPendingSearch
+  } = useDiscoverSearch(debouncedSearchTerm)
+
+  const queryData = searchData?.data?.discover || []
+  console.log(queryData)
 
   if (isPending) return (
     <SafeAreaView style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
@@ -35,11 +45,26 @@ export default function Discover() {
         columnWrapperStyle={{columnGap: 3}}
         ListHeaderComponentStyle={{marginBottom: 20}}
         ListHeaderComponent={
-          <Search
-            value={search}
-            setValue={setSearch}
-            placeholder={'Search clubs and activities'}
-          />
+          <>
+            <Search
+              value={search}
+              setValue={setSearch}
+              placeholder={'Search clubs and activities'}
+            />
+            <View style={[{
+              width: DEVICE_WIDTH,
+              paddingHorizontal: 3,
+              gap: 2,
+              flexDirection: 'row',
+            }, queryData.length > 0 && {marginBottom: 50}]}>
+              {
+                queryData.map((item, index) => (
+                  <DiscoverItems discover={item} key={index} />
+                ))
+              }
+            </View>
+            {queryData.length > 0 && <Divider/>}
+          </>
         }
       />
     </SafeAreaView>
