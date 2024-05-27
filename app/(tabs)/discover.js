@@ -21,7 +21,6 @@ export default function Discover() {
   } = useDiscoverSearch(debouncedSearchTerm)
 
   const queryData = searchData?.data?.discover || []
-  console.log(queryData)
 
   if (isPending) return (
     <SafeAreaView style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
