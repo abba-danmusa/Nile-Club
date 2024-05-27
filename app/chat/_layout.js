@@ -24,6 +24,7 @@ export default function Layout() {
         options={{
           headerShown: true,
           headerStyle: {backgroundColor: '#365486', ...SHADOW},
+          headerTitle: '',
           headerRight: props =>
           { return <HeaderRight {...props} members={data?.data?.members} /> },
           headerLeft: props => {

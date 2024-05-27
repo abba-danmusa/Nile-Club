@@ -4,32 +4,37 @@ import { BarChart as BarChartAnalytics, Grid, YAxis } from 'react-native-svg-cha
 import { Text } from 'react-native-svg'
 
 class BarChart extends React.PureComponent {
+  constructor (props) {
+    super(props)
+    this.members = props?.analytics?.newMembersPerMonth?.map(member => member.count)
+    this.months = props?.analytics?.newMembersPerMonth
+  }
 
   render() {
 
-    const data = [10, 5, 25, 15, 20]
-    const X_AXIS = [0, 20, 30, 40, 50]
+    const data = [...this.members]
+    const X_AXIS = [0, ...this.members]
 
-    const CUT_OFF = 20
+    const CUT_OFF = 0
     const Labels = ({ x, y, bandwidth, data }) => (
-      data.map((value, index) => (
+      this.months.map((value, index) => (
         <Text
           key={index}
           x={x(index) + (bandwidth / 2)}
-          y={value < CUT_OFF ? y(value) - 10 : y(value) + 15}
+          y={value.count < CUT_OFF ? y(value.count) - 10 : y(value.count) + 15}
           fontSize={14}
-          fill={value >= CUT_OFF ? 'white' : 'black'}
+          fill={value.count >= CUT_OFF ? 'white' : 'black'}
           alignmentBaseline={'middle'}
           textAnchor={'middle'}
         >
-          {value}
+          {value.month}
         </Text>
       ))
     )
 
     return (
       <View style={{ flexDirection: 'row', height: 200, paddingVertical: 16 }}>
-        {/* <YAxis
+        <YAxis
           data={X_AXIS}
           contentInset={{ top: 10, bottom: 10 }}
           svg={{
@@ -39,7 +44,7 @@ class BarChart extends React.PureComponent {
           style={{ height: 200 }}
           numberOfTicks={5}
           formatLabel={(value) => `${value}*`}
-        /> */}
+        />
         <BarChartAnalytics
           style={{ flex: 1, height: 200 }}
           data={data}

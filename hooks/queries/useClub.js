@@ -339,3 +339,19 @@ export const useAnalytics = () => {
     },
   })
 }
+
+export const useDiscover = (search) => {
+  return useQuery({
+    queryKey: ['discover'],
+    queryFn: async () => {
+      return await axios.get(`/feed/discover?search=${search}`)
+    },
+    onError: (error) => {
+      Toast(error.response?.data.message || error.message) // prioritize server error message, then client error
+      if (error?.response?.status === 401) { // user isn't logged in
+        router.replace('/signin')
+      }
+    },
+    retry: true
+  })
+}

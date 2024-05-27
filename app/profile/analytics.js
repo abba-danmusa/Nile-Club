@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, ScrollView, Text, StatusBar } from 'react-native';
+import { StyleSheet, View, ScrollView, Text, StatusBar, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Card, Divider } from '@rneui/themed'
 import { SHADOW } from '../../utils/styles';
@@ -19,13 +19,19 @@ const Analytics = () => {
       <StatusBar backgroundColor={'#fff'} barStyle="dark-content" />
       <ScrollView>
         <Card containerStyle={{ height: 350, ...SHADOW, borderRadius: 10 }}>
-          <PieChartWithDynamicSlices analytics={analytics} />
+          {
+            isPending ? <ActivityIndicator size={50} color={'tomato'} />
+            : <PieChartWithDynamicSlices analytics={analytics} />
+          }
         </Card>
         <Card containerStyle={{ height: 350, ...SHADOW, borderRadius: 10 }}>
           <Card.Title>
             <Text>Ratings (Latest 15)</Text>
           </Card.Title>
-          <LineChart analytics={analytics} />
+          {
+            isPending ? <ActivityIndicator size={50} color={'tomato'}/>
+            : <LineChart analytics={analytics} />
+          }
           <View style={{alignSelf: 'flex-end'}}>
             <Text style={{ fontFamily: 'Poppins', fontSize: 14, fontWeight: '700', marginBottom: 20 }}>Keys:</Text>
             <View style={{flexDirection: 'row'}}>

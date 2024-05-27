@@ -4,37 +4,25 @@ import { SHADOW } from '../../utils/styles'
 import { AntDesign } from '@expo/vector-icons'
 import { router } from 'expo-router'
 import TruncateText from '../chats/TruncateText'
+import { AirbnbRating } from '@rneui/base'
 
-export default function FeaturedItems({ club }) {
+export default function FeaturedItems({ discover }) {
   return (
     <TouchableOpacity
-      onPress={() => router.push(`/club/${club?._id}`)}
-      key={club?._id}
+      onPress={() => router.push(`/club/${discover._id}`)}
+      key={discover?._id}
       style={styles.container}
     >
       <Image
-        source={club?.assets?.image?.secure_url}
+        source={discover?.assets?.image?.secure_url}
         style={styles.image}
       />
-      <View style={styles.content}>
-        <View style={styles.titleContainer}>
-          <TruncateText
-            text={club?.name}
-            maxLength={18}
-            style={styles.title}
-          />
-          <View style={styles.ratingsContainer}>
-            <AntDesign name="star" size={8} color="#365486" />
-            <View style={{ alignItems: 'flex-end', height: 10 }}>
-              <Text style={styles.rating}>{club?.ratings || '5.0'}</Text>
-            </View>
-          </View>
-        </View>
-        <TruncateText
-          style={{ color: 'black', fontFamily: 'Poppins', fontSize: 10 }}
-          text={club?.description}
-          maxLength={165}
-        />
+      <View style={{ position: 'absolute', top: 2, left: 2, backgroundColor: '#fff', padding: 2, borderRadius: 2, zIndex: 1 }}>
+        <TruncateText style={{color: 'black', fontSize: 10}} text={discover.name} maxLength={20}/>
+      </View>
+      <View style={{ position: 'absolute', bottom: 2, right: 2, padding: 2, borderRadius: 2, zIndex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff' }}>
+        <AirbnbRating size={7} count={1} showRating={false}/>
+        <Text style={{fontSize: 10}}>{discover.ratings}</Text>
       </View>
     </TouchableOpacity>
   )
@@ -42,17 +30,17 @@ export default function FeaturedItems({ club }) {
 
 const styles = StyleSheet.create({
   container: {
-    width: 175,
-    height: 270,
+    width: '50%',
+    height: 250,
     // backgroundColor: '#F2F9FB',
     backgroundColor: '#fff',
-    marginHorizontal: 2,
-    marginBottom: 10,
+    // marginHorizontal: 2,
+    marginBottom: 2,
     borderRadius: 8,
     // ...SHADOW
   },
   image: {
-    height: 150,
+    height: '100%',
     width: '100%',
     contentFit: 'cover',
     borderRadius: 5,

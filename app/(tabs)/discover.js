@@ -1,105 +1,43 @@
-import { View, Text, ScrollView, FlatList } from 'react-native'
+import { View, FlatList, Dimensions, ActivityIndicator } from 'react-native'
 import React, { useState } from 'react'
 import Search from '../../components/Search'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import DiscoverItems from '../../components/discover/DiscoverItems'
-import { useFeaturedClubs } from '../../hooks/queries/useClub'
+import { useDiscover } from '../../hooks/queries/useClub'
+
+const DEVICE_WIDTH = Dimensions.get('window').width
 
 export default function Discover() {
   
-  const [searchValue, setSearchValue] = useState('')
+  const [search, setSearch] = useState('')
 
-  const { data, isPending } = useFeaturedClubs()
+  const { data, isPending } = useDiscover(search)
 
-  const featuredClubs = [
-    {
-      _id: '24242',
-      name: 'Drama Club',
-      image: require('../../assets/home/drama-club.png'),
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt',
-      members: [
-        {
-          image: require('../../assets/home/club-member-1.png'),
-        },
-        {
-          image: require('../../assets/home/club-member-2.png'),
-        },
-        {
-          image: require('../../assets/home/club-member-3.png'),
-        }
-      ]
-    },
-    {
-      _id: '2424256',
-      name: 'Model UN Club',
-      image: require('../../assets/home/model-un-club.png'),
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt',
-      members: [
-        {
-          image: require('../../assets/home/club-member-1.png'),
-        },
-        {
-          image: require('../../assets/home/club-member-2.png'),
-        },
-        {
-          image: require('../../assets/home/club-member-3.png'),
-        }
-      ]
-    },
-    {
-      _id: '36373333',
-      name: 'Music Club',
-      image: require('../../assets/home/drama-club.png'),
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt',
-      members: [
-        {
-          image: require('../../assets/home/club-member-1.png'),
-        },
-        {
-          image: require('../../assets/home/club-member-2.png'),
-        },
-        {
-          image: require('../../assets/home/club-member-3.png'),
-        }
-      ]
-    },
-    {
-      _id: '868453',
-      name: 'Social Club',
-      image: require('../../assets/home/drama-club.png'),
-      description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt',
-      members: [
-        {
-          image: require('../../assets/home/club-member-1.png'),
-        },
-        {
-          image: require('../../assets/home/club-member-2.png'),
-        },
-        {
-          image: require('../../assets/home/club-member-3.png'),
-        }
-      ]
-    }
-  ]
+  if (isPending) return (
+    <SafeAreaView style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <ActivityIndicator size={50} color='tomato'/>
+    </SafeAreaView>
+  )
 
   return (
     <SafeAreaView style={{flex: 1, paddingBottom: 70}}>
       <FlatList
         stickyHeaderIndices={[0]}
         stickyHeaderHiddenOnScroll
-        style={{ }}
+        style={{ width: DEVICE_WIDTH, paddingHorizontal: 3, }}
         numColumns={2}
         initialNumToRender={30}
-        data={data?.data?.featuredClubs || []}
+        data={data?.data?.discover || []}
         keyExtractor={(_item, index) => index}
         ItemSeparatorComponent={<View style={{margin: 0}} />} 
-        renderItem={({ item }) => <DiscoverItems club={item} />}
-        contentContainerStyle={{ paddingBottom: 80, paddingTop: 10 }}
+        renderItem={({ item }) => <DiscoverItems discover={item} />}
+        contentContainerStyle={{ paddingBottom: 80, paddingTop: 10, rowGap:2 }}
+        columnWrapperStyle={{columnGap: 3}}
         ListHeaderComponentStyle={{marginBottom: 20}}
         ListHeaderComponent={
           <Search
-            value={searchValue}
-            setValue={setSearchValue}
+            value={search}
+            setValue={setSearch}
             placeholder={'Search clubs and activities'}
           />
         }
