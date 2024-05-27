@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useRef } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Animated, PanResponder, StatusBar } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Animated, PanResponder, StatusBar, KeyboardAvoidingView, Keyboard, Platform } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useLocalSearchParams } from 'expo-router'
 import { socket } from '../../socket.io/socket';
@@ -269,43 +269,49 @@ const Chat = () => {
   }
 
   return (
-    <View style={styles.container}>
-      <StatusBar hidden/>
-      <FlatList
-        inverted
-        data={messages}
-        ref={flatListRef}
-        initialNumToRender={100}
-        keyExtractor={(item, index) => index}
-        onContentSizeChange={handleContentSizeChange}
-        ListHeaderComponent={
-          <NewMessages
-            unreadMessages={unreadMessages}
-            handleSelectMessage={handleSelectMessage}
-            setListHeaderHeight={setListHeaderHeight}
-            User={User}
-          />
-        }
-        renderItem={({ item }) => (
-          <ChatBubble
-            message={item}
-            onSelectMessage={handleSelectMessage}
-            isMyMessage={
-              item?.isMyMessage ? true
-              : User._id == item?.sender?._id ? true : false
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.container}>
+          <StatusBar hidden/>
+          <FlatList
+            inverted
+            data={messages}
+            ref={flatListRef}
+            initialNumToRender={100}
+            keyExtractor={(item, index) => index}
+            onContentSizeChange={handleContentSizeChange}
+            ListHeaderComponent={
+              <NewMessages
+                unreadMessages={unreadMessages}
+                handleSelectMessage={handleSelectMessage}
+                setListHeaderHeight={setListHeaderHeight}
+                User={User}
+              />
             }
+            renderItem={({ item }) => (
+              <ChatBubble
+                message={item}
+                onSelectMessage={handleSelectMessage}
+                isMyMessage={
+                  item?.isMyMessage ? true
+                  : User._id == item?.sender?._id ? true : false
+                }
+              />
+            )}
           />
-        )}
-      />
-      <QuotedMessage
-        message={quotedMessage}
-        setQuotedMessage={setQuotedMessage}
-      />
-      <ChatInput
-        onSendMessage={sendMessage}
-        selectedMessage={quotedMessage}
-      />
-    </View>
+          <QuotedMessage
+            message={quotedMessage}
+            setQuotedMessage={setQuotedMessage}
+          />
+          <ChatInput
+            onSendMessage={sendMessage}
+            selectedMessage={quotedMessage}
+          />
+        </View>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
