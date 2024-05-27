@@ -54,7 +54,11 @@ const Analytics = () => {
             <Text>New Members</Text>
           </Card.Title>
           <Divider />
-          <BarChart analytics={analytics} />
+          {
+            isPending ? <ActivityIndicator size={50} color={'tomato'} />
+            : <BarChart analytics={analytics} />
+            
+          }
           <View style={{ alignSelf: 'flex-end' }}>
             <Text style={{ fontFamily: 'Poppins', fontSize: 14, fontWeight: '700', marginBottom: 10, marginTop: 20 }}>Keys:</Text>
             <View style={{ flexDirection: 'row' }}>

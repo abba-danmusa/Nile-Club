@@ -14,10 +14,9 @@ class BarChart extends React.PureComponent {
 
     const data = [...this.members]
     const X_AXIS = [0, ...this.members]
-
     const CUT_OFF = 0
     const Labels = ({ x, y, bandwidth, data }) => (
-      this.months.map((value, index) => (
+      this.months?.map((value, index) => (
         <Text
           key={index}
           x={x(index) + (bandwidth / 2)}
@@ -43,7 +42,7 @@ class BarChart extends React.PureComponent {
           }}
           style={{ height: 200 }}
           numberOfTicks={5}
-          formatLabel={(value) => `${value}*`}
+          formatLabel={(value) => `${value} M(s)`}
         />
         <BarChartAnalytics
           style={{ flex: 1, height: 200 }}
