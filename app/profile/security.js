@@ -83,9 +83,6 @@ const Security = () => {
 
           <View style={styles.alertContainer}>
             <Feather name="alert-circle" size={15} color="black" />
-            <Text style={styles.alertText}>
-              Make sure passwords are matching
-            </Text>
           </View>
 
           <BottomButton title={'Proceed'} handlePress={changePassword} />
