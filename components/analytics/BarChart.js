@@ -26,7 +26,7 @@ class BarChart extends React.PureComponent {
           alignmentBaseline={'middle'}
           textAnchor={'middle'}
         >
-          {value.month}
+          {value.month.month}
         </Text>
       ))
     )
