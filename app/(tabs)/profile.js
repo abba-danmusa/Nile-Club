@@ -8,23 +8,33 @@ const profile = () => {
   const { data } = useUser();
   const User = data?.data?.user;
 
-  const PROFILE_ITEMS = [
-    { title: "manage profile", onPress: () => router.push("/profile/manage") },
-    { title: "my club", onPress: () => router.push("/profile/club") },
+  const SUPER_ADMIN_ITEMS = [{
+    title: "Approve Clubs",
+    onPress: () => router.push("/profile/admin")
+  }]
+
+  const ADMIN_ITEMS = [
+    { title: "Analytics", onPress: () => router.push("/profile/analytics") },
     { title: "my events", onPress: () => router.push("/profile/events") },
     { title: "roles", onPress: () => router.push("/roles") },
-    { title: "create club", onPress: () => router.push("/profile/create") },
-    User?.admin
-      ? {
-          title: "Approve Clubs",
-          onPress: () => router.push("/profile/admin"),
-        }
-      : null,
-    User?.club &&
-    {
-      title: 'Analytics',
-      onPress: () => router.push('/profile/analytics')
-    },
+    { title: "my club", onPress: () => router.push("/profile/club") },
+  ]
+
+  const USER_ITEMS = [{
+    title: "create club",
+    onPress: () => router.push("/profile/create"),
+  }]
+
+  const ALL_USERS_ITEMS = [{
+    title: "manage profile",
+    onPress: () => router.push("/profile/manage"),
+  }]
+
+  const PROFILE_ITEMS = [
+    ...ALL_USERS_ITEMS,
+    ...(!User?.club && !User.admin ? USER_ITEMS : []),
+    ...(User?.club ? ADMIN_ITEMS : []),
+    ...(User?.admin ? SUPER_ADMIN_ITEMS : []),
   ]
 
   const signout = () => {
@@ -39,7 +49,7 @@ const profile = () => {
         contentContainerStyle={styles.itemsContentContainer}
       >
         {PROFILE_ITEMS.map((item) => {
-          if (!item) return
+          if (!item) return;
           if (
             !User?.club &&
             (item.title === "my events" ||

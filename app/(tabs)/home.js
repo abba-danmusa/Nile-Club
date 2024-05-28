@@ -26,7 +26,7 @@ export default function home() {
   return (
     <Animated.View style={{ flex: 1, backgroundColor: '#fff' }}>
       <StatusBar backgroundColor={'#EBEEF3'} barStyle="dark-content"/>
-      { User?.data?.user?.club && <AddEventButton /> }
+      { User?.data?.user?.club && !User?.data?.user.admin && <AddEventButton /> }
       <FlashList
         data={data?.data?.feeds}
         ListHeaderComponentStyle={styles.listHeaderComponentStyle}

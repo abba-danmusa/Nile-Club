@@ -255,7 +255,7 @@ const Ratings = (club) => {
       }}
     >
       <AirbnbRating
-        count={6}
+        count={5}
         size={15}
         showRating={false}
         isDisabled={true}
@@ -282,12 +282,12 @@ const Ratings = (club) => {
             </TouchableOpacity>
             <Text style={styles.modalTitle}>Rate us!!!</Text>
             <AirbnbRating
-              count={6}
+              count={5}
               defaultRating={ratingValue}
               onFinishRating={number => setRatingValue(number)}
               starContainerStyle={{ alignSelf: 'center', marginBottom: 20 }}
               reviews={
-                ['Terrible', 'Bad', 'Meh!', 'OK!', 'Good!!', 'Superb!!!']
+                ['Terrible', 'Meh!', 'OK!', 'Good!!', 'Superb!!!']
               }
             />
             <Button title="Confirm" onPress={handleSubmit} />
