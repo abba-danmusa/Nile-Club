@@ -1,12 +1,13 @@
+import { FontAwesome5, FontAwesome, MaterialIcons, EvilIcons } from '@expo/vector-icons'
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native'
 import { Image } from 'expo-image'
-import { FontAwesome5, FontAwesome } from '@expo/vector-icons'
 import TruncateText from '../../components/TruncateText'
 import EventTimeLine from '../home/EventTimeLine'
 import ImageGallery from '../home/ImageGallery'
 import { useSetLike } from '../../hooks/queries/useEvent'
 import { useState } from 'react'
 import { NativeViewGestureHandler } from 'react-native-gesture-handler'
+import { SHADOW } from '../../utils/styles'
 
 const DEVICE_WIDTH = Dimensions.get('window').width
 
