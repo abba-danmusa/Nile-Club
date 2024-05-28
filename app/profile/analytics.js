@@ -56,7 +56,7 @@ const Analytics = () => {
           <Divider />
           {
             isPending ? <ActivityIndicator size={50} color={'tomato'} />
-            : <BarChart analytics={analytics} />
+            : <BarChart analytics={data?.data?.newMembersPerMonth} />
             
           }
           <View style={{ alignSelf: 'flex-end' }}>

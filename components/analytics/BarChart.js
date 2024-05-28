@@ -6,8 +6,8 @@ import { Text } from 'react-native-svg'
 class BarChart extends React.PureComponent {
   constructor (props) {
     super(props)
-    this.members = props?.analytics?.newMembersPerMonth?.map(member => member.count)
-    this.months = props?.analytics?.newMembersPerMonth
+    this.members = props?.analytics?.map(member => member.count)
+    this.months = props?.analytics
   }
 
   render() {
@@ -26,7 +26,7 @@ class BarChart extends React.PureComponent {
           alignmentBaseline={'middle'}
           textAnchor={'middle'}
         >
-          {value.month.month}
+          {value.month}
         </Text>
       ))
     )
