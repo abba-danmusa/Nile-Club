@@ -97,27 +97,23 @@ const ChatInput = ({ onSendMessage, quotedMessage }) => {
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'height' : ''}
-    >
-      <View style={styles.inputContainer}>
-        {quotedMessage && (
-          <View style={styles.quotedContainer}>
-            <Text style={styles.quotedText}>{quotedMessage.content}</Text>
-          </View>
-        )}
-        <TextInput
-          style={styles.input}
-          value={message}
-          onChangeText={setMessage}
-          placeholder="Type a message..."
-          multiline
-        />
-        <TouchableOpacity onPress={handleSend} style={styles.sendButton}>
-          <MaterialIcons name="send" size={24} color="#fff" />
-        </TouchableOpacity>
-      </View>
-    </KeyboardAvoidingView>
+    <View style={styles.inputContainer}>
+      {quotedMessage && (
+        <View style={styles.quotedContainer}>
+          <Text style={styles.quotedText}>{quotedMessage.content}</Text>
+        </View>
+      )}
+      <TextInput
+        style={styles.input}
+        value={message}
+        onChangeText={setMessage}
+        placeholder="Type a message..."
+        multiline
+      />
+      <TouchableOpacity onPress={handleSend} style={styles.sendButton}>
+        <MaterialIcons name="send" size={24} color="#fff" />
+      </TouchableOpacity>
+    </View>
   );
 };
 
@@ -306,10 +302,14 @@ const Chat = () => {
           message={quotedMessage}
           setQuotedMessage={setQuotedMessage}
         />
-        <ChatInput
-          onSendMessage={sendMessage}
-          selectedMessage={quotedMessage}
-        />
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'position' : 'height'}
+        >
+          <ChatInput
+            onSendMessage={sendMessage}
+            selectedMessage={quotedMessage}
+          />
+        </KeyboardAvoidingView>
       </View>
     </TouchableWithoutFeedback>
   );
