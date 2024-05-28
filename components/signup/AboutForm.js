@@ -25,6 +25,39 @@ const FACULTIES = [
   { key: 9, value: 'Faculty of Education' },
   { key: 10, value: 'Faculty of Health' },
 ]
+const DEPARTMENTS = [
+  "B.Eng Information and Communication Engineering",
+  "BEng Chemical Engineering",
+  "BEng Civil Engineering",
+  "BEng Computer Engineering",
+  "BEng Electrical & Electronics Engineering",
+  "BEng Mechanical Engineering",
+  "BEng Mechatronics Engineering",
+  "BEng Petroleum & Gas Engineering",
+  "B.Sc. Building",
+  "B.Sc. Data Science",
+  "B.Sc. Entrepreneurship",
+  "B.Sc. Information System",
+  "B.Sc. Peace Studies and Conflict Resolution",
+  "B.Sc. Science Laboratory Technology",
+  "BSc Accounting",
+  "BSc Architecture",
+  "BSc Banking and Finance",
+  "BSc Biochemistry",
+  "BSc Banking and Finance",
+  "BSc Biotechnology",
+  "BSc Business Administration",
+  "BSc Computer Science",
+  "BSc Cyber Security",
+  "BSc Economics",
+  "BSc Human Anatomy",
+  "BSc Information Technology",
+  "BSc Marketing",
+  "BSc Software Engineering",
+  "LLB Law",
+  "MBBS Medicine",
+
+]
 const LEVELS = [
   { key: 1, value: '100 Level' },
   { key: 2, value: '200 Level' },
@@ -86,7 +119,7 @@ export default function AboutForm({ scrollToScreen, editProfile = () => { }, edi
         : null
     },
     {
-      data: FACULTIES,
+      data: DEPARTMENTS,
       setSelected:  setDepartment ,
       searchPlaceholder: 'Please choose your department',
       placeholder: 'Please choose your department',
