@@ -22,7 +22,7 @@ export default function FeaturedItems({ discover, width = '50%'}) {
       </View>
       <View style={{ position: 'absolute', bottom: 2, right: 2, padding: 2, borderRadius: 2, zIndex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', backgroundColor: '#fff' }}>
         <AirbnbRating size={7} count={1} showRating={false}/>
-        <Text style={{fontSize: 10}}>{discover.ratings}</Text>
+        <Text style={{fontSize: 10}}>{discover.ratings.toFixed(1)}</Text>
       </View>
     </TouchableOpacity>
   )

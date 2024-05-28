@@ -25,7 +25,13 @@ export default function FeedItem({ item }) {
     follow,
     like,
     likes,
-    totalLikes
+    totalLikes,
+    physical,
+    virtual,
+    content,
+    venue,
+    link,
+    itemType
   } = item
 
   const { mutate: addToSetLike } = useSetLike()
@@ -102,28 +108,64 @@ export default function FeedItem({ item }) {
                   <FontAwesome5 name="heart" size={20} color="black" />
               }
             </TouchableOpacity>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={{ marginRight: 5, padding: 5, }}
               onPress={() => setOpenComments(openComments)}
             >
               <FontAwesome5 name="comment" size={20} color="black" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
 
         </View>
-        <View style={styles.contentContainer}>
-          <Text
-            style={{
-              marginBottom: 5,
-              fontFamily: 'Poppins',
-              fontSize: 16,
-              fontWeight: '700',
-              color: '#365486'
-            }}
-          >{title}</Text>
-          <TruncateText text={description} />
-          <EventTimeLine fromDate={starts} toDate={ends} />
-        </View>
+        {
+          itemType === 'event' ?
+            <View style={styles.contentContainer}>
+              <Text
+                style={{
+                  marginBottom: 5,
+                  fontFamily: 'Poppins',
+                  fontSize: 14,
+                  fontWeight: '700',
+                  color: '#365486'
+                }}
+              >{title}</Text>
+              <TruncateText text={description} />
+              <View
+                style={{
+                  ...SHADOW,
+                  backgroundColor: '#fff',
+                  padding: 2,
+                  width: 100,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginTop: 10
+                }}
+              >
+                <Text>{physical ? 'Physical Event' : 'Virtual Event'}</Text>
+              </View>
+              <View>
+                {
+                  link &&
+                  <View style={styles.linkContainer}>
+                    <EvilIcons name="link" size={12} color="black" />
+                    <Text>{link}</Text>
+                  </View>
+                }
+                {
+                  venue &&
+                  <View style={styles.linkContainer}>
+                    <MaterialIcons name="location-on" size={12} color="black" />
+                    <Text>{venue}</Text>
+                  </View>
+                }
+              </View>
+              <EventTimeLine fromDate={starts} toDate={ends} />
+            </View>
+            :
+            <View style={styles.contentContainer}>
+              <TruncateText text={content} />
+            </View>
+        }
       </View>
     </NativeViewGestureHandler>
   )
