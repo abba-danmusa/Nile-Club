@@ -127,12 +127,12 @@ export default function FeedItem({ item }) {
                   <FontAwesome5 name="heart" size={22} color="black" />
               }
             </TouchableOpacity>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={{ marginRight: 5, padding: 5, }}
               onPress={() => setOpenComments(openComments)}
             >
               <FontAwesome5 name="comment" size={22} color="black" />
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
 
         </View>
