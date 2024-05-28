@@ -60,7 +60,7 @@ export default function club() {
                 club={data?.data?.club}
                 onPressComment={handleOpenComments}
               />
-              <SectionTitle title={'Similar Club'} />
+              <SectionTitle title={'Featured Clubs'} />
               <FlatList
                 horizontal
                 data={featuredClubs?.data?.featuredClubs || []}
