@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, Animated} from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native'
 import { AntDesign } from '@expo/vector-icons'
 import { SHADOW } from "../../utils/styles"
 import { Image } from 'expo-image'
@@ -7,6 +7,7 @@ import { router } from "expo-router"
 import { useAnimationStore } from '../../hooks/stores/useAnimationStore'
 import { getStatusBarHeight } from '../../utils/methods'
 import { useUser } from '../../hooks/queries/useAuthentication'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 const HomeHeader = () => {
   
@@ -26,36 +27,34 @@ const HomeHeader = () => {
     })
 
   return (
-    <Animated.View
-      style={[
-        styles.container,
-        {
-          transform: [{ translateY: headerTranslateY }],
-          height: 50 + STATUS_BAR_HEIGHT * 1.5,
-          paddingTop: STATUS_BAR_HEIGHT * 1.5,
-        }
-      ]}
-    >
-      <TouchableOpacity
-        onPress={() => router.push('/profile')}
-        style={styles.avatarContainer}
+    <SafeAreaView style={{flex: 1}}>
+      <Animated.View
+        style={[
+          styles.container,
+          {transform: [{ translateY: headerTranslateY }]}
+        ]}
       >
-        <Image
-          source={
-            User?.asset?.secure_url ||
-            'https://i.pravatar.cc/300?img=1'
-          }
-          style={styles.avatar}
-        />
-      </TouchableOpacity>
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>{`Hello ${User?.firstName||''},` }</Text>
-        <Text style={styles.message}>Let’s see what your clubs are up to!</Text>
-      </View>
-      <TouchableOpacity style={styles.notificationContainer}>
-        <AntDesign name="bells" size={24} color="#EBEEF3" />
-      </TouchableOpacity>
-    </Animated.View>
+        <TouchableOpacity
+          onPress={() => router.push('/profile')}
+          style={styles.avatarContainer}
+        >
+          <Image
+            source={
+              User?.asset?.secure_url ||
+              'https://i.pravatar.cc/300?img=1'
+            }
+            style={styles.avatar}
+          />
+        </TouchableOpacity>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>{`Hello ${User?.firstName||''},` }</Text>
+          <Text style={styles.message}>Let’s see what your clubs are up to!</Text>
+        </View>
+        <TouchableOpacity style={styles.notificationContainer}>
+          <AntDesign name="bells" size={24} color="#EBEEF3" />
+        </TouchableOpacity>
+      </Animated.View>
+    </SafeAreaView>
   )
 }
 

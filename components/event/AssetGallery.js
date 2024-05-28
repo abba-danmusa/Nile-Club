@@ -214,7 +214,8 @@ const UploadStatus = ({ image, upload, uploadProgress }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
+    height: '80%'
   },
   image: { 
     width: DEVICE_WIDTH,
