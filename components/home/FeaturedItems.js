@@ -26,7 +26,7 @@ export default function FeaturedItems({ club }) {
           <View style={styles.ratingsContainer}>
             <AirbnbRating count={1} size={8} showRating={false} />
             <View style={{alignItems: 'flex-end', height: 10,}}>
-              <Text style={styles.rating}>{club?.ratings.toFixed(1) || '4.0' }</Text>
+              <Text style={styles.rating}>{club?.ratings?.toFixed(1) || '4.0' }</Text>
             </View>
           </View>
         </View>
