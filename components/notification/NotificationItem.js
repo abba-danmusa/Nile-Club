@@ -12,6 +12,7 @@ const NotificationItem = ({ item }) => {
     createdAt,
     isRead
   } = item
+
   if (type == "Post") {
     return (
       <View style={styles.mainContainer}>
@@ -47,13 +48,28 @@ const NotificationItem = ({ item }) => {
     return (
       <View style={styles.mainContainer}>
         <View style={styles.container}>
-          <Image
-            source={club?.assets?.image?.secure_url}
-            style={styles.image}
-          />
+          <View>
+            {
+              !isRead &&
+              <View style={{
+                width: 12,
+                height: 12,
+                backgroundColor: 'tomato',
+                position: 'absolute',
+                top: 0,
+                right: 10,
+                borderRadius: 20,
+                ...SHADOW,
+                zIndex: 1
+              }} />
+            }
+            <Image
+              source={club?.assets?.image?.secure_url}
+              style={styles.image}
+            />
+          </View>
           <View>
             <Text>{`${club?.name} has a new event`}</Text>
-            <Text>{event?.title}</Text>
             <Text style={{fontSize: 10}}>{createdAt}</Text>
           </View>
         </View>
