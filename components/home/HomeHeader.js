@@ -95,7 +95,7 @@ const HomeHeader = () => {
             </TouchableOpacity>
             <Text style={styles.modalTitle}>Notifications</Text>
             <Divider />
-            <View>
+            <View style={{flex: 1, marginTop: 20}}>
               <FlashList
                 data={notifications}
                 keyExtractor={(item) => item._id}
@@ -179,8 +179,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     padding: 10,
     borderRadius: 10,
-    width: '80%',
-    height: '30%',
+    width: '90%',
+    height: '80%',
     overflow: 'scroll'
   },
   modalTitle: {
