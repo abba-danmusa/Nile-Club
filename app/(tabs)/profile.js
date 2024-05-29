@@ -32,7 +32,7 @@ const profile = () => {
 
   const PROFILE_ITEMS = [
     ...ALL_USERS_ITEMS,
-    ...(!User?.club && !User.admin ? USER_ITEMS : []),
+    ...(!User?.club && !User?.admin ? USER_ITEMS : []),
     ...(User?.club ? ADMIN_ITEMS : []),
     ...(User?.admin ? SUPER_ADMIN_ITEMS : []),
   ]
