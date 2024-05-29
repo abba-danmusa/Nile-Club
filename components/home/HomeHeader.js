@@ -63,15 +63,18 @@ const HomeHeader = () => {
           onPress={() => setModalVisible(true)}
         >
           <AntDesign name="bells" size={24} color="#EBEEF3" />
-          <View style={{
-            width: 12,
-            height: 12,
-            backgroundColor: 'tomato',
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            borderRadius: 20
-          }} />
+          {
+            notifications?.length > 0 &&
+            <View style={{
+              width: 12,
+              height: 12,
+              backgroundColor: 'tomato',
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              borderRadius: 20
+            }} />
+          }
         </TouchableOpacity>
       </Animated.View>
       <Modal
@@ -91,10 +94,7 @@ const HomeHeader = () => {
                 padding: 5,
               }}
             >
-              {
-                notifications?.length > 0 &&
-                <AntDesign name="close" size={24} color="tomato" />
-              }
+              <AntDesign name="close" size={24} color="tomato" />
             </TouchableOpacity>
             <Text style={styles.modalTitle}>Notifications</Text>
             <Divider />
