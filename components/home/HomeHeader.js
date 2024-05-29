@@ -91,7 +91,10 @@ const HomeHeader = () => {
                 padding: 5,
               }}
             >
-              <AntDesign name="close" size={24} color="tomato" />
+              {
+                notifications.length > 0 &&
+                <AntDesign name="close" size={24} color="tomato" />
+              }
             </TouchableOpacity>
             <Text style={styles.modalTitle}>Notifications</Text>
             <Divider />
