@@ -9,7 +9,7 @@ import { getStatusBarHeight } from '../../utils/methods'
 import { useUser } from '../../hooks/queries/useAuthentication'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Divider } from '@rneui/base'
-import {useNotifications} from '../../hooks/queries/useNotification'
+import {useNotifications, useSetNotifications} from '../../hooks/queries/useNotification'
 import { FlashList } from '@shopify/flash-list'
 import NotificationItem from '../notification/NotificationItem'
 
@@ -18,11 +18,13 @@ const HomeHeader = () => {
   const [modalVisible, setModalVisible] = useState(false)
 
   const { data } = useUser()
-  const {data: notificationsData} = useNotifications()
+  const { data: notificationsData } = useNotifications()
+  const { mutate  } = useSetNotifications()
 
   const User = data?.data?.user
   const notifications = notificationsData?.data?.notifications
-  // console.log(notifications)
+  const newNotifications = notifications?.filter(item => item.isRead == false)
+
   const STATUS_BAR_HEIGHT = getStatusBarHeight()
 
   const { translateY } = useAnimationStore()
@@ -33,6 +35,11 @@ const HomeHeader = () => {
       outputRange: [0, -70 + (-STATUS_BAR_HEIGHT)],
       extrapolate: 'clamp',
     })
+  
+  const closeModal = () => {
+    setModalVisible(false)
+    mutate({newNotifications})
+  }
 
   return (
     <SafeAreaView style={{flex: 1}}>
@@ -64,7 +71,7 @@ const HomeHeader = () => {
         >
           <AntDesign name="bells" size={24} color="#EBEEF3" />
           {
-            notifications?.length > 0 &&
+            newNotifications?.length > 0 &&
             <View style={{
               width: 12,
               height: 12,
@@ -72,7 +79,9 @@ const HomeHeader = () => {
               position: 'absolute',
               top: 0,
               right: 0,
-              borderRadius: 20
+              borderRadius: 20,
+              ...SHADOW,
+              zIndex: 1
             }} />
           }
         </TouchableOpacity>
@@ -86,7 +95,7 @@ const HomeHeader = () => {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <TouchableOpacity
-              onPress={() => setModalVisible(false)}
+              onPress={closeModal}
               style={{
                 position: 'absolute',
                 right: 10,
