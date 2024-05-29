@@ -92,7 +92,7 @@ const HomeHeader = () => {
               }}
             >
               {
-                notifications.length > 0 &&
+                notifications?.length > 0 &&
                 <AntDesign name="close" size={24} color="tomato" />
               }
             </TouchableOpacity>
